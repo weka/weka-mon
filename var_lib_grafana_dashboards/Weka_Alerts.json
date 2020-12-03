@@ -252,7 +252,7 @@
             "condition": "",
             "key": "cluster",
             "operator": "=",
-            "value": ""
+            "value": "Select A Cluster"
           }
         ],
         "hide": 1,

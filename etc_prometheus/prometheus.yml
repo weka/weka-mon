@@ -25,4 +25,4 @@ scrape_configs:
     static_configs: 
       - 
         targets: 
-          - "metrics-exporter:8001"
+          - "export:8001"
