@@ -30,7 +30,7 @@ if __name__ == '__main__':
     signals.signal_handling()
 
     parser = argparse.ArgumentParser(description="Prometheus Client for Weka clusters")
-    parser.add_argument("-c", "--configfile", dest='configfile', default="./weka-metrics-exporter.yml", help="override ./weka-metrics-exporter.yml as config file")
+    parser.add_argument("-c", "--configfile", dest='configfile', default="./export.yml", help="override ./export.yml as config file")
     parser.add_argument("-p", "--port", dest='port', default="8001", help="TCP port number to listen on")
     parser.add_argument("--loki_host", dest='lokihost', default=None, help="hostname/ip for loki server")
     parser.add_argument("--loki_port", dest='lokiport', default="3100", help="port for loki server")
@@ -141,12 +141,12 @@ if __name__ == '__main__':
 
 
     while True:
+        time.sleep(30)  # sleep first, just in case we're started at the same time as Loki; give it time
         if lokiserver != None:
             for cluster in cluster_list:
                 logger.info(f"getting events for cluster {cluster.name}")
                 events = cluster.get_events()
                 lokiserver.send_events( events, cluster )
-        time.sleep(30)
 
 
 
