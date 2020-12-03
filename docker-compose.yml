@@ -1,0 +1,53 @@
+version: "3"
+
+#networks:
+#  weka:
+
+services:
+  loki:
+    image: grafana/loki:2.0.0
+    volumes:
+      - /var/log:/var/log
+      - ${PWD}/etc_loki:/etc/loki
+      - ${PWD}/loki_data:/loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/loki-config.yaml
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - /var/log:/var/log
+      - ${PWD}/etc_prometheus:/etc/prometheus
+      - ${PWD}/prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    volumes:
+      - /var/log:/var/log
+      - ${PWD}/etc_alertmanager:/etc/alertmanager
+      - ${PWD}/prometheus_data:/prometheus
+    command: --config.file="/etc/alertmanager/alertmanager.yml"
+    ports:
+      - "9093:9093"
+
+  grafana:
+    image: grafana/grafana:latest
+    volumes:
+      - /var/log:/var/log
+      - ${PWD}/etc_grafana_provisioning:/etc/grafana/provisioning
+      - ${PWD}/var_lib_grafana_dashboards:/var/lib/grafana/dashboards
+    ports:
+      - "3000:3000"
+
+  metrics-exporter:
+    image: wekasolutions/export:latest
+    volumes:
+      - /var/log:/var/log
+      - ${HOME}/.weka:/weka/.weka
+      - /etc/hosts:/etc/hosts
+    command: -vv -a --loki_host loki ${CLUSTER_SPEC}
+    ports:
+      - "8001:8001"

@@ -1,0 +1,28 @@
+--- 
+alerting: 
+  alertmanagers: 
+    - 
+      static_configs: 
+        - 
+          targets: 
+            - "alertmanager:9093"
+global: 
+  evaluation_interval: 15s
+  scrape_interval: 15s
+rule_files: 
+  -
+    rules.yml
+scrape_configs: 
+  - 
+    job_name: prometheus
+    static_configs: 
+      - 
+        targets: 
+          - "prometheus:9090"
+  - 
+    job_name: weka
+    scrape_interval: 60s
+    static_configs: 
+      - 
+        targets: 
+          - "metrics-exporter:8001"

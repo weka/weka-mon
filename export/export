@@ -1,0 +1,159 @@
+#!/usr/bin/env python3
+
+# Weka Prometheus client
+# Vince Fleming
+# vince@weka.io
+#
+VERSION="3.6.0"
+
+# system imports
+import logging
+import logging.handlers
+from logging import debug, info, warning, error, critical
+import argparse
+import os
+import sys
+from prometheus_client import start_http_server, REGISTRY
+import time
+import traceback
+from lokilogs import LokiServer
+
+# local imports
+from collector import wekaCollector
+from wekacluster import WekaCluster
+import signals
+
+
+
+if __name__ == '__main__':
+    # handle signals (ie: ^C and such)
+    signals.signal_handling()
+
+    parser = argparse.ArgumentParser(description="Prometheus Client for Weka clusters")
+    parser.add_argument("-c", "--configfile", dest='configfile', default="./weka-metrics-exporter.yml", help="override ./weka-metrics-exporter.yml as config file")
+    parser.add_argument("-p", "--port", dest='port', default="8001", help="TCP port number to listen on")
+    parser.add_argument("--loki_host", dest='lokihost', default=None, help="hostname/ip for loki server")
+    parser.add_argument("--loki_port", dest='lokiport', default="3100", help="port for loki server")
+    parser.add_argument( 'clusterspec', default="localhost", nargs='*', help="Cluster specifications.  <host>,<host>,...:authfile" )
+    parser.add_argument("-a", "--autohost", dest='autohost', default=False, action="store_true", help="Automatically load balance queries over backend hosts" )
+    parser.add_argument("-v", "--verbosity", action="count", default=0, help="increase output verbosity")
+    parser.add_argument("--version", dest="version", default=False, action="store_true", help="Display version number")
+    args = parser.parse_args()
+
+    if args.version:
+        print( f"{sys.argv[0]} version {VERSION}" )
+        sys.exit( 0 )
+
+    if args.verbosity == 0:
+        loglevel = logging.ERROR
+    elif args.verbosity == 1:
+        loglevel = logging.WARNING
+    elif args.verbosity == 2:
+        loglevel = logging.INFO
+    elif args.verbosity > 2:
+        loglevel = logging.DEBUG
+
+    # set the root logger
+    logger = logging.getLogger()
+    FORMAT = "%(filename)s:%(lineno)s:%(funcName)s():%(message)s"
+    #logging.basicConfig(format=FORMAT)
+    logger.setLevel(loglevel)
+
+    # create handler to log to syslog
+    syslog_handler = logging.handlers.SysLogHandler(address="/dev/log")
+    #syslog_handler.setLevel(loglevel)
+    syslog_handler.setFormatter(logging.Formatter(os.path.basename( sys.argv[0] ) + ': %(levelname)s: %(message)s'))
+
+    # create handler to log to stderr
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(logging.Formatter(FORMAT))
+    #console_handler.setLevel(loglevel)
+
+    # add handlers to root logger
+    #logger.addHandler(syslog_handler)
+    logger.addHandler(console_handler)
+
+    # configure logging in signals module
+    #sublog = logging.getLogger( "signals" )
+    #sublog.setLevel(loglevel)
+
+    # configure logging in collector module
+    #sublog = logging.getLogger( "collector" )
+    #sublog.setLevel(loglevel)
+
+    # configure logging in wekaapi module
+    sublog = logging.getLogger( "wekaapi" )
+    sublog.setLevel(logging.ERROR)
+
+    # configure logging in sthreads module
+    sublog = logging.getLogger( "sthreads" )
+    sublog.setLevel(logging.ERROR)
+
+    # configure logging in lokilogs module
+    sublog = logging.getLogger( "lokilogs" )
+    sublog.setLevel(logging.INFO)
+
+
+    # parse the command line, get our hosts and associated auth files
+    clusters = []
+    for spec in args.clusterspec:
+        clusterspeclist = spec.split(":")
+        cluster_hosts = clusterspeclist[0]
+        if len(clusterspeclist) > 1:
+            cluster_auth = clusterspeclist[1]
+        else:
+            cluster_auth = None
+        clusters.append( dict ( cluster_hosts=cluster_hosts, cluster_auth=cluster_auth ) )
+
+    cluster_list = []
+    # create the wekaCollector object
+    collector = wekaCollector( args.configfile )
+    num_good = 0
+    for cluster in clusters:
+        try:
+            cluster_obj = WekaCluster( cluster["cluster_hosts"], cluster["cluster_auth"], args.autohost ) 
+        except Exception as exc:
+            track = traceback.format_exc()
+            print(track)
+            logger.critical( f"unable to create cluster object: {exc}" )
+            continue
+        collector.add_cluster( cluster_obj )
+        cluster_list.append( cluster_obj )
+        num_good += 1
+
+    if num_good == 0:
+        logger.critical( "no clusters could be contacted, aborting" )
+        sys.exit( 1 )
+
+    if args.lokihost != None:
+        lokiserver = LokiServer( args.lokihost, args.lokiport )
+    else:
+        lokiserver = None
+
+    #
+    # Start up the server to expose the metrics.
+    #
+    logger.info( "starting http server" )
+    start_http_server(int(args.port))
+
+    # register our custom collector
+    REGISTRY.register( collector )
+
+
+    while True:
+        if lokiserver != None:
+            for cluster in cluster_list:
+                logger.info(f"getting events for cluster {cluster.name}")
+                events = cluster.get_events()
+                lokiserver.send_events( events, cluster )
+        time.sleep(30)
+
+
+
+
+
+
+
+
+
+

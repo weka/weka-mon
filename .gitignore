@@ -1,0 +1,10 @@
+# OSX trash
+.DS_Store
+
+__pycache__
+__pycache__/*
+loki_data
+loki_data/*
+prometheus_data
+prometheus_data/*
+.*.swp

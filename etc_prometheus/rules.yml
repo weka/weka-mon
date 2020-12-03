@@ -1,0 +1,10 @@
+--- 
+groups: 
+  - name: WekaAlert
+    rules:
+    - alert: WekaAlert
+      expr: weka_alerts >= 1
+      for: 1m
+      #annotations:
+      #  summary: "Weka Alert Summary {{ $labels.cluster }}"
+      #  description: "Weka Alert Description {{ $labels.cluster }}"
