@@ -42,7 +42,7 @@ services:
     ports:
       - "3000:3000"
 
-  metrics-exporter:
+  export:
     image: wekasolutions/export:latest
     volumes:
       - /var/log:/var/log
