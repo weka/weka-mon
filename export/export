@@ -78,8 +78,8 @@ if __name__ == '__main__':
     #sublog.setLevel(loglevel)
 
     # configure logging in collector module
-    #sublog = logging.getLogger( "collector" )
-    #sublog.setLevel(loglevel)
+    sublog = logging.getLogger( "collector" )
+    sublog.setLevel(logging.DEBUG)
 
     # configure logging in wekaapi module
     sublog = logging.getLogger( "wekaapi" )

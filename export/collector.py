@@ -46,8 +46,24 @@ cmd_exec_gauge = Gauge('weka_metrics_exporter_cmd_execute_seconds', 'Time spent 
 log = getLogger(__name__)
 
 # makes life easier
-def parse_sizes_values( value_string ):  # returns list of tuples of [(iosize,value),(iosize,value),...], and their sum
+def parse_sizes_values_post38( values ):  # returns list of tuples of [(iosize,value),(iosize,value),...], and their sum
+    # example input: [{'value': 2474458, 'start_range': 4096, 'end_range': 8192}]  - a list, NOT a string
+    log.debug(f"value_string={values}, type={type(values)}")
+    gsum = 0
+    stat_list=[]
+    
+    for value in values:      # value_list should be "[32768..65536] 19486" the first time through
+        #stat_list.append( ( str(value['end_range']), float(value['value']) ) )
+        #gsum += float( value['value'] )
+        stat_list.append( ( str(value['end_range']), float(value['value'])/60 ) )  # bug in stats
+        gsum += float( value['value'] )/60  # bug
+
+    return stat_list, gsum
+
+# makes life easier
+def parse_sizes_values_pre38( value_string ):  # returns list of tuples of [(iosize,value),(iosize,value),...], and their sum
     # example input: "[32768..65536] 19486, [65536..131072] 1.57837e+06"
+    log.debug(f"value_string={value_string}, type={type(value_string)}")
     gsum = 0
     stat_list=[]
     values_list = value_string.split( ", " ) # should be "[32768..65536] 19486","[65536..131072] 1.57837e+06"
@@ -497,11 +513,14 @@ class wekaCollector(object):
                         else:   
 
                             try:
-                                value_dict, gsum = parse_sizes_values( node["stat_value"] )  # Turn the stat_value into a dict
+                                if cluster.release < "380":
+                                    value_dict, gsum = parse_sizes_values_pre38( node["stat_value"] )  # Turn the stat_value into a dict
+                                else:
+                                    value_dict, gsum = parse_sizes_values_post38( node["stat_value"] )  # Turn the stat_value into a dict
                                 metric_objs['weka_io_histogram'].add_metric( labels=labelvalues, buckets=value_dict, gsum_value=gsum )
                             except:
-                                #track = traceback.format_exc()
-                                #print(track)
+                                track = traceback.format_exc()
+                                print(track)
                                 log.error( "gather(): error processing io sizes for cluster {}".format(str(cluster)) )
 
 

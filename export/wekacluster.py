@@ -60,6 +60,7 @@ class WekaCluster(object):
         self.loadbalance = True
         self.orig_hostlist = None
         self.name = ""
+        self.release = None
 
         self.cloud_url = None
         self.cloud_creds = None
@@ -80,6 +81,8 @@ class WekaCluster(object):
         api_return = self.call_api( method="status", parms={} )
         self.name = api_return['name']
         self.guid = api_return['guid']
+        temp = api_return['release'].split('.') # 3.8.1
+        self.release = temp[0] + temp[1] + temp[2] # 381
 
         #log.debug( self.hosts )
         #log.debug( "wekaCluster {} created. Cluster has {} members, {} are online".format(self.name, self.clustersize, len(self.hosts)) )

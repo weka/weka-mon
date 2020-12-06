@@ -7,47 +7,53 @@ services:
   loki:
     image: grafana/loki:2.0.0
     volumes:
-      - /var/log:/var/log
+      - /dev/log:/dev/log
       - ${PWD}/etc_loki:/etc/loki
       - ${PWD}/loki_data:/loki
+    command: -config.file=/etc/loki/loki-config.yaml
+    #restart: unless-stopped
     ports:
       - "3100:3100"
-    command: -config.file=/etc/loki/loki-config.yaml
 
   prometheus:
     image: prom/prometheus:latest
     volumes:
-      - /var/log:/var/log
+      - /dev/log:/dev/log
       - ${PWD}/etc_prometheus:/etc/prometheus
       - ${PWD}/prometheus_data:/prometheus
+    #restart:
     ports:
       - "9090:9090"
 
   alertmanager:
     image: prom/alertmanager:latest
     volumes:
-      - /var/log:/var/log
+      - /dev/log:/dev/log
       - ${PWD}/etc_alertmanager:/etc/alertmanager
       - ${PWD}/prometheus_data:/prometheus
     command: --config.file="/etc/alertmanager/alertmanager.yml"
+    #restart: unless-stopped
     ports:
       - "9093:9093"
 
   grafana:
     image: grafana/grafana:latest
     volumes:
-      - /var/log:/var/log
+      - /dev/log:/dev/log
       - ${PWD}/etc_grafana_provisioning:/etc/grafana/provisioning
       - ${PWD}/var_lib_grafana_dashboards:/var/lib/grafana/dashboards
+    #restart: unless-stopped
     ports:
       - "3000:3000"
 
   export:
     image: wekasolutions/export:latest
     volumes:
-      - /var/log:/var/log
+      - /dev/log:/dev/log
       - ${HOME}/.weka:/weka/.weka
       - /etc/hosts:/etc/hosts
-    command: -vv -a --loki_host loki ${CLUSTER_SPEC}
+      - ${PWD}/export/export.yml:/weka/export.yml
+    command: -vvv -a --loki_host loki ${CLUSTER_SPEC}
+    #restart: "unless-stopped"
     ports:
       - "8001:8001"
