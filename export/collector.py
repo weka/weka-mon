@@ -361,6 +361,7 @@ class wekaCollector(object):
                WekaClusterStatus="WARN"
 
             # Basic info
+            cluster.release = wekadata["clusterinfo"]["release"]  # keep this up to date
             wekacluster = { "cluster": str(cluster), "version": wekadata["clusterinfo"]["release"], 
                     "cloud_status": cloudStatus, "license_status":wekadata["clusterinfo"]["licensing"]["mode"], 
                     "io_status": wekadata["clusterinfo"]["io_status"], "link_layer": wekadata["clusterinfo"]["net"]["link_layer"], "status" : WekaClusterStatus }
@@ -447,6 +448,7 @@ class wekaCollector(object):
         for alert in wekadata["alerts"]:
             if not alert["muted"]:
                 log.debug(f"alert detected {alert['type']}")
+                cluster_name = "None"
                 host_name="None"
                 host_id="None"
                 node_id="None"
@@ -454,6 +456,8 @@ class wekaCollector(object):
                 if "params" in alert:
                     #print( json.dumps(alert["params"], indent=4, sort_keys=True) )
                     params = alert['params']
+                    #if 'cluster' in params:
+                    #    cluster_name = params['cluster']
                     if 'hostname' in params:
                         host_name = params['hostname']
                     if 'host_id' in params:
@@ -513,7 +517,8 @@ class wekaCollector(object):
                         else:   
 
                             try:
-                                if cluster.release < "380":
+                                release_list = cluster.release.split('.')   # 3.8.1 becomes ['3','8','1']
+                                if int(release_list[0]) >= 3 and int(release_list[1]) >= 8:
                                     value_dict, gsum = parse_sizes_values_pre38( node["stat_value"] )  # Turn the stat_value into a dict
                                 else:
                                     value_dict, gsum = parse_sizes_values_post38( node["stat_value"] )  # Turn the stat_value into a dict

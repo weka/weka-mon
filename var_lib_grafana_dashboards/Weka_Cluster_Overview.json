@@ -4605,7 +4605,7 @@
             "condition": "",
             "key": "cluster",
             "operator": "=",
-            "value": "wekatest"
+            "value": "Select A Cluster"
           }
         ],
         "hide": 0,
