@@ -22,20 +22,23 @@ route:
 receivers:
   - name: 'slack-notify'
     slack_configs:
-    - channel: '#YOUR_CHANNEL'
+    - channel: '#MY_CHANNEL'
       username: "Weka Alert"
+      send_resolved: true
       title: '[{{ .Status | toUpper }} {{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }} Alerts{{ end }}] {{ .CommonAnnotations.summary }}'
-      text: "<!channel>\n
-        Cluster: {{ .CommonLabels.cluster }}\n
-        Type: {{ .CommonLabels.type }}\n
-        Title: {{ .CommonLabels.title }}\n
-        {{ if .CommonLabels.host_name }}{{else}}Hostname(s) affected: {{ range .Alerts }}{{ .Labels.host_name }} {{ end }}\n{{ end }}
-        {{ if .CommonLabels.host_id }}{{else}}HostId(s) affected: {{ range .Alerts }}{{ .Labels.host_id }} {{ end }}\n{{ end }}
-        {{ if .CommonLabels.node_id }}{{else}}NodeId(s) affected: {{ range .Alerts }}{{ .Labels.node_id }} {{ end }}\n{{ end }}
-        {{ if .CommonLabels.drive_id }}{{else}}DiskId(s) affected: {{ range .Alerts }}{{ .Labels.drive_id }} {{ end }}\n{{ end }}"
+      text: |-
+        <!channel>
+        Cluster: {{ .CommonLabels.cluster }}
+        Type: {{ .CommonLabels.type }}
+        Title: {{ .CommonLabels.title }}
+        {{ if .CommonLabels.host_name }}{{else}}Hostname(s) affected: {{ range .Alerts }}{{ .Labels.host_name }} {{ end }}{{ end }} 
+        {{ if .CommonLabels.host_id }}{{else}}HostId(s) affected: {{ range .Alerts }}{{ .Labels.host_id }} {{ end }}{{ end }}
+        {{ if .CommonLabels.node_id }}{{else}}NodeId(s) affected: {{ range .Alerts }}{{ .Labels.node_id }} {{ end }}{{ end }}
+        {{ if .CommonLabels.drive_id }}{{else}}DiskId(s) affected: {{ range .Alerts }}{{ .Labels.drive_id }} {{ end }}{{ end }}
   - name: 'pagerduty-notify'
     pagerduty_configs:
     - service_key: 'SECRET'
+      send_resolved: true
       description: '[{{ .Status | toUpper }} {{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }} Alerts{{ end }}] {{ .CommonAnnotations.summary }}'
 #templates:
 #  - weka.tmpl

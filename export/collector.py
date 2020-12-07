@@ -84,6 +84,7 @@ class wekaCollector(object):
         "nodeList": dict( method="nodes_list", parms={} ),
         "fs_stat": dict( method="filesystems_get_capacity", parms={} ),
         "alerts": dict( method="alerts_list", parms={} )
+        #"quotas": dict( method="directory_quota_list", parms={'fs_name','start_cookie'} )
         }
     CLUSTERSTATS = {
         'weka_overview_activity_ops': ['Weka IO Summary number of operations', ['cluster'], 'num_ops'],
@@ -448,7 +449,6 @@ class wekaCollector(object):
         for alert in wekadata["alerts"]:
             if not alert["muted"]:
                 log.debug(f"alert detected {alert['type']}")
-                cluster_name = "None"
                 host_name="None"
                 host_id="None"
                 node_id="None"
@@ -456,8 +456,6 @@ class wekaCollector(object):
                 if "params" in alert:
                     #print( json.dumps(alert["params"], indent=4, sort_keys=True) )
                     params = alert['params']
-                    #if 'cluster' in params:
-                    #    cluster_name = params['cluster']
                     if 'hostname' in params:
                         host_name = params['hostname']
                     if 'host_id' in params:
