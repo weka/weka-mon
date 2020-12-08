@@ -42,6 +42,7 @@ services:
       - /dev/log:/dev/log
       - ${PWD}/etc_grafana_provisioning:/etc/grafana/provisioning
       - ${PWD}/var_lib_grafana_dashboards:/var/lib/grafana/dashboards
+      - ${PWD}/usr_share_grafana_public_img:/usr/share/grafana/public/img/weka
     #restart: unless-stopped
     ports:
       - "3000:3000"

@@ -52,9 +52,7 @@ def parse_sizes_values_post38( values ):  # returns list of tuples of [(iosize,v
     gsum = 0
     stat_list=[]
     
-    for value in values:      # value_list should be "[32768..65536] 19486" the first time through
-        #stat_list.append( ( str(value['end_range']), float(value['value']) ) )
-        #gsum += float( value['value'] )
+    for value in values:      
         stat_list.append( ( str(value['end_range']), float(value['value'])/60 ) )  # bug in stats
         gsum += float( value['value'] )/60  # bug
 
@@ -506,7 +504,7 @@ class wekaCollector(object):
                         if unit != "sizes":
                             try:
                                 if category == 'ops_nfs':
-                                    log.debug( "{} {}".format(stat, node["stat_value"] ) )
+                                    log.debug( "ops_nfs is: {} {}".format(stat, node["stat_value"] ) )
                                 metric_objs['weka_stats_gauge'].add_metric(labelvalues, node["stat_value"])
                             except:
                                 #track = traceback.format_exc()
@@ -515,11 +513,13 @@ class wekaCollector(object):
                         else:   
 
                             try:
+                                if category == 'ops_nfs':
+                                    log.debug( "ops_nfs is: {} {}".format(stat, node["stat_value"] ) )
                                 release_list = cluster.release.split('.')   # 3.8.1 becomes ['3','8','1']
                                 if int(release_list[0]) >= 3 and int(release_list[1]) >= 8:
-                                    value_dict, gsum = parse_sizes_values_pre38( node["stat_value"] )  # Turn the stat_value into a dict
-                                else:
                                     value_dict, gsum = parse_sizes_values_post38( node["stat_value"] )  # Turn the stat_value into a dict
+                                else:
+                                    value_dict, gsum = parse_sizes_values_pre38( node["stat_value"] )  # Turn the stat_value into a dict
                                 metric_objs['weka_io_histogram'].add_metric( labels=labelvalues, buckets=value_dict, gsum_value=gsum )
                             except:
                                 track = traceback.format_exc()
