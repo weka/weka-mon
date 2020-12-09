@@ -1,74 +1,61 @@
-# grafana-dashboards
-Grafana Dashboard examples
+# weka-mon
+Weka Cluster Monitoring
 
 
-Example Grafana Dashboards for Weka.  Use with the weka-metrics-exporter.
+A solution that implements Grafana dashboards with Prometheus, and includes Grafana/Loki for logs and Prometheus/Alertmanager for alerting.
 
-# Use:  
+# Use Overview:  
 
-Install and configure the weka-metrics-exporter (http://github.com/weka/weka-metrics-exporter.git) 
+Clone this repository, edit the alertmanager configuration file, start with docker-compose.   Compose will start Grafana, Prometheus, Loki, Alertmanager, and Weka Exporter containers such that all can communicate with each other.
 
-Install and configure Prometheus (https://prometheus.io/)
+# Data Flow:
 
-Install and configure Grafana (https://grafana.com/)
+The Weka Exporter (export) gathers data from the Weka cluster(s) and presents it such that Prometheus can scrape data from it, and pushes Events to Loki; 
+Prometheus gathers data from the Exporter, and forward Alerts to Alertmanager.
+Grafana queries Prometheus and Loki for performance metrics, logs, and alerts and displays them.
 
-Either follow the below directions for starting containers, or import the JSON files from the subdir var_lib_grafana_dashboards into an existing Grafana environment.
+# Installation:
 
-
-# Docker installation:
-Installing Grafana, Prometheus, and weka-metrics-exporter in containers is an simple and convienient way to deploy these dashboards! Start by installing the metrics exporter (see above). The github page has a pre-built container under "Releases". Follow the instructions there. Then just install docker and do the following to get grafana and prometheus running - complete with these dashboards already installed!
-
-install docker
-
+Clone this repository with 
 ```
-docker pull grafana/grafana
-
-docker pull prom/prometheus
-
-docker pull wekasolutions/metrics-exporter:latest
-
-cd grafana-dashboards
-
-./set_permissions.sh
-
-```
-Start the Prometheus container:
-```
-docker run -d --net=host --restart unless-stopped --mount type=bind,source=$PWD/etc_prometheus/prometheus.yml,target=/etc/prometheus/prometheus.yml --mount type=bind,source=$PWD/prometheus_data,target=/prometheus prom/prometheus
-```
-Start the Grafana container:
-```
-docker run -d --net=host --restart unless-stopped --mount type=bind,source=$PWD/etc_grafana_provisioning/,target=/etc/grafana/provisioning --mount type=bind,source=$PWD/var_lib_grafana_dashboards/,target=/var/lib/grafana/dashboards grafana/grafana
+git clone <repo>
 ```
 
-Please refer to instructions on http://guthub.com/weka/weka-metrics-exporter for running the exporter container
+Run the "set_permissions.sh" script to set the permissions on the subdirectories used to persist data between container restarts - this preserves the Grafana, Prometheus and Loki databases.
 
-# Optional Alertmanager configuration
+Edit the configuration as needed.  Start copying etc_alertmanager/alertmanager.yml.sanitized to etc_alertmanager/alertmanager.yml, and edit it to send the alerts to your desired destination (PagerDuty, Slack, Email, Text message - please refer to Prometheus Alertmanager documentation for details if you are unfamiliar with configuring Alertmanager).  Skip this step if you don't want Alerts sent via Alertmanager.
 
-Examples for Slack and PagerDuty are provided.
+Set and export the CLUSTER_SPEC environment variable so this software can communicate with the cluster(s).  See CLUSTER_SPEC section below.
 
-Edit the etc_alertmanger/alertmanager.yml file to add your keys for Slack or PagerDuty, and configure one of the two services.
-
-Then run the Prometheus Alertmanager.
-
-Example docker image use:
+Then run Docker Compose to start the containers:
 ```
-docker pull prom/alertmanager
-docker run -d --restart unless-stopped --network=host   --mount type=bind,source=/dev/log,target=/dev/log   --mount type=bind,source=/etc/hosts,target=/etc/hosts   --mount type=bind,source=$PWD/etc_alertmanager,target=/etc/alertmanager   prom/alertmanager --log.level=debug --config.file="/etc/alertmanager/alertmanager.yml"
+docker-compose up -d
 ```
 
-# Optional Grafana Loki (log database) configuration
+Compose will pull the needed containers from docker hub automatically.  You can optionally build the ```export``` container yourself from the included sources (see the ```export``` subdirectory README.md for details.
 
-Example docker image use:
+Grafana Dashboards are automatically provisioned, and Grafana, Loki, Prometheus, and Alertmanager are pre-configured from the config files in the included subdirectories.
+
+# Use
+
+Using a standard web browser, go to http://<this server>:3000 to access the Grafana Dashboards.
+
+# CLUSTER_SPEC
+
+The CLUSTER_SPEC environment variable is used to set where the Weka clusters the Exporter (```export```) will pull data from.
+
+The format of a cluster specification is similar to that used by the Stateless Clients: a list of weka backend servers, plus the addition of optional authentication parameters.
+
+Generally, the format is as such:
 ```
-docker pull grafana/loki:2.0.0
-docker run \
-    -d \
-    --restart unless-stopped \
-    -p 3100:3100 \
-    -v /dev/log:/dev/log \
-    -v $(pwd)/etc_loki:/etc/loki \
-    -v $(pwd)/loki_data:/loki \
-    grafana/loki:2.0.0 \
-    -config.file=/etc/loki/loki-config.yaml
+<wekaserver1>,<wekaserver2>,...,<wekaserverN>:authfile
 ```
+
+Multiple clusters can be monitored by listing the cluster spec for each cluster.  For example:
+```
+export CLUSTER_SPEC="weka1,weka2,weka5:~/.weka/cluster1_auth tweka1,tweka4,tweka7:~/.weka/cluster2_auth"
+```
+
+The auth files can be generated with the ```weka user login``` command.  See docs.weka.io for details.   If you are using the default user/password (not suggested), you can leave off the ```:authfile``` and it will use the default credentials automatically.  ie: ```export CLUSTER_SPEC="weka1,weka2,weka5"```
+
+
