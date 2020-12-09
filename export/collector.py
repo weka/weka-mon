@@ -53,8 +53,9 @@ def parse_sizes_values_post38( values ):  # returns list of tuples of [(iosize,v
     stat_list=[]
     
     for value in values:      
-        stat_list.append( ( str(value['end_range']), float(value['value'])/60 ) )  # bug in stats
-        gsum += float( value['value'] )/60  # bug
+        gsum += float( value['value'] )/60  # bug - have to divide by 60 secs to calc average per sec
+        #stat_list.append( ( str(value['end_range']), float(value['value'])/60 ) )
+        stat_list.append( ( str(value['end_range']), gsum ) ) # each bucket must be sum of all previous
 
     return stat_list, gsum
 
@@ -68,8 +69,9 @@ def parse_sizes_values_pre38( value_string ):  # returns list of tuples of [(ios
     for values_str in values_list:      # value_list should be "[32768..65536] 19486" the first time through
         tmp = values_str.split( ".." )  # should be "[32768", "65536] 19486"
         tmp2 = tmp[1].split( "] " )     # should be "65536","19486"
-        stat_list.append( ( str(int(tmp2[0])-1), float(tmp2[1]) ) )
         gsum += float( tmp2[1] )
+        #stat_list.append( ( str(int(tmp2[0])-1), float(tmp2[1]) ) )
+        stat_list.append( ( str(int(tmp2[0])-1), gsum ) )
 
     return stat_list, gsum
 

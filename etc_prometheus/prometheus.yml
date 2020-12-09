@@ -8,7 +8,8 @@ alerting:
             - "alertmanager:9093"
 global: 
   evaluation_interval: 15s
-  scrape_interval: 15s
+  scrape_interval: 60s
+  scrape_timeout: 50s
 rule_files: 
   -
     rules.yml

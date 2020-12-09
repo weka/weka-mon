@@ -54,7 +54,7 @@ services:
       - ${HOME}/.weka:/weka/.weka
       - /etc/hosts:/etc/hosts
       - ${PWD}/export/export.yml:/weka/export.yml
-    command: -vvv -a --loki_host loki ${CLUSTER_SPEC}
+    command: -v -a --loki_host loki ${CLUSTER_SPEC}
     #restart: "unless-stopped"
     ports:
       - "8001:8001"
