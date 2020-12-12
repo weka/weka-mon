@@ -28,6 +28,7 @@ class simul_threads():
         self.staged = {}            # threads that need to be run - dict of {threadid:thread_object}
         self.running = {}           # currently running threads that will need to be reaped - dict (same as staged)
         self.dead = {}
+        log.debug(f"object created; num_simultaneous={self.num_simultaneous}")
 
     # create a thread and put it in the list of threads
     def new( self, function, funcargs=None ):
@@ -49,7 +50,7 @@ class simul_threads():
 
     # look for threads that need reaping, start next thread
     def reaper( self ):
-        log.debug(f"reaping threads")
+        #log.debug(f"reaping threads")
         for threadid, thread in self.running.items():
             if not thread.is_alive():
                 thread.join()                   # reap it (wait for it)
@@ -66,7 +67,8 @@ class simul_threads():
         # only allow num_simultaneous threads to run at one time
         #print "starter(): self.running has " + str( len( self.running ) ) + " items, and self.staged has " + str( len( self.staged ) ) + " items"
         #print self.num_simultaneous
-        log.debug(f"starting threads")
+        #log.debug(f"starting threads")
+        log.debug(f"starting threads; num_simultaneous={self.num_simultaneous}, running={len( self.running )}, staged={len( self.staged )}")
         while len( self.running ) < self.num_simultaneous and len( self.staged ) > 0:
             threadid, thread = self.staged.popitem()    # take one off the staged list
             thread.start()                              # start it
@@ -81,6 +83,7 @@ class simul_threads():
     # run all threads, wait for all to complete
     def run( self ):
         log.debug(f"running threads")
+        log.debug(f"starting threads; num_simultaneous={self.num_simultaneous}, running={len( self.running )}, staged={len( self.staged )}")
         while len( self.staged ) + len( self.running ) > 0:
             self.reaper()       # reap any dead threads
             self.starter()      # kick off threads

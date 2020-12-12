@@ -15,8 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 6,
-  "iteration": 1607433889718,
+  "iteration": 1607776224927,
   "links": [
     {
       "$$hashKey": "object:415",
@@ -131,7 +130,7 @@
       "pluginVersion": "7.3.4",
       "targets": [
         {
-          "expr": "weka_info",
+          "expr": "weka_info{cluster=\"$cluster\"}",
           "interval": "",
           "legendFormat": "{{status}}",
           "refId": "A"
@@ -199,7 +198,7 @@
       "pluginVersion": "7.3.4",
       "targets": [
         {
-          "expr": "weka_info",
+          "expr": "weka_info{cluster=\"$cluster\"}",
           "interval": "",
           "legendFormat": "{{license_status}}",
           "refId": "A"
@@ -267,7 +266,7 @@
       "pluginVersion": "7.3.4",
       "targets": [
         {
-          "expr": "weka_info",
+          "expr": "weka_info{cluster=\"$cluster\"}",
           "interval": "",
           "legendFormat": "{{io_status}}",
           "refId": "A"
@@ -336,7 +335,7 @@
       "pluginVersion": "7.3.4",
       "targets": [
         {
-          "expr": "weka_drive_storage_total_bytes",
+          "expr": "weka_drive_storage_total_bytes{cluster=\"$cluster\"}",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -394,7 +393,7 @@
       "pluginVersion": "7.3.4",
       "targets": [
         {
-          "expr": "sum(weka_alerts)",
+          "expr": "sum(weka_alerts{cluster=\"$cluster\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -473,7 +472,7 @@
       "repeatDirection": "v",
       "targets": [
         {
-          "expr": "weka_protection",
+          "expr": "weka_protection{cluster=\"$cluster\"}",
           "instant": false,
           "interval": "",
           "legendFormat": "{{numFailures}} Failures",
@@ -542,7 +541,7 @@
       "pluginVersion": "7.3.4",
       "targets": [
         {
-          "expr": "weka_info",
+          "expr": "weka_info{cluster=\"$cluster\"}",
           "interval": "",
           "legendFormat": "{{cluster}}",
           "refId": "A"
@@ -610,7 +609,7 @@
       "pluginVersion": "7.3.4",
       "targets": [
         {
-          "expr": "weka_info",
+          "expr": "weka_info{cluster=\"$cluster\"}",
           "interval": "",
           "legendFormat": "{{version}}",
           "refId": "A"
@@ -678,7 +677,7 @@
       "pluginVersion": "7.3.4",
       "targets": [
         {
-          "expr": "weka_info",
+          "expr": "weka_info{cluster=\"$cluster\"}",
           "interval": "",
           "legendFormat": "{{link_layer}}",
           "refId": "A"
@@ -756,7 +755,7 @@
       "pluginVersion": "7.3.4",
       "targets": [
         {
-          "expr": "weka_uptime",
+          "expr": "weka_uptime{cluster=\"$cluster\"}",
           "interval": "",
           "legendFormat": "{{cluster}}",
           "refId": "A"
@@ -824,7 +823,7 @@
       "pluginVersion": "7.3.4",
       "targets": [
         {
-          "expr": "weka_drive_storage_unprovisioned_bytes",
+          "expr": "weka_drive_storage_unprovisioned_bytes{cluster=\"$cluster\"}",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -889,7 +888,7 @@
       "pluginVersion": "7.3.4",
       "targets": [
         {
-          "expr": "weka_overview_activity_write_bytespersec+weka_overview_activity_read_bytespersec",
+          "expr": "weka_overview_activity_write_bytespersec{cluster=\"$cluster\"}+weka_overview_activity_read_bytespersec{cluster=\"$cluster\"}",
           "format": "time_series",
           "interval": "",
           "legendFormat": "{{cluster}}",
@@ -954,7 +953,7 @@
       "pluginVersion": "7.3.4",
       "targets": [
         {
-          "expr": "weka_overview_activity_write_bytespersec+weka_overview_activity_read_bytespersec",
+          "expr": "weka_overview_activity_write_bytespersec{cluster=\"$cluster\"}+weka_overview_activity_read_bytespersec{cluster=\"$cluster\"}",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -1029,13 +1028,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "weka_drive_storage_total_bytes - weka_drive_storage_unprovisioned_bytes",
+          "expr": "weka_drive_storage_total_bytes{cluster=\"$cluster\"} - weka_drive_storage_unprovisioned_bytes{cluster=\"$cluster\"}",
           "interval": "",
           "legendFormat": "{{cluster}} - allocated",
           "refId": "A"
         },
         {
-          "expr": "weka_drive_storage_total_bytes",
+          "expr": "weka_drive_storage_total_bytes{cluster=\"$cluster\"}",
           "interval": "",
           "legendFormat": "{{cluster}} - total",
           "refId": "B"
@@ -1147,7 +1146,7 @@
           "pluginVersion": "7.3.4",
           "targets": [
             {
-              "expr": "weka_fs_utilization_percent",
+              "expr": "weka_fs_utilization_percent{cluster=\"$cluster\"}",
               "format": "time_series",
               "hide": false,
               "instant": true,
@@ -1224,7 +1223,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "weka_fs_used_bytes",
+              "expr": "weka_fs_used_bytes{cluster=\"$cluster\"}",
               "hide": false,
               "interval": "",
               "legendFormat": "{{name}}",
@@ -1333,7 +1332,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "abs(predict_linear(weka_fs_utilization_percent[30d], 86400*30)) < 100",
+              "expr": "abs(predict_linear(weka_fs_utilization_percent{cluster=\"$cluster\"}[30d], 86400*30)) < 100",
               "instant": false,
               "interval": "",
               "intervalFactor": 1,
@@ -1461,7 +1460,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "weka_fs_utilization_percent",
+              "expr": "weka_fs_utilization_percent{cluster=\"$cluster\"}",
               "hide": false,
               "interval": "",
               "legendFormat": "{{fsname}}",
@@ -1574,7 +1573,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "avg by (host_name) (weka_stats{stat=\"CPU_UTILIZATION\",node_role=\"FRONTEND\"})",
+              "expr": "avg by (host_name) (weka_stats{cluster=\"$cluster\",stat=\"CPU_UTILIZATION\",node_role=\"FRONTEND\"})",
               "hide": false,
               "interval": "",
               "legendFormat": "{{host_name}}",
@@ -1672,7 +1671,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "avg by (host_name) (weka_stats{stat=\"CPU_UTILIZATION\",node_role=\"COMPUTE\"})",
+              "expr": "avg by (host_name) (weka_stats{cluster=\"$cluster\",stat=\"CPU_UTILIZATION\",node_role=\"COMPUTE\"})",
               "interval": "",
               "legendFormat": "{{host_name}}",
               "refId": "A"
@@ -1769,7 +1768,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "avg by (host_name) (weka_stats{stat=\"CPU_UTILIZATION\",node_role=\"DRIVES\"})",
+              "expr": "avg by (host_name) (weka_stats{cluster=\"$cluster\",stat=\"CPU_UTILIZATION\",node_role=\"DRIVES\"})",
               "interval": "",
               "legendFormat": "{{host_name}}",
               "refId": "A"
@@ -1884,7 +1883,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "weka_overview_activity_ops",
+          "expr": "weka_overview_activity_ops{cluster=\"$cluster\"}",
           "interval": "",
           "legendFormat": "{{cluster}}",
           "refId": "A"
@@ -1982,7 +1981,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "weka_overview_activity_read_bytespersec + weka_overview_activity_write_bytespersec",
+          "expr": "weka_overview_activity_read_bytespersec{cluster=\"$cluster\"} + weka_overview_activity_write_bytespersec{cluster=\"$cluster\"}",
           "interval": "",
           "legendFormat": "{{cluster}}",
           "refId": "A"
@@ -2078,13 +2077,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "weka_overview_activity_write_iops",
+          "expr": "weka_overview_activity_write_iops{cluster=\"$cluster\"}",
           "interval": "",
           "legendFormat": "writes",
           "refId": "A"
         },
         {
-          "expr": "weka_overview_activity_read_iops",
+          "expr": "weka_overview_activity_read_iops{cluster=\"$cluster\"}",
           "interval": "",
           "legendFormat": "reads",
           "refId": "B"
@@ -2180,13 +2179,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "weka_overview_activity_read_bytespersec",
+          "expr": "weka_overview_activity_read_bytespersec{cluster=\"$cluster\"}",
           "interval": "",
           "legendFormat": "reads",
           "refId": "A"
         },
         {
-          "expr": "weka_overview_activity_write_bytespersec",
+          "expr": "weka_overview_activity_write_bytespersec{cluster=\"$cluster\"}",
           "interval": "",
           "legendFormat": "writes",
           "refId": "B"
@@ -2282,7 +2281,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "weka_overview_activity_ops - weka_overview_activity_write_iops - weka_overview_activity_read_iops",
+          "expr": "weka_overview_activity_ops{cluster=\"$cluster\"} - weka_overview_activity_write_iops{cluster=\"$cluster\"} - weka_overview_activity_read_iops{cluster=\"$cluster\"}",
           "interval": "",
           "legendFormat": "metadata ops",
           "refId": "A"
@@ -2380,13 +2379,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "weka_overview_activity_object_download_bytespersec",
+          "expr": "weka_overview_activity_object_download_bytespersec{cluster=\"$cluster\"}",
           "interval": "",
           "legendFormat": "download",
           "refId": "A"
         },
         {
-          "expr": "weka_overview_activity_object_upload_bytespersec",
+          "expr": "weka_overview_activity_object_upload_bytespersec{cluster=\"$cluster\"}",
           "interval": "",
           "legendFormat": "upload",
           "refId": "B"
@@ -2482,97 +2481,97 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(weka_stats{stat=\"FILEOPEN_OPS\"})",
+          "expr": "sum(weka_stats{cluster=\"$cluster\",stat=\"FILEOPEN_OPS\"})",
           "interval": "",
           "legendFormat": "open",
           "refId": "A"
         },
         {
-          "expr": "sum(weka_stats{stat=\"CREATE_OPS\"})",
+          "expr": "sum(weka_stats{cluster=\"$cluster\",stat=\"CREATE_OPS\"})",
           "interval": "",
           "legendFormat": "create",
           "refId": "B"
         },
         {
-          "expr": "sum(weka_stats{stat=\"FILECLOSE_OPS\"})",
+          "expr": "sum(weka_stats{cluster=\"$cluster\",stat=\"FILECLOSE_OPS\"})",
           "interval": "",
           "legendFormat": "close",
           "refId": "C"
         },
         {
-          "expr": "sum(weka_stats{stat=\"MKDIR_OPS\"})",
+          "expr": "sum(weka_stats{cluster=\"$cluster\",stat=\"MKDIR_OPS\"})",
           "interval": "",
           "legendFormat": "",
           "refId": "D"
         },
         {
-          "expr": "sum(weka_stats{stat=\"READDIR_OPS\"})",
+          "expr": "sum(weka_stats{cluster=\"$cluster\",stat=\"READDIR_OPS\"})",
           "interval": "",
           "legendFormat": "read dir",
           "refId": "E"
         },
         {
-          "expr": "sum(weka_stats{stat=\"REMOVE_OPS\"})",
+          "expr": "sum(weka_stats{cluster=\"$cluster\",stat=\"REMOVE_OPS\"})",
           "interval": "",
           "legendFormat": "remove",
           "refId": "F"
         },
         {
-          "expr": "sum(weka_stats{stat=\"RMDIR_OPS\"})",
+          "expr": "sum(weka_stats{cluster=\"$cluster\",stat=\"RMDIR_OPS\"})",
           "interval": "",
           "legendFormat": "rmdir",
           "refId": "G"
         },
         {
-          "expr": "sum(weka_stats{stat=\"UNLINK_OPS\"})",
+          "expr": "sum(weka_stats{cluster=\"$cluster\",stat=\"UNLINK_OPS\"})",
           "interval": "",
           "legendFormat": "unlink",
           "refId": "H"
         },
         {
-          "expr": "sum(weka_stats{stat=\"ACCESS_OPS\"})",
+          "expr": "sum(weka_stats{cluster=\"$cluster\",stat=\"ACCESS_OPS\"})",
           "interval": "",
           "legendFormat": "access",
           "refId": "I"
         },
         {
-          "expr": "sum(weka_stats{stat=\"COMMIT_OPS\"})",
+          "expr": "sum(weka_stats{cluster=\"$cluster\",stat=\"COMMIT_OPS\"})",
           "interval": "",
           "legendFormat": "",
           "refId": "J"
         },
         {
-          "expr": "sum(weka_stats{stat=\"FLOCK_OPS\"})",
+          "expr": "sum(weka_stats{cluster=\"$cluster\",stat=\"FLOCK_OPS\"})",
           "interval": "",
           "legendFormat": "flock",
           "refId": "K"
         },
         {
-          "expr": "sum(weka_stats{stat=\"FSINFO_OPS\"})",
+          "expr": "sum(weka_stats{cluster=\"$cluster\",stat=\"FSINFO_OPS\"})",
           "interval": "",
           "legendFormat": "fsinfo",
           "refId": "L"
         },
         {
-          "expr": "sum(weka_stats{stat=\"GETATTR_OPS\"})",
+          "expr": "sum(weka_stats{cluster=\"$cluster\",stat=\"GETATTR_OPS\"})",
           "interval": "",
           "legendFormat": "getattr",
           "refId": "M"
         },
         {
-          "expr": "sum(weka_stats{stat=\"LINK_OPS\"})",
+          "expr": "sum(weka_stats{cluster=\"$cluster\",stat=\"LINK_OPS\"})",
           "interval": "",
           "legendFormat": "link",
           "refId": "N"
         },
         {
-          "expr": "sum(weka_stats{stat=\"MKNOD_OPS\"})",
+          "expr": "sum(weka_stats{cluster=\"$cluster\",stat=\"MKNOD_OPS\"})",
           "interval": "",
           "legendFormat": "mknod",
           "refId": "O"
         },
         {
-          "expr": "sum(weka_stats{stat=\"RENAME_OPS\"})",
+          "expr": "sum(weka_stats{cluster=\"$cluster\",stat=\"RENAME_OPS\"})",
           "interval": "",
           "legendFormat": "rename",
           "refId": "P"
@@ -2670,14 +2669,14 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum by (le) (weka_blocksize_bucket{category=\"ops_driver\",stat=\"READ_SIZES\"})",
+          "expr": "sum by (le) (weka_blocksize_bucket{cluster=\"$cluster\",category=\"ops_driver\",stat=\"READ_SIZES\"})",
           "format": "heatmap",
           "interval": "",
           "legendFormat": "{{le}} reads",
           "refId": "A"
         },
         {
-          "expr": "sum by (le) (weka_blocksize_bucket{category=\"ops_driver\",stat=\"WRITE_SIZES\"})",
+          "expr": "sum by (le) (weka_blocksize_bucket{cluster=\"$cluster\",category=\"ops_driver\",stat=\"WRITE_SIZES\"})",
           "format": "heatmap",
           "interval": "",
           "legendFormat": "{{le}} writes",
@@ -2765,14 +2764,14 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum by (le) (weka_blocksize_bucket{category=\"ops_driver\",stat=\"READ_SIZES\"})",
+          "expr": "sum by (le) (weka_blocksize_bucket{cluster=\"$cluster\",category=\"ops_driver\",stat=\"READ_SIZES\"})",
           "format": "heatmap",
           "interval": "",
           "legendFormat": "{{le}} reads",
           "refId": "A"
         },
         {
-          "expr": "sum by (le) (weka_blocksize_bucket{category=\"ops_driver\",stat=\"WRITE_SIZES\"})",
+          "expr": "sum by (le) (weka_blocksize_bucket{cluster=\"$cluster\",category=\"ops_driver\",stat=\"WRITE_SIZES\"})",
           "format": "heatmap",
           "interval": "",
           "legendFormat": "{{le}} writes",
@@ -2846,14 +2845,14 @@
       "pluginVersion": "7.3.4",
       "targets": [
         {
-          "expr": "sum by (le) (weka_blocksize_bucket{category=\"ops_driver\",stat=\"READ_SIZES\"})",
+          "expr": "sum by (le) (weka_blocksize_bucket{cluster=\"$cluster\",category=\"ops_driver\",stat=\"READ_SIZES\"})",
           "format": "heatmap",
           "interval": "",
           "legendFormat": "{{le}} reads",
           "refId": "A"
         },
         {
-          "expr": "sum by (le) (weka_blocksize_bucket{category=\"ops_driver\",stat=\"WRITE_SIZES\"})",
+          "expr": "sum by (le) (weka_blocksize_bucket{cluster=\"$cluster\",category=\"ops_driver\",stat=\"WRITE_SIZES\"})",
           "format": "heatmap",
           "interval": "",
           "legendFormat": "{{le}} writes",
@@ -2922,7 +2921,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum by (host_name) (weka_stats{category=\"ops\",stat=\"OPS\"})",
+              "expr": "sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"OPS\"})",
               "interval": "",
               "legendFormat": "{{host_name}}",
               "refId": "A"
@@ -3015,7 +3014,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum by (host_name) (weka_stats{category=\"ops\",stat=\"THROUGHPUT\"})",
+              "expr": "sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"THROUGHPUT\"})",
               "interval": "",
               "legendFormat": "{{host_name}}",
               "refId": "A"
@@ -3108,7 +3107,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum by (host_name) (weka_stats{category=\"ops\",stat=\"READS\"})",
+              "expr": "sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READS\"})",
               "interval": "",
               "legendFormat": "{{host_name}}",
               "refId": "A"
@@ -3201,7 +3200,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum by (host_name) (weka_stats{category=\"ops\",stat=\"READ_BYTES\"})",
+              "expr": "sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READ_BYTES\"})",
               "interval": "",
               "legendFormat": "{{host_name}}",
               "refId": "A"
@@ -3294,7 +3293,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum by (host_name) (weka_stats{category=\"ops\",stat=\"WRITES\"})",
+              "expr": "sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITES\"})",
               "interval": "",
               "legendFormat": "{{host_name}}",
               "refId": "A"
@@ -3387,7 +3386,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum by (host_name) (weka_stats{category=\"ops\",stat=\"WRITE_BYTES\"})",
+              "expr": "sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITE_BYTES\"})",
               "interval": "",
               "legendFormat": "{{host_name}}",
               "refId": "A"
@@ -3479,7 +3478,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum by (host_name) ( weka_stats{category=\"ops\",stat=\"OPS\"} ) - sum by (host_name)( weka_stats{category=\"ops\",stat=\"READS\"} )- sum by (host_name)( weka_stats{category=\"ops\",stat=\"WRITES\"} )",
+              "expr": "sum by (host_name) ( weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"OPS\"} ) - sum by (host_name)( weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READS\"} )- sum by (host_name)( weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITES\"} )",
               "interval": "",
               "legendFormat": "{{host_name}}",
               "refId": "A"
@@ -3573,13 +3572,13 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "avg by (host_name) (weka_stats{category=\"ops\",stat=\"READ_LATENCY\"})",
+              "expr": "avg by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READ_LATENCY\"})",
               "interval": "",
               "legendFormat": "{{host_name}} read",
               "refId": "A"
             },
             {
-              "expr": "avg by (host_name) (weka_stats{category=\"ops\",stat=\"WRITE_LATENCY\"})",
+              "expr": "avg by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITE_LATENCY\"})",
               "interval": "",
               "legendFormat": "{{host_name}} write",
               "refId": "B"
@@ -3687,7 +3686,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "topk( 5, sum by (host_name) (weka_stats{category=\"ops\",stat=\"READS\",host_role=\"client\"}) + sum by (host_name) (weka_stats{category=\"ops\",stat=\"WRITES\",host_role=\"client\"}))  ",
+              "expr": "topk( 5, sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READS\",host_role=\"client\"}) + sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITES\",host_role=\"client\"}))  ",
               "interval": "",
               "legendFormat": "{{host_name}}",
               "refId": "A"
@@ -3780,7 +3779,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "topk( 5, sum by (host_name) (weka_stats{category=\"ops\",stat=\"THROUGHPUT\",host_role=\"client\"}))",
+              "expr": "topk( 5, sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"THROUGHPUT\",host_role=\"client\"}))",
               "interval": "",
               "legendFormat": "{{host_name}}",
               "refId": "A"
@@ -3873,7 +3872,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "topk( 5, sum by (host_name) (weka_stats{category=\"ops\",stat=\"READS\",host_role=\"client\"}))",
+              "expr": "topk( 5, sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READS\",host_role=\"client\"}))",
               "interval": "",
               "legendFormat": "{{host_name}}",
               "refId": "A"
@@ -3968,7 +3967,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "topk( 5, sum by (host_name) (weka_stats{category=\"ops\",stat=\"READ_BYTES\",host_role=\"client\"}))",
+              "expr": "topk( 5, sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READ_BYTES\",host_role=\"client\"}))",
               "interval": "",
               "legendFormat": "{{host_name}}",
               "refId": "A"
@@ -4063,7 +4062,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "topk( 5, sum by (host_name) (weka_stats{category=\"ops\",stat=\"WRITES\",host_role=\"client\"}))",
+              "expr": "topk( 5, sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITES\",host_role=\"client\"}))",
               "interval": "",
               "legendFormat": "{{host_name}}",
               "refId": "A"
@@ -4158,7 +4157,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "topk( 5, sum by (host_name) (weka_stats{category=\"ops\",stat=\"WRITE_BYTES\",host_role=\"client\"}))",
+              "expr": "topk( 5, sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITE_BYTES\",host_role=\"client\"}))",
               "interval": "",
               "legendFormat": "{{host_name}}",
               "refId": "A"
@@ -4251,7 +4250,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "topk( 5, sum by (host_name) (weka_stats{category=\"ops\",stat=\"READ_LATENCY\",host_role=\"client\"}))",
+              "expr": "topk( 5, sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READ_LATENCY\",host_role=\"client\"}))",
               "interval": "",
               "legendFormat": "{{host_name}}",
               "refId": "A"
@@ -4344,7 +4343,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "topk( 5, sum by (host_name) (weka_stats{category=\"ops\",stat=\"WRITE_LATENCY\",host_role=\"client\"}))",
+              "expr": "topk( 5, sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITE_LATENCY\",host_role=\"client\"}))",
               "interval": "",
               "legendFormat": "{{host_name}}",
               "refId": "A"
@@ -4437,7 +4436,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "topk( 5, sum by (host_name) (weka_stats{category=\"ops\",stat=\"OPS\",host_role=\"client\"}) - sum by (host_name) (weka_stats{category=\"ops\",stat=\"READS\",host_role=\"client\"}) - sum by (host_name) (weka_stats{category=\"ops\",stat=\"WRITES\",host_role=\"client\"}))",
+              "expr": "topk( 5, sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"OPS\",host_role=\"client\"}) - sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READS\",host_role=\"client\"}) - sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITES\",host_role=\"client\"}))",
               "interval": "",
               "legendFormat": "{{host_name}}",
               "refId": "A"
@@ -4544,7 +4543,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "weka_stats{category=\"cpu\",stat=\"CPU_UTILIZATION\"}",
+              "expr": "weka_stats{cluster=\"$cluster\",category=\"cpu\",stat=\"CPU_UTILIZATION\"}",
               "interval": "",
               "legendFormat": "{{node_id}} {{host_name}} {{node_role}}",
               "refId": "A"
@@ -4630,8 +4629,8 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "wekatest",
-          "value": "wekatest"
+          "text": "vincetest",
+          "value": "vincetest"
         },
         "datasource": "$weka_datasource",
         "definition": "label_values(weka_info,cluster)",
@@ -4675,5 +4674,5 @@
   "timezone": "",
   "title": "Weka Cluster Overview",
   "uid": "IiUnJScMk",
-  "version": 2
+  "version": 1
 }

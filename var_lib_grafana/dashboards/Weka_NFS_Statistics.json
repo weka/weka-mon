@@ -15,8 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 7,
-  "iteration": 1607433894498,
+  "iteration": 1607780337010,
   "links": [
     {
       "asDropdown": true,
@@ -119,7 +118,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum (weka_stats{category=\"ops_nfs\",stat=\"OPS\"})",
+          "expr": "sum (weka_stats{cluster=\"$cluster\",category=\"ops_nfs\",stat=\"OPS\"})",
           "interval": "",
           "legendFormat": "NFS ops",
           "refId": "A"
@@ -218,7 +217,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum (weka_stats{category=\"ops_nfs\",stat=\"READ_BYTES\"})",
+          "expr": "sum (weka_stats{cluster=\"$cluster\",category=\"ops_nfs\",stat=\"READ_BYTES\"})",
           "interval": "",
           "legendFormat": "NFS ops",
           "refId": "A"
@@ -317,13 +316,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum (weka_stats{category=\"ops_nfs\",stat=\"READS\"})",
+          "expr": "sum (weka_stats{cluster=\"$cluster\",category=\"ops_nfs\",stat=\"READS\"})",
           "interval": "",
           "legendFormat": "NFS Reads",
           "refId": "A"
         },
         {
-          "expr": "sum (weka_stats{category=\"ops_nfs\",stat=\"WRITES\"})",
+          "expr": "sum (weka_stats{cluster=\"$cluster\",category=\"ops_nfs\",stat=\"WRITES\"})",
           "interval": "",
           "legendFormat": "NFS Writes",
           "refId": "B"
@@ -422,7 +421,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum (weka_stats{category=\"ops_nfs\",stat=\"WRITE_BYTES\"})",
+          "expr": "sum (weka_stats{cluster=\"$cluster\",category=\"ops_nfs\",stat=\"WRITE_BYTES\"})",
           "interval": "",
           "legendFormat": "NFS ops",
           "refId": "A"
@@ -509,14 +508,14 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum by (le) (weka_blocksize_bucket{category=\"ops_nfs\",stat=\"READ_SIZES\"})",
+          "expr": "sum by (le) (weka_blocksize_bucket{cluster=\"$cluster\",category=\"ops_nfs\",stat=\"READ_SIZES\"})",
           "format": "heatmap",
           "interval": "",
           "legendFormat": "{{le}} reads",
           "refId": "A"
         },
         {
-          "expr": "sum by (le) (weka_blocksize_bucket{category=\"ops_nfs\",stat=\"WRITE_SIZES\"})",
+          "expr": "sum by (le) (weka_blocksize_bucket{cluster=\"$cluster\",category=\"ops_nfs\",stat=\"WRITE_SIZES\"})",
           "format": "heatmap",
           "interval": "",
           "legendFormat": "{{le}} writes",
@@ -600,14 +599,14 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum by (le) (weka_blocksize_bucket{category=\"ops_nfs\",stat=\"READ_SIZES\"})",
+          "expr": "sum by (le) (weka_blocksize_bucket{cluster=\"$cluster\",category=\"ops_nfs\",stat=\"READ_SIZES\"})",
           "format": "heatmap",
           "interval": "",
           "legendFormat": "{{le}} reads",
           "refId": "A"
         },
         {
-          "expr": "sum by (le) (weka_blocksize_bucket{category=\"ops_nfs\",stat=\"WRITE_SIZES\"})",
+          "expr": "sum by (le) (weka_blocksize_bucket{cluster=\"$cluster\",category=\"ops_nfs\",stat=\"WRITE_SIZES\"})",
           "format": "heatmap",
           "interval": "",
           "legendFormat": "{{le}} writes",
@@ -668,7 +667,7 @@
     "list": [
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "Prometheus",
           "value": "Prometheus"
         },
@@ -690,8 +689,8 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "wekatest",
-          "value": "wekatest"
+          "text": "vincetest",
+          "value": "vincetest"
         },
         "datasource": "$weka_datasource",
         "definition": "label_values(weka_info,cluster)",
@@ -723,5 +722,5 @@
   "timezone": "",
   "title": "Weka NFS Statistics",
   "uid": "y1i2YzJMk",
-  "version": 8
+  "version": 1
 }

@@ -79,11 +79,11 @@ if __name__ == '__main__':
 
     # configure logging in collector module
     sublog = logging.getLogger( "collector" )
-    sublog.setLevel(logging.DEBUG)
+    sublog.setLevel(logging.INFO)
 
     # configure logging in wekaapi module
     sublog = logging.getLogger( "wekaapi" )
-    sublog.setLevel(logging.ERROR)
+    sublog.setLevel(logging.INFO)
 
     # configure logging in sthreads module
     sublog = logging.getLogger( "sthreads" )

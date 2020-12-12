@@ -3,30 +3,30 @@ from logging import debug, info, warning, error, critical, getLogger, DEBUG, Str
 import logging
 
 from wekaapi import WekaApi
+import wekaapi
 from wekatime import wekatime_to_lokitime, lokitime_to_wekatime, wekatime_to_datetime, lokitime_to_datetime, datetime_to_wekatime, datetime_to_lokitime
 from reserve import reservation_list
 import traceback
 import urllib3
 import datetime
+import time
 from threading import Lock
 import json
 
 log = getLogger(__name__)
 
 class WekaHost(object):
-    def __init__( self, hostname, tokenfile=None ):
-        self.name = hostname
-        self.apitoken = tokenfile
+    def __init__( self, hostname, cluster ):
+        self.name = hostname    # what's my name?
+        self.cluster = cluster  # what cluster am I in?
         self.api_obj = None
         self._lock = Lock()
+
         # do we need a backpointer to the cluster?
-        log.debug(f"authfile={tokenfile}")
+        #log.debug(f"authfile={tokenfile}")
 
         try:
-            if self.apitoken != None:
-                self.api_obj = WekaApi(self.name, token_file=self.apitoken, timeout=10)
-            else:
-                self.api_obj = WekaApi(self.name, timeout=10)
+            self.api_obj = WekaApi(self.name, tokens=self.cluster.apitoken, timeout=10)
         except Exception as exc:
             log.error(f"{exc}")
 
@@ -36,9 +36,11 @@ class WekaHost(object):
             raise Exception("Unable to open API session")
 
     def call_api( self, method=None, parms={} ):
-        with self._lock:    # let's force only one command at a time
-            log.debug( "calling Weka API on host {}".format(self.name) )
-            return self.api_obj.weka_api_command( method, parms )
+        start_time = time.time()
+        log.debug( "calling Weka API on host {}".format(self.name) )
+        result = self.api_obj.weka_api_command( method, parms )
+        log.debug(f"elapsed time for host {self.name}: {time.time() - start_time} secs")
+        return result
 
     def __str__(self):
         return self.name
@@ -50,14 +52,13 @@ class WekaHost(object):
 class WekaCluster(object):
 
     # collects on a per-cluster basis
-    # hostname format is "host1,host2,host3,host4" (can be ip addrs, even only one of the cluster hosts)
+    # clusterspec format is "host1,host2,host3,host4" (can be ip addrs, even only one of the cluster hosts)
     # auth file is output from "weka user login" command.
     # autohost is a bool = should we distribute the api call load among all weka servers
-    def __init__( self, hostname, authfile=None, autohost=True ):
+    def __init__( self, clusterspec, authfile=None, autohost=True ):
         # object instance global data
         self.errors = 0
         self.clustersize = 0
-        self.loadbalance = True
         self.orig_hostlist = None
         self.name = ""
         self.release = None
@@ -68,13 +69,15 @@ class WekaCluster(object):
         self.cloud_proxy = None
         self.cloud_http_pool = None
 
-        self.orig_hostlist = hostname.split(",")  # takes a comma-separated list of hosts
+        self.orig_hostlist = clusterspec.split(",")  # takes a comma-separated list of hosts
         self.hosts = reservation_list()
         self.authfile = authfile
         self.loadbalance = autohost
         self.last_event_timestamp = None
         self.last_get_events_time = None
 
+        # fetch cluster configuration
+        self.apitoken = wekaapi.get_tokens(self.authfile)
         self.refresh_config()
 
         # get the cluster name via a manual api call    (failure raises and fails creation of obj)
@@ -92,14 +95,17 @@ class WekaCluster(object):
             # create objects for the hosts; recover from total failure
             for hostname in self.orig_hostlist:
                 try:
-                    hostobj = WekaHost(hostname, self.authfile)
+                    hostobj = WekaHost(hostname, self)
                 except:
                     pass
                 else:
                     self.hosts.add(hostobj)
+
         # get the rest of the cluster (bring back any that had previously disappeared, or have been added)
-        self.clustersize = 0
         api_return = self.call_api( method="hosts_list", parms={} )
+
+        self.clustersize = 0
+        self.hosts = reservation_list()  # reset the list
         for host in api_return:
             hostname = host["hostname"]
             if host["mode"] == "backend":
@@ -107,31 +113,11 @@ class WekaCluster(object):
                 if host["state"] == "ACTIVE" and host["status"] == "UP":
                     if not hostname in self.hosts:
                         try:
-                            hostobj = WekaHost(hostname, self.authfile)
+                            hostobj = WekaHost(hostname, self)
                         except:
                             pass
                         else:
                             self.hosts.add(hostobj)
-
-        # weka-home setup
-        self.cloud_url = self.call_api( method="cloud_get_url", parms={} )
-        log.critical(f"cloud_url='{self.cloud_url}'")
-        self.cloud_creds = self.call_api( method="cloud_get_creds", parms={} )
-        temp = self.call_api( method="events_describe", parms={"show_internal":False} )
-
-        # make a dict of {event_type: event_desc}
-        self.event_descs = {}
-        for event in temp:
-            self.event_descs[event["type"]] = event
-
-        # need to do something with this
-        self.cloud_proxy = self.call_api( method="cloud_get_proxy", parms={} )
-        if len(self.cloud_proxy["proxy"]) != 0:
-            log.debug(f"Using proxy={self.cloud_proxy['proxy']}")
-            self.cloud_http_pool = urllib3.ProxyManager(self.cloud_proxy["proxy"])
-        else:
-            self.cloud_http_pool = urllib3.PoolManager()
-
 
         log.debug( "wekaCluster {} refreshed. Cluster has {} members, {} are online".format(self.name, self.clustersize, len(self.hosts)) )
 
@@ -245,6 +231,25 @@ class WekaCluster(object):
     # get events from Weka
     def get_events( self ):
         log.debug( "getting events" )
+
+        # weka-home setup
+        self.cloud_url = self.call_api( method="cloud_get_url", parms={} )
+        log.critical(f"cloud_url='{self.cloud_url}'")
+        self.cloud_creds = self.call_api( method="cloud_get_creds", parms={} )
+        temp = self.call_api( method="events_describe", parms={"show_internal":False} )
+
+        # make a dict of {event_type: event_desc}
+        self.event_descs = {}
+        for event in temp:
+            self.event_descs[event["type"]] = event
+
+        # need to do something with this
+        self.cloud_proxy = self.call_api( method="cloud_get_proxy", parms={} )
+        if len(self.cloud_proxy["proxy"]) != 0:
+            log.debug(f"Using proxy={self.cloud_proxy['proxy']}")
+            self.cloud_http_pool = urllib3.ProxyManager(self.cloud_proxy["proxy"])
+        else:
+            self.cloud_http_pool = urllib3.PoolManager()
 
         end_time = datetime_to_wekatime(datetime.datetime.utcnow())
         events = self.home_events( 
