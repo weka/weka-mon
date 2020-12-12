@@ -27,3 +27,11 @@ scrape_configs:
       - 
         targets: 
           - "export:8001"
+  - 
+    job_name: grafana
+    scrape_interval: 15s
+    scrape_timeout: 5s
+    static_configs: 
+      - 
+        targets: 
+          - "grafana:3000"

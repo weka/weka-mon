@@ -145,8 +145,12 @@ if __name__ == '__main__':
         if lokiserver != None:
             for cluster in cluster_list:
                 logger.info(f"getting events for cluster {cluster.name}")
-                events = cluster.get_events()
-                lokiserver.send_events( events, cluster )
+                try:
+                    events = cluster.get_events()
+                except Exception as exc:
+                    log.critical(f"Error getting events: {exc}")
+                else:
+                    lokiserver.send_events( events, cluster )
 
 
 

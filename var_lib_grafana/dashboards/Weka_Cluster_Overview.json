@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1607776224927,
+  "iteration": 1607798252166,
   "links": [
     {
       "$$hashKey": "object:415",
@@ -30,6 +30,14 @@
       "tooltip": "",
       "type": "dashboards",
       "url": ""
+    },
+    {
+      "icon": "external link",
+      "tags": [],
+      "targetBlank": true,
+      "title": "Open Weka GUI",
+      "type": "link",
+      "url": "http://${gui_host}:14000"
     }
   ],
   "panels": [
@@ -376,6 +384,13 @@
         "y": 1
       },
       "id": 93,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "Open Alerts Dashboard",
+          "url": "/d/WekaAlerts/weka-alerts?$var-weka_datasource=${weka_datasource}&var-cluster=${cluster}"
+        }
+      ],
       "options": {
         "colorMode": "value",
         "graphMode": "area",
@@ -4651,6 +4666,33 @@
         "tagsQuery": "",
         "type": "query",
         "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "vweka1",
+          "value": "vweka1"
+        },
+        "datasource": "$weka_datasource",
+        "definition": "label_values(weka_stats{cluster=\"$cluster\"},host_name)",
+        "error": null,
+        "hide": 2,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "gui_host",
+        "options": [],
+        "query": "label_values(weka_stats{cluster=\"$cluster\"},host_name)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
       }
     ]
   },
@@ -4673,6 +4715,6 @@
   },
   "timezone": "",
   "title": "Weka Cluster Overview",
-  "uid": "IiUnJScMk",
+  "uid": "WekaOverview",
   "version": 1
 }
