@@ -38,8 +38,8 @@ from reserve import reservation_list
 # Module Globals
 #
 # instrument thyself
-gather_gauge = Gauge('weka_metrics_exporter_weka_metrics_gather_seconds', 'Time spent gathering cluster info')
-weka_collect_gauge = Gauge('weka_collect_seconds', 'Time spent in Prometheus collect')
+#gather_gauge = Gauge('weka_metrics_exporter_weka_metrics_gather_seconds', 'Time spent gathering cluster info')
+#weka_collect_gauge = Gauge('weka_collect_seconds', 'Time spent in Prometheus collect')
 
 # initialize logger - configured in main routine
 log = getLogger(__name__)
@@ -188,7 +188,6 @@ class wekaCollector(object):
                 labels=['cluster', 'type', 'title', 'host_name', 'host_id', 'node_id', 'drive_id' ] )
 
 
-    @weka_collect_gauge.time()
     def collect( self ):
         with self._access_lock:     # be thread-safe - if we get called from simultaneous scrapes... could be ugly
             should_gather = False
@@ -229,7 +228,7 @@ class wekaCollector(object):
 
             # ok, the prometheus_client module calls this method TWICE every time it scrapes...  ugh
             last_collect = self.collect_time
-            self.collect_time = time.time()     # reset to now
+            self.collect_time = start_time
 
             #log.debug( "secs since last collect = {}, should_gather = {}".format( int(self.collect_time - last_collect), should_gather ) )
 
@@ -241,7 +240,17 @@ class wekaCollector(object):
             for metric in metric_objs.values():
                 yield metric
 
-            log.info(f"status returned. total time = {time.time() - start_time}")
+            # report time if we gathered, otherwise, it's meaningless
+            if should_gather:
+                elapsed = time.time() - start_time
+                self.last_elapsed = elapsed
+            else:
+                elapsed = self.last_elapsed
+
+            yield GaugeMetricFamily('weka_collect_seconds', 'Total Time spent in Prometheus collect', value=elapsed)
+            #weka_collect_gauge = GaugeMetricFamily('weka_collect_seconds', 'Total Time spent in Prometheus collect')
+            #weka_collect_gauge.add_metric(labels={}, value=elapsed)
+            log.info(f"status returned. total time = {elapsed}")
 
     # runs in a thread, so args comes in as a dict
     def call_api( self, cluster, metric, category, args ):

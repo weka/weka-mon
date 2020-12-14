@@ -234,7 +234,7 @@ class WekaCluster(object):
 
         # weka-home setup
         self.cloud_url = self.call_api( method="cloud_get_url", parms={} )
-        log.critical(f"cloud_url='{self.cloud_url}'")
+        log.critical(f"cluster={self.name}, cloud_url='{self.cloud_url}'")
         self.cloud_creds = self.call_api( method="cloud_get_creds", parms={} )
         temp = self.call_api( method="events_describe", parms={"show_internal":False} )
 
