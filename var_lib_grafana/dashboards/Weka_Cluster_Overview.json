@@ -1836,7 +1836,7 @@
       "type": "row"
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "datasource": "$weka_datasource",
       "gridPos": {
         "h": 1,
