@@ -20,6 +20,7 @@
     {
       "asDropdown": true,
       "icon": "external link",
+      "includeVars": true,
       "tags": [
         "#weka"
       ],
@@ -667,9 +668,6 @@
     "list": [
       {
         "current": {
-          "selected": false,
-          "text": "Prometheus",
-          "value": "Prometheus"
         },
         "error": null,
         "hide": 0,
@@ -688,9 +686,6 @@
       {
         "allValue": null,
         "current": {
-          "selected": false,
-          "text": "vincetest",
-          "value": "vincetest"
         },
         "datasource": "$weka_datasource",
         "definition": "label_values(weka_info,cluster)",

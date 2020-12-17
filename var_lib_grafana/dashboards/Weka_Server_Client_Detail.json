@@ -22,6 +22,7 @@
       "$$hashKey": "object:252",
       "asDropdown": true,
       "icon": "external link",
+      "includeVars": true,
       "tags": [
         "#weka"
       ],
@@ -1665,9 +1666,6 @@
     "list": [
       {
         "current": {
-          "selected": false,
-          "text": "Prometheus",
-          "value": "Prometheus"
         },
         "error": null,
         "hide": 0,
@@ -1686,9 +1684,6 @@
       {
         "allValue": null,
         "current": {
-          "selected": false,
-          "text": "weka1",
-          "value": "weka1"
         },
         "datasource": "$weka_datasource",
         "definition": "label_values(weka_info,cluster)",
@@ -1713,9 +1708,6 @@
       {
         "allValue": null,
         "current": {
-          "selected": false,
-          "text": "dgx-srv-09",
-          "value": "dgx-srv-09"
         },
         "datasource": "$weka_datasource",
         "definition": "label_values(weka_stats{cluster=\"$cluster\"},host_name)",
