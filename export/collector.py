@@ -250,22 +250,53 @@ class wekaCollector(object):
             yield GaugeMetricFamily('weka_collect_seconds', 'Total Time spent in Prometheus collect', value=elapsed)
             #weka_collect_gauge = GaugeMetricFamily('weka_collect_seconds', 'Total Time spent in Prometheus collect')
             #weka_collect_gauge.add_metric(labels={}, value=elapsed)
-            log.info(f"status returned. total time = {elapsed}")
+            log.info(f"stats returned. total time = {elapsed}")
 
     # runs in a thread, so args comes in as a dict
     def call_api( self, cluster, metric, category, args ):
         method = args['method']
         parms = args['parms']
-        log.debug(f"method={method}, parms={parms}")
+        #log.debug(f"method={method}, parms={parms}")
+
+        #log.error(f"calling {cluster.name} API with {method} {parms}")
+        data_returned = cluster.call_api( method=method, parms=parms )
+
+        if category != None and not category in self.clusterdata[str(cluster)]:
+            self.clusterdata[str(cluster)][category] = {}
+
+        if len(data_returned) == 0:
+            return
+
         if category == None:
-            self.clusterdata[str(cluster)][metric] = cluster.call_api( method=method, parms=parms )
+            #log.error(f"{type(data_returned)} {data_returned}")
+            if metric not in self.clusterdata[str(cluster)]:
+                if type(data_returned) == list:
+                    self.clusterdata[str(cluster)][metric] = []
+                else:
+                    self.clusterdata[str(cluster)][metric] = {}
+
+            if type(data_returned) == list:
+                self.clusterdata[str(cluster)][metric] += data_returned
+            else:
+                self.clusterdata[str(cluster)][metric].update(data_returned)
+
         else:
             #print( json.dumps( self.clusterdata, indent=4, sort_keys=True ))
             #log.debug( self.clusterdata[str(cluster)].keys() )
-            if not category in self.clusterdata[str(cluster)]:
-                self.clusterdata[str(cluster)][category] = {}
-            self.clusterdata[str(cluster)][category][metric] = cluster.call_api( method=method, parms=parms )
-        
+            #if not category in self.clusterdata[str(cluster)]:
+            #    self.clusterdata[str(cluster)][category] = {}
+            if metric not in self.clusterdata[str(cluster)][category]:
+                if type(data_returned) == list:
+                    self.clusterdata[str(cluster)][category][metric] = []
+                else:
+                    self.clusterdata[str(cluster)][category][metric] = {}
+
+            if type(data_returned) == list:
+                self.clusterdata[str(cluster)][category][metric] += data_returned
+            else:
+                self.clusterdata[str(cluster)][category][metric].update(data_returned)
+
+
 
     # start here
     #
@@ -278,6 +309,7 @@ class wekaCollector(object):
     def gather( self, cluster ):
         start_time = time.time()
         log.info( "gathering weka data from cluster {}".format(str(cluster)) )
+
 
         # re-initialize wekadata so changes in the cluster don't leave behind strange things (hosts/nodes that no longer exist, etc)
         wekadata={}
@@ -313,11 +345,18 @@ class wekaCollector(object):
         # clear old maps, if any - if nodes come/go this can get funky with old data, so re-create it every time
         weka_maps = { "node-host": {}, "node-role": {}, "host-role": {} }       # initial state of maps
 
+        #backend_nodes = []
+        #client_nodes = []
         # populate maps
         try:
             for node in wekadata["nodeList"]:
                 weka_maps["node-host"][node["node_id"]] = node["hostname"]
                 weka_maps["node-role"][node["node_id"]] = node["roles"]    # note - this is a list
+                #nid = int(node["node_id"].split('<')[1].split('>')[0]) # make nodeid numeric
+                #if node["mode"] == "backend":
+                #    backend_nodes.append(nid)
+                #else:
+                #    client_nodes.append(nid)
             for host in wekadata["hostList"]:
                 if host["mode"] == "backend":
                     weka_maps["host-role"][host["hostname"]] = "server"
@@ -330,17 +369,61 @@ class wekaCollector(object):
             log.error( "error building maps. Aborting data gather from cluster {}".format(str(cluster)) )
             return
 
+        #log.error(f"backend nodes: {backend_nodes}")
+        #log.error(f"client nodes: {client_nodes}")
+
         log.info(f"Cluster {cluster} Using {cluster.sizeof()} hosts")
         thread_runner = simul_threads(cluster.sizeof())   # up the server count - so 1 thread per server in the cluster
         #thread_runner = simul_threads(50)  # testing
 
+        # be simplistic at first... let's just gather on a subset of nodes each query
+        #all_nodes = backend_nodes + client_nodes    # concat both lists
+
+        node_maps = { "FRONTEND": [], "COMPUTE": [], "DRIVES": [], "MANAGEMENT": [] }       # initial state of maps
+
+        #log.error(f'{weka_maps["node-role"]}')
+
+        for node in weka_maps["node-role"]: # node == "NodeId<xx>"
+            for role in weka_maps['node-role'][node]:
+                nid = int(node.split('<')[1].split('>')[0]) # make nodeid numeric
+                node_maps[role].append(nid)
+
+        #log.error(f"{cluster.name} {node_maps}")
+
+        # find a better place to define this... for now here is good (vince)
+        category_nodetypes = { 
+                'cpu': ['FRONTEND','COMPUTE','DRIVES'],
+                'ops': ['FRONTEND'],
+                'ops_driver': ['FRONTEND'],
+                'ops_nfs': ['COMPUTE'],     # not sure about this one
+                'ssd': ['DRIVES']
+                }
+
         # schedule a bunch of data gather queries
         for category, stat_dict in self.get_commandlist().items():
+
+            category_nodes = []
+            #log.error(f"{cluster.name} category is: {category} {category_nodetypes[category]}")
+            for nodetype in category_nodetypes[category]:  # nodetype is FRONTEND, COMPUTE, DRIVES, MANAGEMENT
+                category_nodes += node_maps[nodetype]
+
+            #log.error(f"{cluster.name} cat nodes: {category} {category_nodes}")
+
+            query_nodes = list( set( category_nodes.copy() ) ) # make the list unique so we don't ask for the same data muliple times
+
             for stat, command in stat_dict.items():
-                try:
-                    thread_runner.new( self.call_api, (cluster, stat, category, command ) ) 
-                except:
-                    log.error( "gather(): error scheduling thread wekastat for cluster {}".format(str(cluster)) )
+                step = 100
+                for i in range(0, len(query_nodes), step):
+                    import copy
+                    newcmd = copy.deepcopy(command)                           # make sure to copy it
+                    newcmd["parms"]["node_ids"] = copy.deepcopy(query_nodes[i:i+step])     # make sure to copy it
+                    #log.error(f"{i}: {i+step}, {cluster.name} {query_nodes[i:i+step]}" )  # debugging
+                    #log.error(f"scheduling {cluster.name} {newcmd['parms']}" )
+                    try:
+                        thread_runner.new( self.call_api, (cluster, stat, category, newcmd ) ) 
+                        #thread_runner.new( self.call_api, (cluster, stat, category, command ) ) 
+                    except:
+                        log.error( "gather(): error scheduling thread wekastat for cluster {}".format(str(cluster)) )
 
         thread_runner.run()     # schedule the rest of the threads, wait for them
         del thread_runner

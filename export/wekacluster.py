@@ -132,7 +132,7 @@ class WekaCluster(object):
         host = self.hosts.reserve()
         api_return = None
         while host != None:
-            log.debug( "calling Weka API on cluster {}, host {}".format(self.name,host) )
+            log.debug( "calling Weka API on cluster {self.name}, host {host} {method} {parms}")
             try:
                 api_return = host.call_api( method, parms )
             except Exception as exc:
@@ -141,9 +141,8 @@ class WekaCluster(object):
                 self.hosts.remove(host)     # remove it from the hostlist iterable
                 host = self.hosts.reserve() # try another host; will return None if none left or failure
                 self.errors += 1
-                log.error( "cluster={}, error {} spawning command {} on host {}. Retrying on {}.".format(
-                        self.name, exc, str(method), last_hostname, str(host)) )
-                print(traceback.format_exc())
+                #log.error(f"cluster={self.name}, error {exc} spawning command {str(method)}{parms} on host {last_hostname}. Retrying on {str(host)}.")
+                #print(traceback.format_exc())
                 continue
 
             self.hosts.release(host)    # release it so it can be used for more queries
