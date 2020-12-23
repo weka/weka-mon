@@ -352,11 +352,6 @@ class wekaCollector(object):
             for node in wekadata["nodeList"]:
                 weka_maps["node-host"][node["node_id"]] = node["hostname"]
                 weka_maps["node-role"][node["node_id"]] = node["roles"]    # note - this is a list
-                #nid = int(node["node_id"].split('<')[1].split('>')[0]) # make nodeid numeric
-                #if node["mode"] == "backend":
-                #    backend_nodes.append(nid)
-                #else:
-                #    client_nodes.append(nid)
             for host in wekadata["hostList"]:
                 if host["mode"] == "backend":
                     weka_maps["host-role"][host["hostname"]] = "server"
@@ -382,11 +377,14 @@ class wekaCollector(object):
         node_maps = { "FRONTEND": [], "COMPUTE": [], "DRIVES": [], "MANAGEMENT": [] }       # initial state of maps
 
         #log.error(f'{weka_maps["node-role"]}')
+        server_FEs = []     # server FRONTEND nodes (for ops_nfs stats)
 
         for node in weka_maps["node-role"]: # node == "NodeId<xx>"
             for role in weka_maps['node-role'][node]:
-                nid = int(node.split('<')[1].split('>')[0]) # make nodeid numeric
+                nid = int(node[7:-1])   # make nodeid numeric
                 node_maps[role].append(nid)
+                if role == "FRONTEND" and weka_maps["host-role"][weka_maps["node-host"][node]] == "server":
+                    server_FEs.append(nid)
 
         #log.error(f"{cluster.name} {node_maps}")
 
@@ -395,7 +393,7 @@ class wekaCollector(object):
                 'cpu': ['FRONTEND','COMPUTE','DRIVES'],
                 'ops': ['FRONTEND'],
                 'ops_driver': ['FRONTEND'],
-                'ops_nfs': ['COMPUTE'],     # not sure about this one
+                'ops_nfs': ['FRONTEND'],     # not sure about this one
                 'ssd': ['DRIVES']
                 }
 
@@ -404,8 +402,11 @@ class wekaCollector(object):
 
             category_nodes = []
             #log.error(f"{cluster.name} category is: {category} {category_nodetypes[category]}")
-            for nodetype in category_nodetypes[category]:  # nodetype is FRONTEND, COMPUTE, DRIVES, MANAGEMENT
-                category_nodes += node_maps[nodetype]
+            if category == "ops_nfs":       # NFS stats only show on server FEs; no point in looking at anything else
+                category_nodes = server_FEs
+            else:
+                for nodetype in category_nodetypes[category]:  # nodetype is FRONTEND, COMPUTE, DRIVES, MANAGEMENT
+                    category_nodes += node_maps[nodetype]
 
             #log.error(f"{cluster.name} cat nodes: {category} {category_nodes}")
 
