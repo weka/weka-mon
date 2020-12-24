@@ -9,7 +9,7 @@ alerting:
 global: 
   evaluation_interval: 15s
   scrape_interval: 60s
-  scrape_timeout: 50s
+  scrape_timeout: 30s
 rule_files: 
   -
     rules.yml
@@ -35,3 +35,19 @@ scrape_configs:
       - 
         targets: 
           - "grafana:3000"
+  - 
+    job_name: loki
+    scrape_interval: 15s
+    scrape_timeout: 5s
+    static_configs: 
+      - 
+        targets: 
+          - "loki:3100"
+  - 
+    job_name: alertmanager
+    scrape_interval: 15s
+    scrape_timeout: 5s
+    static_configs: 
+      - 
+        targets: 
+          - "loki:9093"
