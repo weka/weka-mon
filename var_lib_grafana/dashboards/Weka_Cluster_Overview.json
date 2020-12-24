@@ -4737,9 +4737,6 @@
     "list": [
       {
         "current": {
-          "selected": false,
-          "text": "Prometheus",
-          "value": "Prometheus"
         },
         "error": null,
         "hide": 0,
@@ -4758,9 +4755,6 @@
       {
         "allValue": null,
         "current": {
-          "selected": false,
-          "text": "A100_cluster",
-          "value": "A100_cluster"
         },
         "datasource": "$weka_datasource",
         "definition": "label_values(weka_info,cluster)",
@@ -4785,9 +4779,6 @@
       {
         "allValue": null,
         "current": {
-          "selected": false,
-          "text": "b10i",
-          "value": "b10i"
         },
         "datasource": "$weka_datasource",
         "definition": "label_values(weka_stats{cluster=\"$cluster\",host_role=\"server\"},host_name)",
@@ -4831,5 +4822,5 @@
   "timezone": "",
   "title": "Weka Cluster Overview",
   "uid": "WekaOverview",
-  "version": 1
+  "version": 2
 }

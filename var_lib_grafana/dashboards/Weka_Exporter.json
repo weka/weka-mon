@@ -421,9 +421,6 @@
     "list": [
       {
         "current": {
-          "selected": false,
-          "text": "Prometheus",
-          "value": "Prometheus"
         },
         "error": null,
         "hide": 0,
