@@ -58,6 +58,7 @@ class WekaCluster(object):
     def __init__( self, clusterspec, authfile=None, autohost=True ):
         # object instance global data
         self.errors = 0
+        self.threaderror = False
         self.clustersize = 0
         self.orig_hostlist = None
         self.name = ""
@@ -119,6 +120,7 @@ class WekaCluster(object):
                         else:
                             self.hosts.add(hostobj)
 
+        self.threaderror = False
         log.debug( "wekaCluster {} refreshed. Cluster has {} members, {} are online".format(self.name, self.clustersize, len(self.hosts)) )
 
     def __str__(self):
@@ -132,7 +134,7 @@ class WekaCluster(object):
         host = self.hosts.reserve()
         api_return = None
         while host != None:
-            log.debug( "calling Weka API on cluster {self.name}, host {host} {method} {parms}")
+            log.debug(f"calling Weka API on cluster {self.name}, host {host} {method} {parms}")
             try:
                 api_return = host.call_api( method, parms )
             except Exception as exc:
@@ -149,6 +151,7 @@ class WekaCluster(object):
             return api_return
 
         # ran out of hosts to talk to!
+        self.threaderror = True
         raise Exception("unable to communicate with cluster")
 
         # ------------- end of call_api() -------------

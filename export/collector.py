@@ -39,6 +39,7 @@ from reserve import reservation_list
 #
 # instrument thyself
 #gather_gauge = Gauge('weka_metrics_exporter_weka_metrics_gather_seconds', 'Time spent gathering cluster info')
+#gather_gauge = Gauge('weka_exporter_gather_seconds', 'Time spent gathering cluster info', labels=["cluster"])
 #weka_collect_gauge = Gauge('weka_collect_seconds', 'Time spent in Prometheus collect')
 
 # initialize logger - configured in main routine
@@ -119,7 +120,6 @@ class wekaCollector(object):
         self.gather_timestamp = None
         self.collect_time = None
         self.clusterdata = {}
-        self.threaderror = False
 
         self.wekaCollector_objlist = {}
 
@@ -222,7 +222,6 @@ class wekaCollector(object):
                 thread_runner = simul_threads( len( self.wekaCollector_objlist) )   # one thread per cluster
                 for clustername, cluster in self.wekaCollector_objlist.items():
                     thread_runner.new( self.gather, (cluster,) )
-                    #thread_runner.new( cluster.gather )
                 thread_runner.run()
                 del thread_runner
 
@@ -237,6 +236,7 @@ class wekaCollector(object):
             log.info(f"returning stats, collect length {self.collect_time - start_time} secs" )     # only announce once
 
             # yield for each metric 
+            #log.info(f"{metric_objs}")
             for metric in metric_objs.values():
                 yield metric
 
@@ -252,19 +252,26 @@ class wekaCollector(object):
             #weka_collect_gauge.add_metric(labels={}, value=elapsed)
             log.info(f"stats returned. total time = {elapsed}")
 
-    # runs in a thread, so args comes in as a dict
+    # typically runs in a thread
     def call_api( self, cluster, metric, category, args ):
         method = args['method']
         parms = args['parms']
         #log.debug(f"method={method}, parms={parms}")
+        start_time = time.time()
 
         #log.error(f"calling {cluster.name} API with {method} {parms}")
-        data_returned = cluster.call_api( method=method, parms=parms )
+        try:
+            data_returned = cluster.call_api( method=method, parms=parms )
+        except Exception as exc:
+            log.critical(f"Error calling api on cluster {cluster.name}; aborting api call. Elapsed time {time.time()-start_time}s")
+            return
 
         if category != None and not category in self.clusterdata[str(cluster)]:
             self.clusterdata[str(cluster)][category] = {}
 
         if len(data_returned) == 0:
+            elapsed = time.time()-start_time
+            log.debug(f"cluster {cluster.name}, {category}/{metric}: Null Results, Elapsed Time {elapsed}s")
             return
 
         if category == None:
@@ -283,8 +290,6 @@ class wekaCollector(object):
         else:
             #print( json.dumps( self.clusterdata, indent=4, sort_keys=True ))
             #log.debug( self.clusterdata[str(cluster)].keys() )
-            #if not category in self.clusterdata[str(cluster)]:
-            #    self.clusterdata[str(cluster)][category] = {}
             if metric not in self.clusterdata[str(cluster)][category]:
                 if type(data_returned) == list:
                     self.clusterdata[str(cluster)][category][metric] = []
@@ -296,6 +301,8 @@ class wekaCollector(object):
             else:
                 self.clusterdata[str(cluster)][category][metric].update(data_returned)
 
+        elapsed = time.time()-start_time
+        log.debug(f"cluster {cluster.name}, {category}/{metric}: Elapsed Time {elapsed}s")
 
 
     # start here
@@ -303,7 +310,7 @@ class wekaCollector(object):
     # gather() gets fresh stats from the cluster as they update
     #       populates all datastructures with fresh data
     #
-    # gather() is PER CLUSTER
+    # gather() is PER CLUSTER ************
     #
     #@gather_gauge.time()        # doesn't make a whole lot of sense since we may have more than one cluster
     def gather( self, cluster ):
@@ -314,6 +321,7 @@ class wekaCollector(object):
         # re-initialize wekadata so changes in the cluster don't leave behind strange things (hosts/nodes that no longer exist, etc)
         wekadata={}
         self.clusterdata[str(cluster)] = wekadata  # clear out old data
+        self.threaderror = False
 
         # reset the cluster config to be sure we can talk to all the hosts
         cluster.refresh_config()
@@ -333,7 +341,7 @@ class wekaCollector(object):
 
         thread_runner.run()     # kick off threads; wait for them to complete
 
-        if self.threaderror or cluster.sizeof() == 0:
+        if cluster.sizeof() == 0:
             log.critical( f"api unable to contact cluster {cluster}; aborting gather" )
             return
 
