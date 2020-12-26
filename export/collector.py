@@ -21,7 +21,6 @@ import json
 # local imports
 from wekaapi import WekaApi
 from sthreads import simul_threads
-from reserve import reservation_list
 
 #class WekaIOHistogram(Histogram):
 #    def multi_observe( self, iosize, value ):

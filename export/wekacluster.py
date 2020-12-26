@@ -39,6 +39,7 @@ class WekaHost(object):
         start_time = time.time()
         log.debug( "calling Weka API on host {}".format(self.name) )
         result = self.api_obj.weka_api_command( method, parms )
+        #result2 = self.api_obj.weka_api_command_new( method, parms )
         log.debug(f"elapsed time for host {self.name}: {time.time() - start_time} secs")
         return result
 
@@ -70,7 +71,7 @@ class WekaCluster(object):
         self.cloud_http_pool = None
 
         self.orig_hostlist = clusterspec.split(",")  # takes a comma-separated list of hosts
-        self.hosts = reservation_list()
+        self.hosts = None
         self.authfile = authfile
         self.loadbalance = autohost
         self.last_event_timestamp = None
@@ -91,33 +92,40 @@ class WekaCluster(object):
         # ------------- end of __init__() -------------
 
     def refresh_config(self):
-        if len(self.hosts) == 0:
+        # we need *some* kind of host(s) in order to get the hosts_list below
+        if self.hosts == None or len(self.hosts) == 0:
             # create objects for the hosts; recover from total failure
+            temp_hostlist = []
             for hostname in self.orig_hostlist:
                 try:
                     hostobj = WekaHost(hostname, self)
                 except:
                     pass
                 else:
-                    self.hosts.add(hostobj)
+                    temp_hostlist.append(hostobj)
+            self.hosts = reservation_list(temp_hostlist)  # reset the list
 
         # get the rest of the cluster (bring back any that had previously disappeared, or have been added)
         api_return = self.call_api( method="hosts_list", parms={} )
 
         self.clustersize = 0
-        self.hosts = reservation_list()  # reset the list
+        #self.hosts = reservation_list()  # reset the list
+        temp_hostlist = []
         for host in api_return:
             hostname = host["hostname"]
             if host["mode"] == "backend":
                 self.clustersize += 1
                 if host["state"] == "ACTIVE" and host["status"] == "UP":
-                    if not hostname in self.hosts:
-                        try:
-                            hostobj = WekaHost(hostname, self)
-                        except:
-                            pass
-                        else:
-                            self.hosts.add(hostobj)
+                    #if not hostname in self.hosts:
+                    try:
+                        hostobj = WekaHost(hostname, self)
+                    except:
+                        pass
+                    else:
+                        temp_hostlist.append(hostobj)
+                        #self.hosts.add(hostobj)
+        #self.hosts = reservation_list(temp_hostlist + temp_hostlist)  # reset the list; give it twice so we do 2 queries per host
+        self.hosts = reservation_list(temp_hostlist)  
 
         log.debug( "wekaCluster {} refreshed. Cluster has {} members, {} are online".format(self.name, self.clustersize, len(self.hosts)) )
 

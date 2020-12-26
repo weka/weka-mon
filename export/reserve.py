@@ -12,14 +12,14 @@ SLEEPTIME=0.1
 TIMEOUT=5.0
 
 class reservation_list(object):
-    def __init__( self ):
+    def __init__(self,itemlist=[]):
         # list is a [] kind of list
         self._lock = Lock() # make it re-entrant (thread-safe)
-        self.available = []
+        self.available = itemlist
         self.reserved = []
 
-    # reserve an item in the list
-    def reserve( self ):
+    # reserve an item in the list - BLOCKS until an item becomes available
+    def reserve(self):
         timeout_counter = TIMEOUT
         while timeout_counter > 0:
             with self._lock:
@@ -36,18 +36,18 @@ class reservation_list(object):
         return None
 
     # return a reserved item
-    def release( self, item ):
+    def release(self, item):
         with self._lock:
             self.reserved.remove(item)
             self.available.append(item)
 
     # add an item to the list
-    def add( self, item ):
-        with self._lock:
-            if not (item in self.available or item in self.reserved):
-                self.available.append(item)
+    #def add(self, item):
+    #    with self._lock:
+    #        if not (item in self.available or item in self.reserved):
+    #            self.available.append(item)
 
-    def remove( self, item ):
+    def remove(self, item):
         with self._lock:
             # remove it, regardless of which list it's in
             try:
@@ -55,11 +55,11 @@ class reservation_list(object):
             except:
                 self.reserved.remove(item)
 
-    def __len__( self ):
+    def __len__(self):
         with self._lock:
             return len(self.available) + len(self.reserved)
 
-    def __str__( self ):
+    def __str__(self):
         #track = traceback.print_stack()
         #print(track)
         with self._lock:
@@ -78,34 +78,34 @@ if __name__ == "__main__":
 
     print("add 8 things")
     for i in range(8):
-        hostlist.add( "name" + str(i) )
+        hostlist.add("name" + str(i))
 
-    print( str(hostlist) )
+    print(str(hostlist))
 
     print("reserve 3 things")
     reserved=[]
     for i in range(3):
         reserved.append(hostlist.reserve())
-    print( str(hostlist) )
+    print(str(hostlist))
 
 
     print("reserve 4 things")
     for i in range(4):
         reserved.append(hostlist.reserve())
-    print( str(hostlist) )
+    print(str(hostlist))
 
     print("release 3 things")
     for i in range(3):
         item = reserved.pop()
-        print( "releasing {}".format(item))
+        print("releasing {}".format(item))
         hostlist.release(item)
-    print( str(hostlist) )
+    print(str(hostlist))
 
     print("remove 3 things")
     for i in range(3):
-        print( "removing {}".format(reserved[i]))
+        print("removing {}".format(reserved[i]))
         hostlist.remove(reserved[i])
-    print( str(hostlist) )
+    print(str(hostlist))
 
     print("reserve 6 things")
     for i in range(6):
@@ -113,14 +113,14 @@ if __name__ == "__main__":
         if temp != None:
             reserved.append(temp)
         else:
-            print( "reserve() timed out" )
-        print( reserved )
-        print( str(hostlist) )
+            print("reserve() timed out")
+        print(reserved)
+        print(str(hostlist))
 
     if "name7" in hostlist:
-        print( "it's in there")
+        print("it's in there")
     else:
-        print( "it's NOT in there")
+        print("it's NOT in there")
 
 
 
