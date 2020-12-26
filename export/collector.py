@@ -120,9 +120,7 @@ class wekaCollector(object):
         self.gather_timestamp = None
         self.collect_time = None
         self.clusterdata = {}
-
-        self.wekaCollector_objlist = {}
-        self.wekaCollector_objlist[str(cluster_obj)] = cluster_obj
+        self.cluster = cluster_obj
 
         global weka_stat_list 
         weka_stat_list = self._load_config( configfile )
@@ -153,9 +151,6 @@ class wekaCollector(object):
 
     def get_weka_stat_list( self ):
         return weka_stat_list
-
-    def add_cluster( self, cluster_obj ):
-        self.wekaCollector_objlist[str(cluster_obj)] = cluster_obj
 
     # load the config file
     @staticmethod
@@ -221,11 +216,7 @@ class wekaCollector(object):
                 log.info( "gathering" )
                 self.gather_timestamp = start_time
                 self._reset_metrics()
-                thread_runner = simul_threads( len( self.wekaCollector_objlist) )   # one thread per cluster
-                for clustername, cluster in self.wekaCollector_objlist.items():
-                    thread_runner.new( self.gather, (cluster,) )
-                thread_runner.run()
-                del thread_runner
+                self.gather()
 
             # ok, the prometheus_client module calls this method TWICE every time it scrapes...  ugh
             last_collect = self.collect_time
@@ -255,7 +246,7 @@ class wekaCollector(object):
             log.info(f"stats returned. total time = {elapsed}")
 
     # typically runs in a thread
-    def call_api( self, cluster, metric, category, args ):
+    def call_api( self, metric, category, args ):
         method = args['method']
         parms = args['parms']
         #log.debug(f"method={method}, parms={parms}")
@@ -263,48 +254,48 @@ class wekaCollector(object):
 
         #log.error(f"calling {cluster.name} API with {method} {parms}")
         try:
-            data_returned = cluster.call_api( method=method, parms=parms )
+            data_returned = self.cluster.call_api(method=method, parms=parms)
         except Exception as exc:
-            log.critical(f"Error calling api on cluster {cluster.name}; aborting api call. Elapsed time {time.time()-start_time}s")
+            log.critical(f"Error calling api on cluster {self.cluster.name}; aborting api call. Elapsed time {time.time()-start_time}s")
             return
 
-        if category != None and not category in self.clusterdata[str(cluster)]:
-            self.clusterdata[str(cluster)][category] = {}
+        if category != None and not category in self.clusterdata[str(self.cluster)]:
+            self.clusterdata[str(self.cluster)][category] = {}
 
         if len(data_returned) == 0:
             elapsed = time.time()-start_time
-            log.debug(f"cluster {cluster.name}, {category}/{metric}: Null Results, Elapsed Time {elapsed}s")
+            log.debug(f"cluster {self.cluster.name}, {category}/{metric}: Null Results, Elapsed Time {elapsed}s")
             return
 
         if category == None:
             #log.error(f"{type(data_returned)} {data_returned}")
-            if metric not in self.clusterdata[str(cluster)]:
+            if metric not in self.clusterdata[str(self.cluster)]:
                 if type(data_returned) == list:
-                    self.clusterdata[str(cluster)][metric] = []
+                    self.clusterdata[str(self.cluster)][metric] = []
                 else:
-                    self.clusterdata[str(cluster)][metric] = {}
+                    self.clusterdata[str(self.cluster)][metric] = {}
 
             if type(data_returned) == list:
-                self.clusterdata[str(cluster)][metric] += data_returned
+                self.clusterdata[str(self.cluster)][metric] += data_returned
             else:
-                self.clusterdata[str(cluster)][metric].update(data_returned)
+                self.clusterdata[str(self.cluster)][metric].update(data_returned)
 
         else:
             #print( json.dumps( self.clusterdata, indent=4, sort_keys=True ))
-            #log.debug( self.clusterdata[str(cluster)].keys() )
-            if metric not in self.clusterdata[str(cluster)][category]:
+            #log.debug( self.clusterdata[str(self.cluster)].keys() )
+            if metric not in self.clusterdata[str(self.cluster)][category]:
                 if type(data_returned) == list:
-                    self.clusterdata[str(cluster)][category][metric] = []
+                    self.clusterdata[str(self.cluster)][category][metric] = []
                 else:
-                    self.clusterdata[str(cluster)][category][metric] = {}
+                    self.clusterdata[str(self.cluster)][category][metric] = {}
 
             if type(data_returned) == list:
-                self.clusterdata[str(cluster)][category][metric] += data_returned
+                self.clusterdata[str(self.cluster)][category][metric] += data_returned
             else:
-                self.clusterdata[str(cluster)][category][metric].update(data_returned)
+                self.clusterdata[str(self.cluster)][category][metric].update(data_returned)
 
         elapsed = time.time()-start_time
-        log.debug(f"cluster {cluster.name}, {category}/{metric}: Elapsed Time {elapsed}s")
+        log.debug(f"cluster {self.cluster.name}, {category}/{metric}: Elapsed Time {elapsed}s")
 
 
     # start here
@@ -315,35 +306,35 @@ class wekaCollector(object):
     # gather() is PER CLUSTER ************
     #
     #@gather_gauge.time()        # doesn't make a whole lot of sense since we may have more than one cluster
-    def gather( self, cluster ):
+    def gather(self):
         start_time = time.time()
-        log.info( "gathering weka data from cluster {}".format(str(cluster)) )
+        log.info( "gathering weka data from cluster {}".format(str(self.cluster)) )
 
 
         # re-initialize wekadata so changes in the cluster don't leave behind strange things (hosts/nodes that no longer exist, etc)
         wekadata={}
-        self.clusterdata[str(cluster)] = wekadata  # clear out old data
+        self.clusterdata[str(self.cluster)] = wekadata  # clear out old data
         self.threaderror = False
 
         # reset the cluster config to be sure we can talk to all the hosts
-        cluster.refresh_config()
+        self.cluster.refresh_config()
 
         # to do on-demand gathers instead of every minute;
         #   only gather if we haven't gathered in this minute (since 0 secs has passed)
 
-        thread_runner = simul_threads( cluster.sizeof() )    # 1 per host, please
+        thread_runner = simul_threads( self.cluster.sizeof() )    # 1 per host, please
 
         # get info from weka cluster
         for stat, command in self.WEKAINFO.items():
             try:
-                thread_runner.new( self.call_api, (cluster, stat, None, command ) ) 
+                thread_runner.new( self.call_api, (stat, None, command ) ) 
             except:
                 log.error( "error scheduling wekainfo threads for cluster {}".format(self.clustername) )
                 return      # bail out if we can't talk to the cluster with this first command
 
         thread_runner.run()     # kick off threads; wait for them to complete
 
-        if cluster.sizeof() == 0:
+        if self.cluster.sizeof() == 0:
             log.critical( f"api unable to contact cluster {cluster}; aborting gather" )
             return
 
@@ -371,14 +362,14 @@ class wekaCollector(object):
             print(f"EXCEPTION {exc}")
             track = traceback.format_exc()
             print(track)
-            log.error( "error building maps. Aborting data gather from cluster {}".format(str(cluster)) )
+            log.error( "error building maps. Aborting data gather from cluster {}".format(str(self.cluster)) )
             return
 
         #log.error(f"backend nodes: {backend_nodes}")
         #log.error(f"client nodes: {client_nodes}")
 
-        log.info(f"Cluster {cluster} Using {cluster.sizeof()} hosts")
-        thread_runner = simul_threads(cluster.sizeof())   # up the server count - so 1 thread per server in the cluster
+        log.info(f"Cluster {self.cluster} Using {self.cluster.sizeof()} hosts")
+        thread_runner = simul_threads(self.cluster.sizeof())   # up the server count - so 1 thread per server in the cluster
         #thread_runner = simul_threads(50)  # testing
 
         # be simplistic at first... let's just gather on a subset of nodes each query
@@ -396,7 +387,7 @@ class wekaCollector(object):
                 if role == "FRONTEND" and weka_maps["host-role"][weka_maps["node-host"][node]] == "server":
                     server_FEs.append(nid)
 
-        #log.error(f"{cluster.name} {node_maps}")
+        #log.error(f"{self.cluster.name} {node_maps}")
 
         # find a better place to define this... for now here is good (vince)
         category_nodetypes = { 
@@ -411,14 +402,14 @@ class wekaCollector(object):
         for category, stat_dict in self.get_commandlist().items():
 
             category_nodes = []
-            #log.error(f"{cluster.name} category is: {category} {category_nodetypes[category]}")
+            #log.error(f"{self.cluster.name} category is: {category} {category_nodetypes[category]}")
             if category == "ops_nfs":       # NFS stats only show on server FEs; no point in looking at anything else
                 category_nodes = server_FEs
             else:
                 for nodetype in category_nodetypes[category]:  # nodetype is FRONTEND, COMPUTE, DRIVES, MANAGEMENT
                     category_nodes += node_maps[nodetype]
 
-            #log.error(f"{cluster.name} cat nodes: {category} {category_nodes}")
+            #log.error(f"{self.cluster.name} cat nodes: {category} {category_nodes}")
 
             query_nodes = list( set( category_nodes.copy() ) ) # make the list unique so we don't ask for the same data muliple times
 
@@ -428,25 +419,25 @@ class wekaCollector(object):
                     import copy
                     newcmd = copy.deepcopy(command)                           # make sure to copy it
                     newcmd["parms"]["node_ids"] = copy.deepcopy(query_nodes[i:i+step])     # make sure to copy it
-                    #log.error(f"{i}: {i+step}, {cluster.name} {query_nodes[i:i+step]}" )  # debugging
-                    #log.error(f"scheduling {cluster.name} {newcmd['parms']}" )
+                    #log.error(f"{i}: {i+step}, {self.cluster.name} {query_nodes[i:i+step]}" )  # debugging
+                    #log.error(f"scheduling {self.cluster.name} {newcmd['parms']}" )
                     try:
-                        thread_runner.new( self.call_api, (cluster, stat, category, newcmd ) ) 
+                        thread_runner.new( self.call_api, (stat, category, newcmd ) ) 
                         #thread_runner.new( self.call_api, (cluster, stat, category, command ) ) 
                     except:
-                        log.error( "gather(): error scheduling thread wekastat for cluster {}".format(str(cluster)) )
+                        log.error( "gather(): error scheduling thread wekastat for cluster {}".format(str(self.cluster)) )
 
         thread_runner.run()     # schedule the rest of the threads, wait for them
         del thread_runner
         elapsed = time.time()-start_time
-        log.debug(f"gather for cluster {cluster} complete.  Elapsed time {elapsed}")
-        metric_objs['cmd_gather'].add_metric( [str(cluster)], value=elapsed)
+        log.debug(f"gather for cluster {self.cluster} complete.  Elapsed time {elapsed}")
+        metric_objs['cmd_gather'].add_metric( [str(self.cluster)], value=elapsed)
 
         # if the cluster changed during a gather, this may puke, so just go to the next sample.
         #   One or two missing samples won't hurt
 
         #  Start filling in the data
-        log.info( "populating datastructures for cluster {}".format(str(cluster)) )
+        log.info( "populating datastructures for cluster {}".format(str(self.cluster)) )
         try:
             # determine Cloud Status 
             if wekadata["clusterinfo"]["cloud"]["healthy"]: cloudStatus="Healthy"       # must be enabled to be healthy 
@@ -457,14 +448,14 @@ class wekaCollector(object):
         except:
             #track = traceback.format_exc()
             #print(track)
-            log.error( "error processing cloud status for cluster {}".format(str(cluster)) )
+            log.error( "error processing cloud status for cluster {}".format(str(self.cluster)) )
 
         #
         # start putting the data into the prometheus_client gauges and such
         #
 
         # set the weka_info Gauge
-        log.debug(f"weka_info Gauge cluster={cluster.name}")
+        log.debug(f"weka_info Gauge cluster={self.cluster.name}")
         try:
             # Weka status indicator
             if (wekadata["clusterinfo"]["buckets"]["active"] == wekadata["clusterinfo"]["buckets"]["total"] and
@@ -476,8 +467,8 @@ class wekaCollector(object):
                WekaClusterStatus="WARN"
 
             # Basic info
-            cluster.release = wekadata["clusterinfo"]["release"]  # keep this up to date
-            wekacluster = { "cluster": str(cluster), "version": wekadata["clusterinfo"]["release"], 
+            self.cluster.release = wekadata["clusterinfo"]["release"]  # keep this up to date
+            wekacluster = { "cluster": str(self.cluster), "version": wekadata["clusterinfo"]["release"], 
                     "cloud_status": cloudStatus, "license_status":wekadata["clusterinfo"]["licensing"]["mode"], 
                     "io_status": wekadata["clusterinfo"]["io_status"], "link_layer": wekadata["clusterinfo"]["net"]["link_layer"], "status" : WekaClusterStatus }
 
@@ -487,11 +478,11 @@ class wekaCollector(object):
         except:
             #track = traceback.format_exc()
             #print(track)
-            log.error( "error cluster info - aborting populate of cluster {}".format(str(cluster)) )
+            log.error( "error cluster info - aborting populate of cluster {}".format(str(self.cluster)) )
             return
 
 
-        log.debug(f"uptime cluster={cluster.name}")
+        log.debug(f"uptime cluster={self.cluster.name}")
         try:
             # Uptime
             # not sure why, but sometimes this would fail... trim off the microseconds, because we really don't care 
@@ -500,44 +491,44 @@ class wekaCollector(object):
             now_obj = datetime.datetime.strptime( cluster_time, "%Y-%m-%dT%H:%M:%S" )
             dt_obj = datetime.datetime.strptime( start_time, "%Y-%m-%dT%H:%M:%S" )
             uptime = now_obj - dt_obj
-            metric_objs["wekauptime"].add_metric([str(cluster)], uptime.total_seconds())
+            metric_objs["wekauptime"].add_metric([str(self.cluster)], uptime.total_seconds())
         except:
             #track = traceback.format_exc()
             #print(track)
-            log.error( "error calculating runtime for cluster {}".format(str(cluster)) )
+            log.error( "error calculating runtime for cluster {}".format(str(self.cluster)) )
 
 
-        log.debug(f"perf overview cluster={cluster.name}")
+        log.debug(f"perf overview cluster={self.cluster.name}")
         try:
             # performance overview summary
             # I suppose we could change the gauge names to match the keys, ie: "num_ops" so we could do this in a loop
             #       e: weka_overview_activity_num_ops instead of weka_overview_activity_ops
             for name, parms in self.CLUSTERSTATS.items():
-                metric_objs["cluster_stat_"+name].add_metric([str(cluster)], wekadata["clusterinfo"]["activity"][parms[2]] )
+                metric_objs["cluster_stat_"+name].add_metric([str(self.cluster)], wekadata["clusterinfo"]["activity"][parms[2]] )
 
         except:
             #track = traceback.format_exc()
             #print(track)
-            log.error( "error processing performance overview for cluster {}".format(str(cluster)) )
+            log.error( "error processing performance overview for cluster {}".format(str(self.cluster)) )
 
-        log.debug(f"server overview cluster={cluster.name}")
+        log.debug(f"server overview cluster={self.cluster.name}")
         try:
-            metric_objs['weka_host_spares'].add_metric([str(cluster)], wekadata["clusterinfo"]["hot_spare"] )
-            metric_objs['weka_host_spares_bytes'].add_metric([str(cluster)], wekadata["clusterinfo"]["capacity"]["hot_spare_bytes"] )
-            metric_objs['weka_drive_storage_total_bytes'].add_metric([str(cluster)], wekadata["clusterinfo"]["capacity"]["total_bytes"] )
-            metric_objs['weka_drive_storage_unprovisioned_bytes'].add_metric([str(cluster)], wekadata["clusterinfo"]["capacity"]["unprovisioned_bytes"])
-            metric_objs['weka_num_servers_active'].add_metric([str(cluster)], wekadata["clusterinfo"]["hosts"]["backends"]["active"])
-            metric_objs['weka_num_servers_total'].add_metric([str(cluster)], wekadata["clusterinfo"]["hosts"]["backends"]["total"])
-            metric_objs['weka_num_clients_active'].add_metric([str(cluster)], wekadata["clusterinfo"]["hosts"]["clients"]["active"])
-            metric_objs['weka_num_clients_total'].add_metric([str(cluster)], wekadata["clusterinfo"]["hosts"]["clients"]["total"])
-            metric_objs['weka_num_drives_active'].add_metric([str(cluster)], wekadata["clusterinfo"]["drives"]["active"])
-            metric_objs['weka_num_drives_total'].add_metric([str(cluster)], wekadata["clusterinfo"]["drives"]["total"])
+            metric_objs['weka_host_spares'].add_metric([str(self.cluster)], wekadata["clusterinfo"]["hot_spare"] )
+            metric_objs['weka_host_spares_bytes'].add_metric([str(self.cluster)], wekadata["clusterinfo"]["capacity"]["hot_spare_bytes"] )
+            metric_objs['weka_drive_storage_total_bytes'].add_metric([str(self.cluster)], wekadata["clusterinfo"]["capacity"]["total_bytes"] )
+            metric_objs['weka_drive_storage_unprovisioned_bytes'].add_metric([str(self.cluster)], wekadata["clusterinfo"]["capacity"]["unprovisioned_bytes"])
+            metric_objs['weka_num_servers_active'].add_metric([str(self.cluster)], wekadata["clusterinfo"]["hosts"]["backends"]["active"])
+            metric_objs['weka_num_servers_total'].add_metric([str(self.cluster)], wekadata["clusterinfo"]["hosts"]["backends"]["total"])
+            metric_objs['weka_num_clients_active'].add_metric([str(self.cluster)], wekadata["clusterinfo"]["hosts"]["clients"]["active"])
+            metric_objs['weka_num_clients_total'].add_metric([str(self.cluster)], wekadata["clusterinfo"]["hosts"]["clients"]["total"])
+            metric_objs['weka_num_drives_active'].add_metric([str(self.cluster)], wekadata["clusterinfo"]["drives"]["active"])
+            metric_objs['weka_num_drives_total'].add_metric([str(self.cluster)], wekadata["clusterinfo"]["drives"]["total"])
         except:
             #track = traceback.format_exc()
             #print(track)
-            log.error( "error processing server overview for cluster {}".format(str(cluster)) )
+            log.error( "error processing server overview for cluster {}".format(str(self.cluster)) )
 
-        log.debug(f"protection status cluster={cluster.name}")
+        log.debug(f"protection status cluster={self.cluster.name}")
         try:
             # protection status
             rebuildStatus = wekadata["clusterinfo"]["rebuild"]
@@ -545,27 +536,27 @@ class wekaCollector(object):
             numStates = len( protectionStateList )  # 3 (0,1,2) for 2 parity), or 5 (0,1,2,3,4 for 4 parity)
 
             for index in range( numStates ):
-                metric_objs['weka_protection'].add_metric([str(cluster), str(protectionStateList[index]["numFailures"])], protectionStateList[index]["percent"])
+                metric_objs['weka_protection'].add_metric([str(self.cluster), str(protectionStateList[index]["numFailures"])], protectionStateList[index]["percent"])
 
         except:
             #track = traceback.format_exc()
             #print(track)
-            log.error( "error processing protection status for cluster {}".format(str(cluster)) )
+            log.error( "error processing protection status for cluster {}".format(str(self.cluster)) )
 
-        log.debug(f"filesystems cluster={cluster.name}")
+        log.debug(f"filesystems cluster={self.cluster.name}")
         try:
             # Filesystem stats
             for fs in wekadata["fs_stat"]:
-                metric_objs['weka_fs_utilization_percent'].add_metric([str(cluster), fs["name"]], float( fs["used_total"] ) / float( fs["available_total"] ) * 100)
-                metric_objs['weka_fs_size_bytes'].add_metric([str(cluster), fs["name"]], fs["available_total"])
-                metric_objs['weka_fs_used_bytes'].add_metric([str(cluster), fs["name"]], fs["used_total"])
+                metric_objs['weka_fs_utilization_percent'].add_metric([str(self.cluster), fs["name"]], float( fs["used_total"] ) / float( fs["available_total"] ) * 100)
+                metric_objs['weka_fs_size_bytes'].add_metric([str(self.cluster), fs["name"]], fs["available_total"])
+                metric_objs['weka_fs_used_bytes'].add_metric([str(self.cluster), fs["name"]], fs["used_total"])
         except:
             #track = traceback.format_exc()
             #print(track)
-            log.error( "error processing filesystem stats for cluster {}".format(str(cluster)) )
+            log.error( "error processing filesystem stats for cluster {}".format(str(self.cluster)) )
 
                 #labels=['cluster', 'type', 'title', 'host_name', 'host_id', 'node_id', 'drive_id' ] )
-        log.debug(f"alerts cluster={cluster.name}")
+        log.debug(f"alerts cluster={self.cluster.name}")
         for alert in wekadata["alerts"]:
             if not alert["muted"]:
                 log.debug(f"alert detected {alert['type']}")
@@ -585,12 +576,12 @@ class wekaCollector(object):
                     if 'drive_id' in params:
                         drive_id = params['drive_id']
 
-                labelvalues = [str(cluster), alert['type'], alert['title'], host_name, host_id, node_id, drive_id]
+                labelvalues = [str(self.cluster), alert['type'], alert['title'], host_name, host_id, node_id, drive_id]
                 metric_objs['alerts'].add_metric(labelvalues, 1.0)
 
         #try:
         #except:
-        #    log.error( "error processing alerts for cluster {}".format(str(cluster)) )
+        #    log.error( "error processing alerts for cluster {}".format(str(self.cluster)) )
 
 
 
@@ -598,7 +589,7 @@ class wekaCollector(object):
         #            ['cluster','host_name','host_role','node_id','node_role','category','stat','unit']
         #
         # yes, I know it's convoluted... it was hard to write, so it *should* be hard to read. ;)
-        log.debug(f"io stats cluster={cluster.name}")
+        log.debug(f"io stats cluster={self.cluster.name}")
         for category, stat_dict in self.get_weka_stat_list().items():
             for stat, nodelist in wekadata[category].items():
                 unit = stat_dict[stat]
@@ -609,13 +600,13 @@ class wekaCollector(object):
                     except Exception as exc:
                         #track = traceback.format_exc()
                         #print(track)
-                        log.error( f"{exc} error in maps for cluster {str(cluster)}" )
+                        log.error( f"{exc} error in maps for cluster {str(self.cluster)}" )
                         return            # or return? was continue
 
                     for role in role_list:
 
                         labelvalues = [ 
-                            str(cluster),
+                            str(self.cluster),
                             hostname,
                             weka_maps["host-role"][hostname], 
                             node["node"], 
@@ -632,13 +623,13 @@ class wekaCollector(object):
                             except:
                                 #track = traceback.format_exc()
                                 #print(track)
-                                log.error( "error processing io stats for cluster {}".format(str(cluster)) )
+                                log.error( "error processing io stats for cluster {}".format(str(self.cluster)) )
                         else:   
 
                             try:
                                 if category == 'ops_nfs':
                                     log.debug( "ops_nfs is: {} {}".format(stat, node["stat_value"] ) )
-                                release_list = cluster.release.split('.')   # 3.8.1 becomes ['3','8','1']
+                                release_list = self.cluster.release.split('.')   # 3.8.1 becomes ['3','8','1']
                                 if int(release_list[0]) >= 3 and int(release_list[1]) >= 8:
                                     value_dict, gsum = parse_sizes_values_post38( node["stat_value"] )  # Turn the stat_value into a dict
                                 else:
@@ -647,9 +638,9 @@ class wekaCollector(object):
                             except:
                                 track = traceback.format_exc()
                                 print(track)
-                                log.error( "error processing io sizes for cluster {}".format(str(cluster)) )
+                                log.error( "error processing io sizes for cluster {}".format(str(self.cluster)) )
 
-        log.debug(f"Complete cluster={cluster.name}")
+        log.debug(f"Complete cluster={self.cluster.name}")
 
     # ------------- end of gather() -------------
 
