@@ -349,9 +349,9 @@ class WekaApi():
                     log.error( f"{exc}" )  
                     continue
 
-                #log.debug( "get_response replied with: {}".format( str(response) ) )
+                log.debug( "get_response replied with: {}".format( str(response) ) )
                 response_body = response.read().decode('utf-8')
-                #log.debug( "response _body is: {}".format( str(response_body) ) )
+                log.debug( "response _body is: {}".format( str(response_body) ) )
 
                 if response.status == httpclient.UNAUTHORIZED:      # not logged in?
                     log.debug( "need to login" )

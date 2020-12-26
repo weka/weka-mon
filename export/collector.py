@@ -111,7 +111,7 @@ class wekaCollector(object):
     wekaIOCommands = {}
     weka_stat_list = {} # category: {{ stat:unit}, {stat:unit}}
 
-    def __init__( self, configfile ):
+    def __init__( self, configfile, cluster_obj ):
 
         # dynamic module globals
         # this comes from a yaml file
@@ -122,9 +122,11 @@ class wekaCollector(object):
         self.clusterdata = {}
 
         self.wekaCollector_objlist = {}
+        self.wekaCollector_objlist[str(cluster_obj)] = cluster_obj
 
         global weka_stat_list 
         weka_stat_list = self._load_config( configfile )
+        log.debug(f"weka_stat_list={weka_stat_list}")
 
         # set up commands to get stats defined in config file
         # category: {{ stat:unit}, {stat:unit}}
