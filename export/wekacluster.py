@@ -38,7 +38,10 @@ class WekaHost(object):
     def call_api( self, method=None, parms={} ):
         start_time = time.time()
         log.debug( "calling Weka API on host {}".format(self.name) )
-        result = self.api_obj.weka_api_command( method, parms )
+        try:
+            result = self.api_obj.weka_api_command( method, parms )
+        except Exception as exc:
+            log.error(f"{exc}")
         log.debug(f"elapsed time for host {self.name}: {time.time() - start_time} secs")
         return result
 
@@ -76,6 +79,7 @@ class WekaCluster(object):
         self.loadbalance = autohost
         self.last_event_timestamp = None
         self.last_get_events_time = None
+        log.debug(f"creating cluster for spec {clusterspec}, hostlist={self.orig_hostlist}")
 
         # fetch cluster configuration
         self.apitoken = wekaapi.get_tokens(self.authfile)
@@ -98,12 +102,16 @@ class WekaCluster(object):
                 try:
                     hostobj = WekaHost(hostname, self)
                 except:
+                    log.error(f"Unable to create WekaHost {hostname}")
                     pass
                 else:
                     self.hosts.add(hostobj)
 
         # get the rest of the cluster (bring back any that had previously disappeared, or have been added)
-        api_return = self.call_api( method="hosts_list", parms={} )
+        try:
+            api_return = self.call_api( method="hosts_list", parms={} )
+        except:
+            log.error(f"Unable to retrieve host list from {self.name}")
 
         self.clustersize = 0
         self.hosts = reservation_list()  # reset the list
@@ -116,6 +124,7 @@ class WekaCluster(object):
                         try:
                             hostobj = WekaHost(hostname, self)
                         except:
+                            log.error(f"Unable to create WekaHost {hostname}")
                             pass
                         else:
                             self.hosts.add(hostobj)
@@ -143,7 +152,7 @@ class WekaCluster(object):
                 self.hosts.remove(host)     # remove it from the hostlist iterable
                 host = self.hosts.reserve() # try another host; will return None if none left or failure
                 self.errors += 1
-                #log.error(f"cluster={self.name}, error {exc} spawning command {str(method)}{parms} on host {last_hostname}. Retrying on {str(host)}.")
+                log.error(f"cluster={self.name}, error {exc} spawning command {str(method)}{parms} on host {last_hostname}. Retrying on {str(host)}.")
                 #print(traceback.format_exc())
                 continue
 
