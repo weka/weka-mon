@@ -27,6 +27,9 @@ scrape_configs:
       - 
         targets: 
           - "export:8001"
+          - "export:8002"
+          - "export:8003"
+          - "export:8004"
   - 
     job_name: grafana
     scrape_interval: 15s

@@ -5,7 +5,7 @@ import logging
 from wekaapi import WekaApi
 import wekaapi
 from wekatime import wekatime_to_lokitime, lokitime_to_wekatime, wekatime_to_datetime, lokitime_to_datetime, datetime_to_wekatime, datetime_to_lokitime
-from reserve import reservation_list
+from circular import circular_list
 import traceback
 import urllib3
 import datetime
@@ -16,30 +16,42 @@ import json
 log = getLogger(__name__)
 
 class WekaHost(object):
-    def __init__( self, hostname, cluster ):
+    def __init__(self, hostname, cluster):
         self.name = hostname    # what's my name?
         self.cluster = cluster  # what cluster am I in?
         self.api_obj = None
         self._lock = Lock()
+        self.host_in_progress = 0
 
-        # do we need a backpointer to the cluster?
         #log.debug(f"authfile={tokenfile}")
 
         try:
-            self.api_obj = WekaApi(self.name, tokens=self.cluster.apitoken, timeout=10)
+            self.api_obj = WekaApi(self.name, tokens=self.cluster.apitoken, timeout=10, scheme=cluster._scheme)
         except Exception as exc:
-            log.error(f"{exc}")
+            log.error(f"Error creating WekaApi object: {exc}")
+            #log.error(traceback.format_exc())
+            self.api_obj = None
 
         if self.api_obj == None:
             # can't open API session, fail.
             #log.error("WekaHost: unable to open API session")
             raise Exception("Unable to open API session")
 
+        cluster._scheme = self.api_obj.scheme() # scheme is per cluster, if one host is http, all are
+        self._scheme = cluster._scheme
+
     def call_api( self, method=None, parms={} ):
         start_time = time.time()
-        log.debug( "calling Weka API on host {}".format(self.name) )
-        result = self.api_obj.weka_api_command( method, parms )
-        #result2 = self.api_obj.weka_api_command_new( method, parms )
+        self.host_in_progress += 1
+        log.debug(f"calling Weka API on host {self}/{method}, {self.host_in_progress} in progress for host")
+        try:
+            result = self.api_obj.weka_api_command( method, parms )
+        except:
+            self.host_in_progress -= 1
+            raise
+        #log.debug(f"result={result}")
+        #log.debug(f"result2={result2}")
+        self.host_in_progress -= 1
         log.debug(f"elapsed time for host {self.name}: {time.time() - start_time} secs")
         return result
 
@@ -49,6 +61,9 @@ class WekaHost(object):
     def __repr__(self):
         return self.name
 
+    def scheme(self):
+        return self._scheme
+
 # per-cluster object 
 class WekaCluster(object):
 
@@ -56,13 +71,16 @@ class WekaCluster(object):
     # clusterspec format is "host1,host2,host3,host4" (can be ip addrs, even only one of the cluster hosts)
     # auth file is output from "weka user login" command.
     # autohost is a bool = should we distribute the api call load among all weka servers
-    def __init__( self, clusterspec, authfile=None, autohost=True ):
+    def __init__(self, clusterspec, authfile=None, autohost=True):
         # object instance global data
         self.errors = 0
         self.clustersize = 0
         self.orig_hostlist = None
         self.name = ""
         self.release = None
+        #self._scheme = "https"
+        self._scheme = "http"
+        self.cluster_in_progress = 0
 
         self.cloud_url = None
         self.cloud_creds = None
@@ -72,6 +90,7 @@ class WekaCluster(object):
 
         self.orig_hostlist = clusterspec.split(",")  # takes a comma-separated list of hosts
         self.hosts = None
+        self.host_dict = {}   # host:WekaHost dictionary
         self.authfile = authfile
         self.loadbalance = autohost
         self.last_event_timestamp = None
@@ -79,7 +98,10 @@ class WekaCluster(object):
 
         # fetch cluster configuration
         self.apitoken = wekaapi.get_tokens(self.authfile)
-        self.refresh_config()
+        try:
+            self.refresh_config()
+        except:
+            raise
 
         # get the cluster name via a manual api call    (failure raises and fails creation of obj)
         api_return = self.call_api( method="status", parms={} )
@@ -93,39 +115,40 @@ class WekaCluster(object):
 
     def refresh_config(self):
         # we need *some* kind of host(s) in order to get the hosts_list below
+        #if len(self.host_dict) == 0:
         if self.hosts == None or len(self.hosts) == 0:
             # create objects for the hosts; recover from total failure
-            temp_hostlist = []
             for hostname in self.orig_hostlist:
                 try:
                     hostobj = WekaHost(hostname, self)
+                    self.host_dict[hostname] = hostobj
                 except:
                     pass
-                else:
-                    temp_hostlist.append(hostobj)
-            self.hosts = reservation_list(temp_hostlist)  # reset the list
+            self.hosts = circular_list(list(self.host_dict.keys()))
 
         # get the rest of the cluster (bring back any that had previously disappeared, or have been added)
-        api_return = self.call_api( method="hosts_list", parms={} )
+        try:
+            api_return = self.call_api( method="hosts_list", parms={} )
+        except:
+            raise
 
         self.clustersize = 0
-        #self.hosts = reservation_list()  # reset the list
-        temp_hostlist = []
+
         for host in api_return:
             hostname = host["hostname"]
             if host["mode"] == "backend":
                 self.clustersize += 1
                 if host["state"] == "ACTIVE" and host["status"] == "UP":
-                    #if not hostname in self.hosts:
-                    try:
-                        hostobj = WekaHost(hostname, self)
-                    except:
-                        pass
-                    else:
-                        temp_hostlist.append(hostobj)
-                        #self.hosts.add(hostobj)
-        #self.hosts = reservation_list(temp_hostlist + temp_hostlist)  # reset the list; give it twice so we do 2 queries per host
-        self.hosts = reservation_list(temp_hostlist)  
+                    # check if it's already in the list
+                    if hostname not in self.host_dict:
+                        try:
+                            log.critical(f"creating new WekaHost instance for host {hostname}")
+                            hostobj = WekaHost(hostname, self)
+                            self.host_dict[hostname] = hostobj
+                        except:
+                            pass
+
+        self.hosts = circular_list(list(self.host_dict.keys()))
 
         log.debug( "wekaCluster {} refreshed. Cluster has {} members, {} are online".format(self.name, self.clustersize, len(self.hosts)) )
 
@@ -137,24 +160,40 @@ class WekaCluster(object):
 
     # cluster-level call_api() will retry commands on another host in the cluster on failure
     def call_api( self, method=None, parms={} ):
-        host = self.hosts.reserve()
+        hostname = self.hosts.next()
+        if hostname == None:
+            # no hosts?
+            raise Exception("unable to communicate with cluster - no hosts in host list")
+        try:
+            host = self.host_dict[hostname]
+        except:
+            log.error(f"hostname {hostname} not in host_dict. host_dict={host_dict}")
+            return
+
         api_return = None
         while host != None:
-            log.debug( "calling Weka API on cluster {}, host {}".format(self.name,host) )
+            self.cluster_in_progress += 1
             try:
+                log.debug(f"calling Weka API on cluster {self}, host {hostname}, method {method}, {self.cluster_in_progress} in progress for cluster")
                 api_return = host.call_api( method, parms )
             except Exception as exc:
+                self.cluster_in_progress -= 1
+                log.critical(f"exception {exc} on {hostname}")
                 # something went wrong...  stop talking to this host from here on.  We'll try to re-establish communications later
-                last_hostname = host.name
-                self.hosts.remove(host)     # remove it from the hostlist iterable
-                host = self.hosts.reserve() # try another host; will return None if none left or failure
+                last_hostname = hostname
+                self.hosts.remove(last_hostname)     # remove it from the hostlist iterable
+                hostname = self.hosts.next()
+                if hostname == None:
+                    host = None
+                    break   # fall through to raise exception
+                host = self.host_dict[hostname] # try another host; will return None if none left or failure
                 self.errors += 1
                 log.error( "cluster={}, error {} spawning command {} on host {}. Retrying on {}.".format(
-                        self.name, exc, str(method), last_hostname, str(host)) )
-                print(traceback.format_exc())
+                        self.name, exc, str(method), last_hostname, str(hostname)) )
+                #print(traceback.format_exc())
                 continue
 
-            self.hosts.release(host)    # release it so it can be used for more queries
+            self.cluster_in_progress -= 1
             return api_return
 
         # ran out of hosts to talk to!
@@ -242,7 +281,7 @@ class WekaCluster(object):
 
         # weka-home setup
         self.cloud_url = self.call_api( method="cloud_get_url", parms={} )
-        log.critical(f"cluster={self.name}, cloud_url='{self.cloud_url}'")
+        log.debug(f"cluster={self.name}, cloud_url='{self.cloud_url}'")
         self.cloud_creds = self.call_api( method="cloud_get_creds", parms={} )
         temp = self.call_api( method="events_describe", parms={"show_internal":False} )
 
@@ -257,7 +296,9 @@ class WekaCluster(object):
             log.debug(f"Using proxy={self.cloud_proxy['proxy']}")
             self.cloud_http_pool = urllib3.ProxyManager(self.cloud_proxy["proxy"])
         else:
-            self.cloud_http_pool = urllib3.PoolManager()
+            #self.cloud_http_pool = urllib3.PoolManager()
+            url = urllib3.util.parse_url(self.cloud_url)
+            self.cloud_http_pool = urllib3.HTTPSConnectionPool(url.host, retries=3)
 
         end_time = datetime_to_wekatime(datetime.datetime.utcnow())
         events = self.home_events( 

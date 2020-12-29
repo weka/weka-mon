@@ -109,7 +109,7 @@ class wekaCollector(object):
     wekaIOCommands = {}
     weka_stat_list = {} # category: {{ stat:unit}, {stat:unit}}
 
-    def __init__( self, configfile ):
+    def __init__( self, configfile, cluster_obj ):
 
         # dynamic module globals
         # this comes from a yaml file
@@ -121,6 +121,7 @@ class wekaCollector(object):
         self.threaderror = False
 
         self.wekaCollector_objlist = {}
+        self.wekaCollector_objlist[str(cluster_obj)] = cluster_obj
 
         global weka_stat_list 
         weka_stat_list = self._load_config( configfile )
@@ -227,13 +228,14 @@ class wekaCollector(object):
 
             # ok, the prometheus_client module calls this method TWICE every time it scrapes...  ugh
             last_collect = self.collect_time
-            self.collect_time = start_time
+            #self.collect_time = start_time
+            #self.collect_time = time.time()
 
             #log.debug( "secs since last collect = {}, should_gather = {}".format( int(self.collect_time - last_collect), should_gather ) )
 
             # prom should always be like 60 secs; the double-call is one after the next
             #if self.collect_time - last_collect > 0:
-            log.info(f"returning stats, collect length {self.collect_time - start_time} secs" )     # only announce once
+            #log.info(f"returning stats, gather length {self.collect_time - start_time} secs" )     # only announce once
 
             # yield for each metric 
             for metric in metric_objs.values():
@@ -256,15 +258,18 @@ class wekaCollector(object):
         method = args['method']
         parms = args['parms']
         log.debug(f"method={method}, parms={parms}")
-        if category == None:
-            self.clusterdata[str(cluster)][metric] = cluster.call_api( method=method, parms=parms )
-        else:
-            #print( json.dumps( self.clusterdata, indent=4, sort_keys=True ))
-            #log.debug( self.clusterdata[str(cluster)].keys() )
-            if not category in self.clusterdata[str(cluster)]:
-                self.clusterdata[str(cluster)][category] = {}
-            self.clusterdata[str(cluster)][category][metric] = cluster.call_api( method=method, parms=parms )
-        
+        try:
+            if category == None:
+                self.clusterdata[str(cluster)][metric] = cluster.call_api( method=method, parms=parms )
+            else:
+                #print( json.dumps( self.clusterdata, indent=4, sort_keys=True ))
+                #log.debug( self.clusterdata[str(cluster)].keys() )
+                if not category in self.clusterdata[str(cluster)]:
+                    self.clusterdata[str(cluster)][category] = {}
+                self.clusterdata[str(cluster)][category][metric] = cluster.call_api( method=method, parms=parms )
+        except Exception as exc:
+            # just log it, as we're probably in a thread
+            log.critical(f"Exception caught: {exc}")
 
     # start here
     #
@@ -330,7 +335,7 @@ class wekaCollector(object):
             return
 
         log.info(f"Cluster {cluster} Using {cluster.sizeof()} hosts")
-        thread_runner = simul_threads(cluster.sizeof())   # up the server count - so 1 thread per server in the cluster
+        thread_runner = simul_threads(cluster.sizeof()*4)   # up the server count - so 1 thread per server in the cluster
         #thread_runner = simul_threads(50)  # testing
 
         # schedule a bunch of data gather queries

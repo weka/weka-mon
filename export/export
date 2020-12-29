@@ -4,7 +4,7 @@
 # Vince Fleming
 # vince@weka.io
 #
-VERSION="3.6.0"
+VERSION="0.9.5"
 
 # system imports
 import logging
@@ -17,11 +17,50 @@ from prometheus_client import start_http_server, REGISTRY
 import time
 import traceback
 from lokilogs import LokiServer
+from multiprocessing import Process
 
 # local imports
 from collector import wekaCollector
 from wekacluster import WekaCluster
 import signals
+
+
+def prom_client(port, configfile, cluster_hosts, cluster_auth, lokihost, lokiport):
+
+    try:
+        cluster_obj = WekaCluster(cluster_hosts, cluster_auth)
+    except Exception as exc:
+        track = traceback.format_exc()
+        print(track)
+        logger.critical(f"unable to create cluster object: {exc}")
+        sys.exit(1)
+
+    # create the wekaCollector object
+    collector = wekaCollector(args.configfile, cluster_obj)
+
+    if lokihost != None:
+        lokiserver = LokiServer( lokihost, lokiport )
+    else:
+        lokiserver = None
+
+    #
+    # Start up the server to expose the metrics.
+    #
+    logger.info(f"starting http server on port {port}" )
+    start_http_server(int(port))
+
+    # register our custom collector
+    REGISTRY.register( collector )
+
+    while True:
+        time.sleep(30)  # sleep first, just in case we're started at the same time as Loki; give it time
+        if lokiserver != None:
+            logger.info(f"getting events for cluster {cluster_obj.name}")
+            try:
+                events = cluster_obj.get_events()
+                lokiserver.send_events(events, cluster_obj)
+            except Exception as exc:
+                logger.critical(f"Error getting events: {exc} for cluster {cluster_obj.name}")
 
 
 
@@ -35,7 +74,7 @@ if __name__ == '__main__':
     parser.add_argument("--loki_host", dest='lokihost', default=None, help="hostname/ip for loki server")
     parser.add_argument("--loki_port", dest='lokiport', default="3100", help="port for loki server")
     parser.add_argument( 'clusterspec', default="localhost", nargs='*', help="Cluster specifications.  <host>,<host>,...:authfile" )
-    parser.add_argument("-a", "--autohost", dest='autohost', default=False, action="store_true", help="Automatically load balance queries over backend hosts" )
+    #parser.add_argument("-a", "--autohost", dest='autohost', default=False, action="store_true", help="Automatically load balance queries over backend hosts" )
     parser.add_argument("-v", "--verbosity", action="count", default=0, help="increase output verbosity")
     parser.add_argument("--version", dest="version", default=False, action="store_true", help="Display version number")
     args = parser.parse_args()
@@ -55,7 +94,7 @@ if __name__ == '__main__':
 
     # set the root logger
     logger = logging.getLogger()
-    FORMAT = "%(filename)s:%(lineno)s:%(funcName)s():%(message)s"
+    FORMAT = "%(process)s:%(filename)s:%(lineno)s:%(funcName)s():%(message)s"
     #logging.basicConfig(format=FORMAT)
     logger.setLevel(loglevel)
 
@@ -93,61 +132,36 @@ if __name__ == '__main__':
     sublog = logging.getLogger( "lokilogs" )
     sublog.setLevel(logging.INFO)
 
+    # configure logging in circular module
+    logging.getLogger("circular").setLevel(logging.INFO)
 
-    # parse the command line, get our hosts and associated auth files
-    clusters = []
+    # schedule up a process for each cluster, put them on conescutive ports starting at 8001 (or specified port)
+    subprocesses = {}
+    port = int(args.port)
+
     for spec in args.clusterspec:
         clusterspeclist = spec.split(":")
-        cluster_hosts = clusterspeclist[0]
+        #cluster_hosts = clusterspeclist[0].split(',')
         if len(clusterspeclist) > 1:
             cluster_auth = clusterspeclist[1]
         else:
             cluster_auth = None
-        clusters.append( dict ( cluster_hosts=cluster_hosts, cluster_auth=cluster_auth ) )
-
-    cluster_list = []
-    # create the wekaCollector object
-    collector = wekaCollector( args.configfile )
-    num_good = 0
-    for cluster in clusters:
-        try:
-            cluster_obj = WekaCluster( cluster["cluster_hosts"], cluster["cluster_auth"], args.autohost ) 
-        except Exception as exc:
-            track = traceback.format_exc()
-            print(track)
-            logger.critical( f"unable to create cluster object: {exc}" )
-            continue
-        collector.add_cluster( cluster_obj )
-        cluster_list.append( cluster_obj )
-        num_good += 1
-
-    if num_good == 0:
-        logger.critical( "no clusters could be contacted, aborting" )
-        sys.exit( 1 )
-
-    if args.lokihost != None:
-        lokiserver = LokiServer( args.lokihost, args.lokiport )
-    else:
-        lokiserver = None
-
-    #
-    # Start up the server to expose the metrics.
-    #
-    logger.info( "starting http server" )
-    start_http_server(int(args.port))
-
-    # register our custom collector
-    REGISTRY.register( collector )
-
+        p = Process(target=prom_client, 
+                args=(port, args.configfile, spec, cluster_auth, args.lokihost, args.lokiport))
+        subprocesses[spec] = p  # keep processes by clusterspec so easy to tell them apart
+        port += 1
+        
+    # kick them off
+    for clusterspec, proc in subprocesses.items():
+        logger.info(f"starting processing of cluster {clusterspec}")
+        proc.start()
 
     while True:
-        time.sleep(30)  # sleep first, just in case we're started at the same time as Loki; give it time
-        if lokiserver != None:
-            for cluster in cluster_list:
-                logger.info(f"getting events for cluster {cluster.name}")
-                try:
-                    events = cluster.get_events()
-                    lokiserver.send_events( events, cluster )
-                except Exception as exc:
-                    logger.critical(f"Error getting events: {exc} for cluster {cluster.name}")
+        time.sleep(10)
+        # monitor subprocesses
+        for clusterspec, proc in subprocesses.items():
+            if not proc.is_alive():
+                logger.critical(f"Child process for cluster {clusterspec} died.")
+                proc.join()
+                # do we try to restart it?
 

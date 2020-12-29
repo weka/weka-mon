@@ -23,6 +23,8 @@ import ssl
 import traceback
 from threading import Lock
 
+import urllib3
+
 try:
     import http.client
     httpclient = http.client
@@ -51,13 +53,14 @@ class HttpException(Exception):
 #        self.message = json_error['message']
 #        self.data = json_error.get('data', None)
 
+#pool_manager = urllib3.PoolManager(num_pools=100) # new
 
 class WekaApiException(Exception):
     def __init__(self, message):
         self.message = message
 
 class WekaApi():
-    def __init__(self, host, scheme='https', port=14000, path='/api/v1', timeout=10, tokens=None ):
+    def __init__(self, host, scheme='http', port=14000, path='/api/v1', timeout=10, tokens=None ):
 
         self._lock = Lock() # make it re-entrant (thread-safe)
         self._scheme = scheme
@@ -69,6 +72,9 @@ class WekaApi():
         self.headers = {}
         self._tokens=tokens
         
+        # forget scheme (https/http) at this point...   notes:  maxsize means 2 connections per host, block means don't make more than 2
+        self.http_conn = urllib3.HTTPConnectionPool(host, port=port, maxsize=2, block=True, retries=3)
+
         log.debug( f"tokens are {self._tokens}" )
         if self._tokens != None:
             self.authorization = '{0} {1}'.format(self._tokens['token_type'], self._tokens['access_token'])
@@ -80,8 +86,12 @@ class WekaApi():
         self.headers['CLI'] = False
         self.headers['Client-Type'] = 'WEKA'
 
-        self._open_connection()
+        self._login()
+
         log.debug( "WekaApi: connected to {}".format(self._host) )
+
+    def scheme(self):
+        return self._scheme
 
     @staticmethod
     def format_request(message_id, method, params):
@@ -103,9 +113,11 @@ class WekaApi():
     @staticmethod
     def _parse_url(url, default_port=14000, default_path='/api/v1'):
         parsed_url = urlparse(url)
-        scheme = parsed_url.scheme if parsed_url.scheme else "https"
+        #scheme = parsed_url.scheme if parsed_url.scheme else "https"
+        scheme = parsed_url.scheme if parsed_url.scheme else "http"
         if scheme not in ['http', 'https']:
-            scheme = "https"
+            #scheme = "https"
+            scheme = "http"
         m = re.match('^(?:(?:http|https)://)?(.+?)(?::(\d+))?(/.*)?$', str(url), re.I)
         assert m
         return scheme, m.group(1), m.group(2) or default_port, m.group(3) or default_path
@@ -218,45 +230,10 @@ class WekaApi():
         return raw_resp
     # end of _format_response()
 
-    def old_login( self ):
-        login_message_id = self.unique_id()
-
-        log.debug( "logging into host {}".format(self._host) )
-
-        if self._tokens != None:
-            params = dict(refresh_token=self._tokens["refresh_token"])
-            login_request = self.format_request(login_message_id, "user_refresh_token", params)
-        else:
-            params = dict(username="admin", password="admin")
-            login_request = self.format_request(login_message_id, "user_login", params)
-
-        #self._conn.set_debuglevel(5)
-        self._conn.request('POST', self._path, json.dumps(login_request), self.headers) # POST either user_refresh_token or user_login
-        #self._conn.set_debuglevel(0)
-        response = self._conn.getresponse()
-        response_body = response.read().decode('utf-8')
-
-        log.debug(f"response.status={response.status}")
-        if response.status != 200:  # default login creds/refresh failed
-            raise HttpException(response.status, response_body)
-
-        response_object = json.loads(response_body)
-        log.debug(f"response_object={response_object}")
-        self._tokens = response_object["result"]
-        if self._tokens != {}:
-            self.authorization = '{0} {1}'.format(self._tokens['token_type'], self._tokens['access_token'])
-        else:
-            self.authorization = None
-            self._tokens= None
-            log.critical( "Login failed" )
-            raise WekaApiException( "Login failed" )
-
-        # end of old_login()
-
-
     # log into the api  # assumes that you got an UNAUTHORIZED (401)
     def _login( self ):
         login_message_id = self.unique_id()
+        log.debug("logging in")
 
         if self.authorization != None:   # maybe should see if _tokens != None also?
             # try to refresh the auth since we have prior authorization
@@ -270,14 +247,43 @@ class WekaApi():
             log.debug(f"default login with host {self._host} {login_request}" )
 
 
-        self._conn.request('POST', self._path, json.dumps(login_request), self.headers) # POST a user_login request
-        response = self._conn.getresponse()
-        response_body = response.read().decode('utf-8')
+        try:
+            api_endpoint = f"{self._scheme}://{self._host}:{self._port}{self._path}"
+            log.debug(f"trying {api_endpoint}")
+            response = self.http_conn.request('POST', api_endpoint, headers=self.headers, body=json.dumps(login_request).encode('utf-8'))
+        except urllib3.exceptions.MaxRetryError as exc:
+            # https failed, try http - http would never produce an ssl error
+            if isinstance(exc.reason, urllib3.exceptions.SSLError):
+                log.debug(f"SSLError detected")
+                log.debug( "https failed" )
+                self._scheme = "http"
+                return self._login() # recurse
+            elif isinstance(exc.reason, urllib3.exceptions.NewConnectionError):
+                log.critical(f"ConnectionRefusedError/NewConnectionError caught")
+                raise WekaApiException( "Login failed" )
+            else:
+                log.critical(f"MaxRetryError: {exc.reason}")
+                track = traceback.format_exc()
+                print(track)
+                raise
+        except Exception as exc:
+            log.critical(f"{exc}")
+            raise WekaApiException( "Login failed" )
+
+        response_body = response.data.decode('utf-8')
+        #self._conn.request('POST', self._path, json.dumps(login_request), self.headers) # POST a user_login request
+        #response = self._conn.getresponse()
+        #response_body = response.read().decode('utf-8')
 
         if response.status != 200:  # default login creds/refresh failed
             raise HttpException(response.status, response_body)
 
         response_object = json.loads(response_body)
+
+        if "error" in response_object:
+            log.critical(f"Error logging into host {self._host}: {response_object['error']['message']}")
+            raise WekaApiException( "Login failed" )
+
         self._tokens = response_object["result"]
         if self._tokens != {}:
             self.authorization = '{0} {1}'.format(self._tokens['token_type'], self._tokens['access_token'])
@@ -292,16 +298,87 @@ class WekaApi():
 
         # end of _login()
 
+
+    # re-implemented with urllib3
     def weka_api_command(self, method, parms):
+
+        api_endpoint = f"{self._scheme}://{self._host}:{self._port}{self._path}"
+        #log.debug(f"api_endpoint = {api_endpoint}")
+        message_id = self.unique_id()
+        request = self.format_request(message_id, method, parms)
+        log.debug(f"trying {api_endpoint}")
+        try:
+            response = self.http_conn.request('POST', api_endpoint, headers=self.headers, body=json.dumps(request).encode('utf-8'))
+        except urllib3.exceptions.MaxRetryError as exc:
+            # https failed, try http - http would never produce an ssl error
+            if isinstance(exc.reason, urllib3.exceptions.SSLError):
+                log.debug(f"SSLError detected")
+                log.debug("https failed")
+                self._scheme = "http"
+                return self.weka_api_command(method, parms) # recurse
+            elif isinstance(exc.reason, urllib3.exceptions.NewConnectionError):
+                log.critical(f"NewConnectionError caught")
+                #raise WekaApiException( "API command failed" )
+            elif isinstance(exc.reason, urllib3.exceptions.ConnectionRefusedError):
+                log.critical(f"ConnectionRefusedError caught")
+                #raise WekaApiException( "API command failed" )
+            else:
+                log.critical(f"MaxRetryError: {exc.reason}")
+                #track = traceback.format_exc()
+                #print(track)
+            raise
+        except Exception as exc:
+            log.debug(f"{exc}")
+            track = traceback.format_exc()
+            print(track)
+            return
+
+
+        #log.info('Response Code: {}'.format(response.status))  # ie: 200, 501, etc
+        #log.info('Response Body: {}'.format(resp_body))
+
+        if response.status == httpclient.UNAUTHORIZED:      # not logged in?
+            log.debug( "need to login" )
+            try:
+                self._login()
+            except:
+                raise
+            return self.weka_api_command(method, parms) # recurse - try again
+
+
+        if response.status in (httpclient.OK, httpclient.CREATED, httpclient.ACCEPTED):
+            response_object = json.loads(response.data.decode('utf-8'))
+            if 'error' in response_object:
+                log.error( "bad response from {}".format(self._host) )
+                raise WekaApiException(response_object['error'])
+            log.debug( "good response from {}".format(self._host) )
+            return self._format_response( method, response_object )
+        elif response.status == httpclient.MOVED_PERMANENTLY:
+            oldhost = self._host
+            self._scheme, self._host, self._port, self._path = self._parse_url(response.getheader('Location'))
+            log.debug( "redirection: {} moved to {}".format(oldhost, self._host) )
+        else:
+            log.error( "unknown error on {}".format(self._host) )
+            raise HttpException(response.status, response.reason)
+
+
+        #log.debug(f"r.data.decode('utf-8') = {r.data.decode('utf-8')}")
+        resp_dict = json.loads(response.data.decode('utf-8'))
+        return self._format_response( method, resp_dict )
+
+
+
+
+    def old_weka_api_command(self, method, parms):
         #lock_timer = time.time()
         #with self._lock:        # make it thread-safe - just in case someone tries to do 2 commands at the same time
 
         #now = time.time()
         #if now - lock_timer > .0001:
         #    log.debug(f"lock time = {now-lock_timer}s")
-        message_id = self.unique_id()
         #log.debug(f"method={method}, parms={parms}")
 
+        message_id = self.unique_id()
         request = self.format_request(message_id, method, parms)
 
         log.debug(f"submitting command to {self._host}: {method} {parms}")
