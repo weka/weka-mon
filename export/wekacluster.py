@@ -34,7 +34,7 @@ class WekaHost(object):
 
         if self.api_obj == None:
             # can't open API session, fail.
-            #log.error("WekaHost: unable to open API session")
+            log.error("WekaHost: unable to open API session")
             raise Exception("Unable to open API session")
 
         cluster._scheme = self.api_obj.scheme() # scheme is per cluster, if one host is http, all are
@@ -49,8 +49,6 @@ class WekaHost(object):
         except:
             self.host_in_progress -= 1
             raise
-        #log.debug(f"result={result}")
-        #log.debug(f"result2={result2}")
         self.host_in_progress -= 1
         log.debug(f"elapsed time for host {self.name}: {time.time() - start_time} secs")
         return result
@@ -109,8 +107,6 @@ class WekaCluster(object):
         self.guid = api_return['guid']
         self.release = api_return['release']
 
-        #log.debug( self.hosts )
-        #log.debug( "wekaCluster {} created. Cluster has {} members, {} are online".format(self.name, self.clustersize, len(self.hosts)) )
         # ------------- end of __init__() -------------
 
     def refresh_config(self):
@@ -178,7 +174,6 @@ class WekaCluster(object):
                 api_return = host.call_api( method, parms )
             except Exception as exc:
                 self.cluster_in_progress -= 1
-                log.critical(f"exception {exc} on {hostname}")
                 # something went wrong...  stop talking to this host from here on.  We'll try to re-establish communications later
                 last_hostname = hostname
                 self.hosts.remove(last_hostname)     # remove it from the hostlist iterable

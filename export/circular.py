@@ -60,7 +60,7 @@ class circular_list():
             log.debug(f"after: {str(self)}")
 
     def __str__(self):
-        #with self._lock:
+        #with self._lock:   # don't lock - causes race condition in debug mode
             return "list=" + str(self.list) + ", current=" + str(self.current)
 
     def __len__(self):

@@ -271,9 +271,6 @@ class WekaApi():
             raise WekaApiException( "Login failed" )
 
         response_body = response.data.decode('utf-8')
-        #self._conn.request('POST', self._path, json.dumps(login_request), self.headers) # POST a user_login request
-        #response = self._conn.getresponse()
-        #response_body = response.read().decode('utf-8')
 
         if response.status != 200:  # default login creds/refresh failed
             raise HttpException(response.status, response_body)
@@ -303,7 +300,7 @@ class WekaApi():
     def weka_api_command(self, method, parms):
 
         api_endpoint = f"{self._scheme}://{self._host}:{self._port}{self._path}"
-        #log.debug(f"api_endpoint = {api_endpoint}")
+        log.debug(f"api_endpoint = {api_endpoint}")
         message_id = self.unique_id()
         request = self.format_request(message_id, method, parms)
         log.debug(f"trying {api_endpoint}")
@@ -318,14 +315,10 @@ class WekaApi():
                 return self.weka_api_command(method, parms) # recurse
             elif isinstance(exc.reason, urllib3.exceptions.NewConnectionError):
                 log.critical(f"NewConnectionError caught")
-                #raise WekaApiException( "API command failed" )
             elif isinstance(exc.reason, urllib3.exceptions.ConnectionRefusedError):
                 log.critical(f"ConnectionRefusedError caught")
-                #raise WekaApiException( "API command failed" )
             else:
                 log.critical(f"MaxRetryError: {exc.reason}")
-                #track = traceback.format_exc()
-                #print(track)
             raise
         except Exception as exc:
             log.debug(f"{exc}")
@@ -362,109 +355,9 @@ class WekaApi():
             raise HttpException(response.status, response.reason)
 
 
-        #log.debug(f"r.data.decode('utf-8') = {r.data.decode('utf-8')}")
         resp_dict = json.loads(response.data.decode('utf-8'))
         return self._format_response( method, resp_dict )
 
-
-
-
-    def old_weka_api_command(self, method, parms):
-        #lock_timer = time.time()
-        #with self._lock:        # make it thread-safe - just in case someone tries to do 2 commands at the same time
-
-        #now = time.time()
-        #if now - lock_timer > .0001:
-        #    log.debug(f"lock time = {now-lock_timer}s")
-        #log.debug(f"method={method}, parms={parms}")
-
-        message_id = self.unique_id()
-        request = self.format_request(message_id, method, parms)
-
-        log.debug(f"submitting command to {self._host}: {method} {parms}")
-
-        #logginglevel = log.getEffectiveLevel()
-
-        for i in range(3):  # give it 3 tries
-            #log.setLevel(DEBUG)
-            log.debug( "Making POST request to {}:".format(self._host) )
-            request_exception = None
-
-            self._open_connection() # will only open a connection if there is none
-
-            try:
-                self._conn.request('POST', self._path, json.dumps(request), self.headers)
-                log.debug( "POST successful to {}".format(self._host) )
-            except http.client.CannotSendRequest as exc:
-                log.debug( "CannotSendRequest to {}: {} {} {}; aborting".format(self._host, self._path, json.dumps(request), str(self.headers)) )
-                request_exception = exc
-            except ConnectionRefusedError as exc: # exception on _conn_request()
-                log.debug( "Connection Refused from {}: {} {} {}".format(self._host, self._path, json.dumps(request), str(self.headers)) )
-                request_exception = exc
-            except BrokenPipeError:
-                log.debug(f"Broken pipe on {self._host}")
-                self._conn = None
-                continue
-
-            #log.setLevel(logginglevel)
-            if request_exception != None:
-                self._conn = None
-                raise WekaApiException(request_exception)
-
-            try:
-                response = self._conn.getresponse()
-                #log.debug( "response received: {}".format( response ) )
-            except (http.client.RemoteDisconnected, http.client.CannotSendRequest) as exc:
-                #log.setLevel(DEBUG)  # increase level to debug on error (reset later )
-                log.debug( "client disconnected?, retrying {}".format(self._host) )
-                #self._conn.connect()    # this should happen at the next request anyway
-                continue
-            except Exception as exc:
-                #log.setLevel(DEBUG)  # increase level to debug on error (reset later )
-                log.error( "Unusual exception caught" )
-                track = traceback.format_exc()
-                print(track)
-                log.error( f"{exc}" )  
-                continue
-
-            #log.debug( "get_response replied with: {}".format( str(response) ) )
-            response_body = response.read().decode('utf-8')
-            #log.debug( "response _body is: {}".format( str(response_body) ) )
-
-            if response.status == httpclient.UNAUTHORIZED:      # not logged in?
-                log.debug( "need to login" )
-                self._login()
-                continue    # go back to the top of the loop and try again now that we're (hopefully) logged in
-
-            if response.status in (httpclient.OK, httpclient.CREATED, httpclient.ACCEPTED):
-                response_object = json.loads(response_body)
-                if 'error' in response_object:
-                    #log.setLevel(DEBUG)  # increase level to debug on error (reset later )
-                    log.error( "bad response from {}".format(self._host) )
-                    raise WekaApiException(response_object['error'])
-                #self._conn.close()
-                log.debug( "good response from {}".format(self._host) )
-                return self._format_response( method, response_object )
-            elif response.status == httpclient.MOVED_PERMANENTLY:
-                oldhost = self._host
-                self._scheme, self._host, self._port, self._path = self._parse_url(response.getheader('Location'))
-                log.debug( "redirection: {} moved to {}".format(oldhost, self._host) )
-                self._conn = None
-                self._open_connection()
-            else:
-                #log.setLevel(DEBUG)  # increase level to debug on error (reset later )
-                log.error( "unknown error on {}".format(self._host) )
-                #log.setLevel(logginglevel)  # increase level to debug on error (reset later )
-                self._conn = None
-                raise HttpException(response.status, response.reason)
-
-        log.debug( "other exception '{}' occurred on host {}".format(exc,self._host) )
-        #log.setLevel(logginglevel)  # increase level to debug on error (reset later )
-        self._conn = None   # make sure we open a new connection next time
-        if i == 2:
-            raise WekaApiException( "Error communicating with {}".format(self._host) )
-        else:
-            raise HttpException(response.status, response_body)
 
 # stand-alone func
 def get_tokens(token_file):

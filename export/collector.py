@@ -228,14 +228,6 @@ class wekaCollector(object):
 
             # ok, the prometheus_client module calls this method TWICE every time it scrapes...  ugh
             last_collect = self.collect_time
-            #self.collect_time = start_time
-            #self.collect_time = time.time()
-
-            #log.debug( "secs since last collect = {}, should_gather = {}".format( int(self.collect_time - last_collect), should_gather ) )
-
-            # prom should always be like 60 secs; the double-call is one after the next
-            #if self.collect_time - last_collect > 0:
-            #log.info(f"returning stats, gather length {self.collect_time - start_time} secs" )     # only announce once
 
             # yield for each metric 
             for metric in metric_objs.values():
@@ -249,8 +241,6 @@ class wekaCollector(object):
                 elapsed = self.last_elapsed
 
             yield GaugeMetricFamily('weka_collect_seconds', 'Total Time spent in Prometheus collect', value=elapsed)
-            #weka_collect_gauge = GaugeMetricFamily('weka_collect_seconds', 'Total Time spent in Prometheus collect')
-            #weka_collect_gauge.add_metric(labels={}, value=elapsed)
             log.info(f"status returned. total time = {elapsed}")
 
     # runs in a thread, so args comes in as a dict
@@ -262,8 +252,6 @@ class wekaCollector(object):
             if category == None:
                 self.clusterdata[str(cluster)][metric] = cluster.call_api( method=method, parms=parms )
             else:
-                #print( json.dumps( self.clusterdata, indent=4, sort_keys=True ))
-                #log.debug( self.clusterdata[str(cluster)].keys() )
                 if not category in self.clusterdata[str(cluster)]:
                     self.clusterdata[str(cluster)][category] = {}
                 self.clusterdata[str(cluster)][category][metric] = cluster.call_api( method=method, parms=parms )
