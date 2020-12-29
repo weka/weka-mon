@@ -258,6 +258,7 @@ class wekaCollector(object):
         except Exception as exc:
             # just log it, as we're probably in a thread
             log.critical(f"Exception caught: {exc}")
+            log.debug(traceback.format_exc())
 
     # start here
     #

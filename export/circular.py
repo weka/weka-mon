@@ -23,14 +23,14 @@ class circular_list():
     def next(self):
         log.debug(f"in next()")
         with self._lock:
-            log.debug(f"before: {str(self)}")
+            log.debug(f"before: {self._str()}")
             if len(self.list) == 0:
                 return None # nothing in the list
             item = self.list[self.current]
             self.current += 1
             if self.current >= len(self.list):    # cycle back to beginning
                 self.current = 0
-            log.debug(f"after: {str(self)}")
+            log.debug(f"after: {self._str()}")
             return item
 
     # reset the list to something new
@@ -43,27 +43,35 @@ class circular_list():
     def remove(self, item):
         log.debug(f"in remove()")
         with self._lock:
-            log.debug(f"removing {item}; before: {str(self)}")
+            log.debug(f"removing {item}; before: {self._str()}")
             try:
                 self.list.remove(item)    # it's really a list [], so use the [].remove() method.
             except ValueError:
-                log.info(f"item {item} not in list")
+                log.debug(f"item {item} not in list")
             if self.current >= len(self.list):    # did we remove the last one in the list?
                 self.current = 0
-            log.debug(f"after: {str(self)}")
+            log.debug(f"after: {self._str()}")
 
     def insert(self, item):
         log.debug(f"in insert()")
         with self._lock:
-            log.debug(f"inserting {item}; before: {str(self)}")
+            log.debug(f"inserting {item}; before: {self._str()}")
             self.list.append(item)
-            log.debug(f"after: {str(self)}")
+            log.debug(f"after: {self._str()}")
+
+    def _str(self):
+        return "list=" + str(self.list) + ", current=" + str(self.current)
 
     def __str__(self):
-        #with self._lock:   # don't lock - causes race condition in debug mode
-            return "list=" + str(self.list) + ", current=" + str(self.current)
+        with self._lock:
+            return self._str()
 
     def __len__(self):
         with self._lock:
             return len(self.list)
+
+    def __contains__(self, other):
+        with self._lock:
+            return other in self.list
+
 

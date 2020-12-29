@@ -55,6 +55,10 @@ class HttpException(Exception):
 
 #pool_manager = urllib3.PoolManager(num_pools=100) # new
 
+class WekaApiIOStopped(Exception):
+    def __init__(self, message):
+        self.message = message
+
 class WekaApiException(Exception):
     def __init__(self, message):
         self.message = message
@@ -343,7 +347,7 @@ class WekaApi():
             response_object = json.loads(response.data.decode('utf-8'))
             if 'error' in response_object:
                 log.error( "bad response from {}".format(self._host) )
-                raise WekaApiException(response_object['error'])
+                raise WekaApiIOStopped(response_object['error']['message'])
             log.debug( "good response from {}".format(self._host) )
             return self._format_response( method, response_object )
         elif response.status == httpclient.MOVED_PERMANENTLY:

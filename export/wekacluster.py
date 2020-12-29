@@ -59,6 +59,18 @@ class WekaHost(object):
     def __repr__(self):
         return self.name
 
+    def __eq__(self, other):
+        if other == None:
+            return False
+        elif isinstance(other, WekaHost):
+            return other.name == self.name
+        elif type(other) == str:
+            return other == self.name
+        raise NotImplementedError
+
+    def __hash__(self):
+        return hash(self.name)
+
     def scheme(self):
         return self._scheme
 
@@ -109,18 +121,27 @@ class WekaCluster(object):
 
         # ------------- end of __init__() -------------
 
+    def __str__(self):
+        return str(self.name)
+
+    def sizeof(self):
+        return len(self.hosts)
+
     def refresh_config(self):
         # we need *some* kind of host(s) in order to get the hosts_list below
-        #if len(self.host_dict) == 0:
         if self.hosts == None or len(self.hosts) == 0:
+            templist = []
+            log.debug(f"Refreshing hostlists from original")
             # create objects for the hosts; recover from total failure
             for hostname in self.orig_hostlist:
                 try:
                     hostobj = WekaHost(hostname, self)
-                    self.host_dict[hostname] = hostobj
+                    #self.host_dict[hostname] = hostobj
+                    templist.append(hostobj)
                 except:
                     pass
-            self.hosts = circular_list(list(self.host_dict.keys()))
+            #self.hosts = circular_list(list(self.host_dict.keys()))
+            self.hosts = circular_list(templist)
 
         # get the rest of the cluster (bring back any that had previously disappeared, or have been added)
         try:
@@ -129,6 +150,7 @@ class WekaCluster(object):
             raise
 
         self.clustersize = 0
+        templist = []
 
         for host in api_return:
             hostname = host["hostname"]
@@ -136,55 +158,60 @@ class WekaCluster(object):
                 self.clustersize += 1
                 if host["state"] == "ACTIVE" and host["status"] == "UP":
                     # check if it's already in the list
-                    if hostname not in self.host_dict:
+                    # need a comparison of hostname to hostobj - vince
+                    #if hostname not in self.host_dict:
+                    if hostname not in self.hosts:
                         try:
-                            log.critical(f"creating new WekaHost instance for host {hostname}")
+                            log.debug(f"creating new WekaHost instance for host {hostname}")
                             hostobj = WekaHost(hostname, self)
-                            self.host_dict[hostname] = hostobj
+                            #self.host_dict[hostname] = hostobj
+                            self.hosts.insert(hostobj)
                         except:
                             pass
+                    else:
+                        log.debug(f"{hostname} already in list")
 
-        self.hosts = circular_list(list(self.host_dict.keys()))
+        #self.hosts = circular_list(templist)
+        #self.hosts = circular_list(list(self.host_dict.keys()))
+
+        log.debug(f"host list is: {str(self.hosts)}")
 
         log.debug( "wekaCluster {} refreshed. Cluster has {} members, {} are online".format(self.name, self.clustersize, len(self.hosts)) )
 
-    def __str__(self):
-        return str(self.name)
-
-    def sizeof(self):
-        return len(self.hosts)
-
     # cluster-level call_api() will retry commands on another host in the cluster on failure
     def call_api( self, method=None, parms={} ):
-        hostname = self.hosts.next()
-        if hostname == None:
-            # no hosts?
-            raise Exception("unable to communicate with cluster - no hosts in host list")
-        try:
-            host = self.host_dict[hostname]
-        except:
-            log.error(f"hostname {hostname} not in host_dict. host_dict={host_dict}")
-            return
+        #hostname = self.hosts.next()
+        #if hostname == None:
+        #    # no hosts?
+        #    raise Exception("unable to communicate with cluster - no hosts in host list")
+        #try:
+        #    host = self.host_dict[hostname]
+        #except:
+        #    log.error(f"hostname {hostname} not in host_dict. host_dict={host_dict}")
+        #    return
+        host = self.hosts.next()
 
         api_return = None
         while host != None:
             self.cluster_in_progress += 1
             try:
-                log.debug(f"calling Weka API on cluster {self}, host {hostname}, method {method}, {self.cluster_in_progress} in progress for cluster")
+                log.debug(f"calling Weka API on cluster {self}, host {host}, method {method}, {self.cluster_in_progress} in progress for cluster")
                 api_return = host.call_api( method, parms )
+            except wekaapi.WekaApiIOStopped as exc:
+                log.error(f"IO Stopped on Cluster {self}")
+                raise
             except Exception as exc:
                 self.cluster_in_progress -= 1
                 # something went wrong...  stop talking to this host from here on.  We'll try to re-establish communications later
-                last_hostname = hostname
-                self.hosts.remove(last_hostname)     # remove it from the hostlist iterable
-                hostname = self.hosts.next()
-                if hostname == None:
-                    host = None
+                #last_hostname = hostname
+                #self.hosts.remove(last_hostname)     # remove it from the hostlist iterable
+                last_hostname = str(host)
+                self.hosts.remove(host) # it failed, so remove it from the list
+                host = self.hosts.next()
+                if host == None:
                     break   # fall through to raise exception
-                host = self.host_dict[hostname] # try another host; will return None if none left or failure
                 self.errors += 1
-                log.error( "cluster={}, error {} spawning command {} on host {}. Retrying on {}.".format(
-                        self.name, exc, str(method), last_hostname, str(hostname)) )
+                log.error(f"cluster={self}, {type(exc)} error {exc} spawning command {method} on host {last_hostname}. Retrying on {host}.")
                 #print(traceback.format_exc())
                 continue
 
