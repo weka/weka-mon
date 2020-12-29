@@ -21,7 +21,7 @@ Clone this repository with
 git clone <repo>
 ```
 
-Run the "set_permissions.sh" script to set the permissions on the subdirectories used to persist data between container restarts - this preserves the Grafana, Prometheus and Loki databases.
+Run the "install.sh" script to set the permissions on the subdirectories used to persist data between container restarts - this preserves the Grafana, Prometheus and Loki databases.
 
 Edit the configuration as needed.  Start copying etc_alertmanager/alertmanager.yml.sanitized to etc_alertmanager/alertmanager.yml, and edit it to send the alerts to your desired destination (PagerDuty, Slack, Email, Text message - please refer to Prometheus Alertmanager documentation for details if you are unfamiliar with configuring Alertmanager).  Skip this step if you don't want Alerts sent via Alertmanager.
 
