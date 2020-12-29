@@ -65,9 +65,6 @@ class simul_threads():
     # start threads, but only a few at a time
     def starter( self ):
         # only allow num_simultaneous threads to run at one time
-        #print "starter(): self.running has " + str( len( self.running ) ) + " items, and self.staged has " + str( len( self.staged ) ) + " items"
-        #print self.num_simultaneous
-        #log.debug(f"starting threads")
         log.debug(f"starting threads; num_simultaneous={self.num_simultaneous}, running={len( self.running )}, staged={len( self.staged )}")
         while len( self.running ) < self.num_simultaneous and len( self.staged ) > 0:
             threadid, thread = self.staged.popitem()    # take one off the staged list

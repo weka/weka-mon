@@ -132,6 +132,9 @@ if __name__ == '__main__':
     sublog = logging.getLogger( "lokilogs" )
     sublog.setLevel(logging.INFO)
 
+    # configure logging in circular module
+    logging.getLogger("circular").setLevel(logging.INFO)
+
     # schedule up a process for each cluster, put them on conescutive ports starting at 8001 (or specified port)
     subprocesses = {}
     port = int(args.port)

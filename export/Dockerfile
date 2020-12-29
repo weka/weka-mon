@@ -15,7 +15,7 @@ WORKDIR $BASEDIR
 COPY export $BASEDIR
 COPY export.yml $BASEDIR
 COPY collector.py $BASEDIR
-COPY reserve.py $BASEDIR
+COPY circular.py $BASEDIR
 COPY signals.py $BASEDIR
 COPY sthreads.py $BASEDIR
 COPY wekaapi.py $BASEDIR

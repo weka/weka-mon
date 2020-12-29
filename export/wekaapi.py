@@ -23,6 +23,8 @@ import ssl
 import traceback
 from threading import Lock
 
+import urllib3
+
 try:
     import http.client
     httpclient = http.client
@@ -51,13 +53,18 @@ class HttpException(Exception):
 #        self.message = json_error['message']
 #        self.data = json_error.get('data', None)
 
+#pool_manager = urllib3.PoolManager(num_pools=100) # new
+
+class WekaApiIOStopped(Exception):
+    def __init__(self, message):
+        self.message = message
 
 class WekaApiException(Exception):
     def __init__(self, message):
         self.message = message
 
 class WekaApi():
-    def __init__(self, host, scheme='https', port=14000, path='/api/v1', timeout=10, tokens=None ):
+    def __init__(self, host, scheme='http', port=14000, path='/api/v1', timeout=10, tokens=None ):
 
         self._lock = Lock() # make it re-entrant (thread-safe)
         self._scheme = scheme
@@ -69,6 +76,9 @@ class WekaApi():
         self.headers = {}
         self._tokens=tokens
         
+        # forget scheme (https/http) at this point...   notes:  maxsize means 2 connections per host, block means don't make more than 2
+        self.http_conn = urllib3.HTTPConnectionPool(host, port=port, maxsize=2, block=True, retries=3)
+
         log.debug( f"tokens are {self._tokens}" )
         if self._tokens != None:
             self.authorization = '{0} {1}'.format(self._tokens['token_type'], self._tokens['access_token'])
@@ -80,8 +90,12 @@ class WekaApi():
         self.headers['CLI'] = False
         self.headers['Client-Type'] = 'WEKA'
 
-        self._open_connection()
-        log.debug(f"WekaApi: connected to {self._host}")
+        self._login()
+
+        log.debug( "WekaApi: connected to {}".format(self._host) )
+
+    def scheme(self):
+        return self._scheme
 
     @staticmethod
     def format_request(message_id, method, params):
@@ -103,9 +117,11 @@ class WekaApi():
     @staticmethod
     def _parse_url(url, default_port=14000, default_path='/api/v1'):
         parsed_url = urlparse(url)
-        scheme = parsed_url.scheme if parsed_url.scheme else "https"
+        #scheme = parsed_url.scheme if parsed_url.scheme else "https"
+        scheme = parsed_url.scheme if parsed_url.scheme else "http"
         if scheme not in ['http', 'https']:
-            scheme = "https"
+            #scheme = "https"
+            scheme = "http"
         m = re.match('^(?:(?:http|https)://)?(.+?)(?::(\d+))?(/.*)?$', str(url), re.I)
         assert m
         return scheme, m.group(1), m.group(2) or default_port, m.group(3) or default_path
@@ -134,7 +150,7 @@ class WekaApi():
                         return
                     except ssl.SSLError:
                         # https failed, try http - http would never produce an ssl error
-                        log.debug( "https failed, trying http" )
+                        log.debug( "https failed" )
                         self._scheme = "http"
                         try_again = True
                     except socket.timeout:
@@ -221,12 +237,13 @@ class WekaApi():
     # log into the api  # assumes that you got an UNAUTHORIZED (401)
     def _login( self ):
         login_message_id = self.unique_id()
+        log.debug("logging in")
 
         if self.authorization != None:   # maybe should see if _tokens != None also?
             # try to refresh the auth since we have prior authorization
             params = dict(refresh_token=self._tokens["refresh_token"])
             login_request = self.format_request(login_message_id, "user_refresh_token", params)
-            log.debug(f"reauthorizing with host {self._host}")
+            log.debug( "reauthorizing with host {}".format(self._host) )
         else:
             # try default login info - we have no tokens.
             params = dict(username="admin", password="admin")
@@ -234,126 +251,117 @@ class WekaApi():
             log.debug(f"default login with host {self._host} {login_request}" )
 
 
-        self._conn.request('POST', self._path, json.dumps(login_request), self.headers) # POST a user_login request
-        response = self._conn.getresponse()
-        response_body = response.read().decode('utf-8')
+        try:
+            api_endpoint = f"{self._scheme}://{self._host}:{self._port}{self._path}"
+            log.debug(f"trying {api_endpoint}")
+            response = self.http_conn.request('POST', api_endpoint, headers=self.headers, body=json.dumps(login_request).encode('utf-8'))
+        except urllib3.exceptions.MaxRetryError as exc:
+            # https failed, try http - http would never produce an ssl error
+            if isinstance(exc.reason, urllib3.exceptions.SSLError):
+                log.debug(f"SSLError detected")
+                log.debug( "https failed" )
+                self._scheme = "http"
+                return self._login() # recurse
+            elif isinstance(exc.reason, urllib3.exceptions.NewConnectionError):
+                log.critical(f"ConnectionRefusedError/NewConnectionError caught")
+                raise WekaApiException( "Login failed" )
+            else:
+                log.critical(f"MaxRetryError: {exc.reason}")
+                track = traceback.format_exc()
+                print(track)
+                raise
+        except Exception as exc:
+            log.critical(f"{exc}")
+            raise WekaApiException( "Login failed" )
+
+        response_body = response.data.decode('utf-8')
 
         if response.status != 200:  # default login creds/refresh failed
-            log.critical(f"Login failed on host {self._host}: status {response.status}")
             raise HttpException(response.status, response_body)
 
         response_object = json.loads(response_body)
+
+        if "error" in response_object:
+            log.critical(f"Error logging into host {self._host}: {response_object['error']['message']}")
+            raise WekaApiException( "Login failed" )
+
         self._tokens = response_object["result"]
         if self._tokens != {}:
             self.authorization = '{0} {1}'.format(self._tokens['token_type'], self._tokens['access_token'])
         else:
             self.authorization = None
             self._tokens= None
-            log.critical(f"Login failed on host {self._host}")
-            raise WekaApiException(f"Login failed on host {self._host}" )
+            log.critical( "Login failed" )
+            raise WekaApiException( "Login failed" )
 
         self.headers["Authorization"] = self.authorization
-        log.debug(f"login to {self._host} successful")
+        log.debug( "login to {} successful".format(self._host) )
 
         # end of _login()
 
+
+    # re-implemented with urllib3
     def weka_api_command(self, method, parms):
-        lock_timer = time.time()
-        # need to make locking more granular
-        with self._lock:        # make it thread-safe - just in case someone tries to do 2 commands at the same time
-            now = time.time()
-            if now - lock_timer > .0001:
-                log.debug(f"lock time = {now-lock_timer}s")
-            message_id = self.unique_id()
-            #log.debug(f"method={method}, parms={parms}")
 
-            request = self.format_request(message_id, method, parms)
-
-            log.debug(f"submitting command to {self._host}: {method} {parms}")
-
-            #logginglevel = log.getEffectiveLevel()
-
-            for i in range(3):  # give it 3 tries
-                request_exception = None
-
-                log.debug(f"Making POST request to {self._host}:")
-                # lock this?
-                self._open_connection() # will only open a connection if there is none
-
-                try:
-                    # POST takes no time... wait below
-                    self._conn.request('POST', self._path, json.dumps(request), self.headers)
-                    log.debug(f"POST successful to {self._host}")
-                except http.client.CannotSendRequest as exc:
-                    log.debug(f"CannotSendRequest from {self._host}: {self._path} {json.dumps(request)} {str(self.headers)}; aborting")
-                    #log.debug( "CannotSendRequest to {}: {} {} {}; aborting".format(self._host, self._path, json.dumps(request), str(self.headers)) )
-                    request_exception = exc
-                except ConnectionRefusedError as exc: # exception on _conn_request()
-                    log.debug(f"Connection Refused from {self._host}: {self._path} {json.dumps(request)} {str(self.headers)}; aborting")
-                    #log.debug( "Connection Refused from {}: {} {} {}".format(self._host, self._path, json.dumps(request), str(self.headers)) )
-                    request_exception = exc
-                except BrokenPipeError:
-                    log.debug(f"Broken pipe on {self._host}")
-                    self._conn = None
-                    continue    # don't take any particular action here - just retry; 3 failures result in the below exception
-
-                if request_exception != None:
-                    self._conn = None
-                    raise WekaApiException(request_exception)
-
-                # wait for a response
-                try:
-                    # Note: we're waiting for a response HERE - takes 1+ seconds
-                    before = time.time()
-                    response = self._conn.getresponse()
-                    log.debug(f"response time: {time.time()-before}")
-                    #log.debug( "response received: {}".format( response ) )
-                except (http.client.RemoteDisconnected, http.client.CannotSendRequest) as exc:
-                    # This happens when there's an error and the connection is no good (possibly from another thread)
-                    log.debug(f"client disconnected?, retrying {self._host}")
-                    #self._conn.connect()    # this should happen at the next request anyway (top of loop)
-                    continue
-                except Exception as exc:
-                    log.error( "Unusual exception caught" )
-                    track = traceback.format_exc()
-                    print(track)
-                    log.error( f"{exc}" )  
-                    continue
-
-                log.debug(f"getresponse replied with: {str(response)}")
-                response_body = response.read().decode('utf-8')
-                log.debug(f"response _body is: {str(response_body)}")
-
-                if response.status == httpclient.UNAUTHORIZED:      # not logged in?
-                    log.debug( "need to login" )
-                    self._login()
-                    continue    # go back to the top of the loop and try again now that we're (hopefully) logged in
-
-                if response.status in (httpclient.OK, httpclient.CREATED, httpclient.ACCEPTED):
-                    response_object = json.loads(response_body)
-                    if 'error' in response_object:
-                        #log.setLevel(DEBUG)  # increase level to debug on error (reset later )
-                        log.error(f"bad response from {self._host}")
-                        raise WekaApiException(response_object['error'])
-                    log.debug( "good response from {self._host}")
-                    return self._format_response( method, response_object )
-                elif response.status == httpclient.MOVED_PERMANENTLY:
-                    oldhost = self._host
-                    self._scheme, self._host, self._port, self._path = self._parse_url(response.getheader('Location'))
-                    log.debug( "redirection: {oldhost} moved to {self._host}")
-                    self._conn = None
-                    self._open_connection()
-                else:
-                    log.error(f"unknown error on {self._host}")
-                    self._conn = None
-                    raise HttpException(response.status, response.reason)
-
-            log.debug(f"other exception '{exc}' occurred on host {self._host}")
-            self._conn = None   # make sure we open a new connection next time
-            if i == 2:
-                raise WekaApiException(f"Error communicating with {self._host}")
+        api_endpoint = f"{self._scheme}://{self._host}:{self._port}{self._path}"
+        log.debug(f"api_endpoint = {api_endpoint}")
+        message_id = self.unique_id()
+        request = self.format_request(message_id, method, parms)
+        log.debug(f"trying {api_endpoint}")
+        try:
+            response = self.http_conn.request('POST', api_endpoint, headers=self.headers, body=json.dumps(request).encode('utf-8'))
+        except urllib3.exceptions.MaxRetryError as exc:
+            # https failed, try http - http would never produce an ssl error
+            if isinstance(exc.reason, urllib3.exceptions.SSLError):
+                log.debug(f"SSLError detected")
+                log.debug("https failed")
+                self._scheme = "http"
+                return self.weka_api_command(method, parms) # recurse
+            elif isinstance(exc.reason, urllib3.exceptions.NewConnectionError):
+                log.critical(f"NewConnectionError caught")
+            elif isinstance(exc.reason, urllib3.exceptions.ConnectionRefusedError):
+                log.critical(f"ConnectionRefusedError caught")
             else:
-                raise HttpException(response.status, response_body)
+                log.critical(f"MaxRetryError: {exc.reason}")
+            raise
+        except Exception as exc:
+            log.debug(f"{exc}")
+            track = traceback.format_exc()
+            print(track)
+            return
+
+
+        #log.info('Response Code: {}'.format(response.status))  # ie: 200, 501, etc
+        #log.info('Response Body: {}'.format(resp_body))
+
+        if response.status == httpclient.UNAUTHORIZED:      # not logged in?
+            log.debug( "need to login" )
+            try:
+                self._login()
+            except:
+                raise
+            return self.weka_api_command(method, parms) # recurse - try again
+
+
+        if response.status in (httpclient.OK, httpclient.CREATED, httpclient.ACCEPTED):
+            response_object = json.loads(response.data.decode('utf-8'))
+            if 'error' in response_object:
+                log.error( "bad response from {}".format(self._host) )
+                raise WekaApiIOStopped(response_object['error']['message'])
+            log.debug( "good response from {}".format(self._host) )
+            return self._format_response( method, response_object )
+        elif response.status == httpclient.MOVED_PERMANENTLY:
+            oldhost = self._host
+            self._scheme, self._host, self._port, self._path = self._parse_url(response.getheader('Location'))
+            log.debug( "redirection: {} moved to {}".format(oldhost, self._host) )
+        else:
+            log.error( "unknown error on {}".format(self._host) )
+            raise HttpException(response.status, response.reason)
+
+
+        resp_dict = json.loads(response.data.decode('utf-8'))
+        return self._format_response( method, resp_dict )
+
 
 # stand-alone func
 def get_tokens(token_file):
@@ -368,11 +376,11 @@ def get_tokens(token_file):
                     tokens = json.load( fp )
                 return tokens
             except Exception as error:
-                log.critical(f"unable to open token file {token_file}")
+                log.critical( "unable to open token file {}".format(token_file) )
                 error=True
         else:
             error=True
-            log.error(f"token file {token_file} not found")
+            log.error( "token file {} not found".format(token_file) )
 
     if error:
         #raise WekaApiException('warning: Could not parse {0}, ignoring file'.format(path), file=sys.stderr)
