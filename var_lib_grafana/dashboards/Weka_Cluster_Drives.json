@@ -15,7 +15,8 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1609280125045,
+  "id": 7,
+  "iteration": 1609281085971,
   "links": [],
   "panels": [
     {
@@ -154,7 +155,7 @@
       "pluginVersion": "7.3.4",
       "targets": [
         {
-          "expr": "weka_drives",
+          "expr": "weka_drives{cluster=\"$cluster\"}",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -239,21 +240,29 @@
         "type": "datasource"
       },
       {
+        "allValue": null,
+        "current": {
+        },
         "datasource": "$weka_datasource",
+        "definition": "label_values(weka_info,cluster)",
         "error": null,
-        "filters": [
-          {
-            "condition": "",
-            "key": "cluster",
-            "operator": "=",
-            "value": ""
-          }
-        ],
         "hide": 0,
+        "includeAll": false,
         "label": null,
+        "multi": false,
         "name": "cluster",
+        "options": [
+        ],
+        "query": "label_values(weka_info,cluster)",
+        "refresh": 0,
+        "regex": "",
         "skipUrlSync": false,
-        "type": "adhoc"
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
       }
     ]
   },
@@ -264,6 +273,6 @@
   "timepicker": {},
   "timezone": "",
   "title": "Weka Cluster Drives",
-  "uid": "58jzC_bGk",
-  "version": 4
+  "uid": "WekaDrives",
+  "version": 5
 }
