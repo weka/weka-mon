@@ -15,8 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 7,
-  "iteration": 1609275593710,
+  "iteration": 1609280125045,
   "links": [],
   "panels": [
     {
@@ -215,7 +214,9 @@
   ],
   "schemaVersion": 26,
   "style": "dark",
-  "tags": [],
+  "tags": [
+    "#weka"
+  ],
   "templating": {
     "list": [
       {
@@ -245,7 +246,7 @@
             "condition": "",
             "key": "cluster",
             "operator": "=",
-            "value": "vincetest1"
+            "value": ""
           }
         ],
         "hide": 0,
@@ -264,5 +265,5 @@
   "timezone": "",
   "title": "Weka Cluster Drives",
   "uid": "58jzC_bGk",
-  "version": 2
+  "version": 4
 }
