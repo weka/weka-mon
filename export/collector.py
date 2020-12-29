@@ -81,6 +81,7 @@ class wekaCollector(object):
         "clusterinfo": dict( method="status", parms={} ),
         "nodeList": dict( method="nodes_list", parms={} ),
         "fs_stat": dict( method="filesystems_get_capacity", parms={} ),
+        "driveList": dict( method="disks_list", parms={"show_removed":False} ),
         "alerts": dict( method="alerts_list", parms={} )
         #"quotas": dict( method="directory_quota_list", parms={'fs_name','start_cookie'} )
         }
@@ -186,6 +187,8 @@ class wekaCollector(object):
                 labels=['cluster','host_name','host_role','node_id','node_role','category','stat','unit'] )
         metric_objs['alerts'] = GaugeMetricFamily('weka_alerts', 'Alerts from Weka cluster', 
                 labels=['cluster', 'type', 'title', 'host_name', 'host_id', 'node_id', 'drive_id' ] )
+        metric_objs['drives'] = GaugeMetricFamily('weka_drives', 'Weka cluster drives', 
+                labels=['cluster', 'host_name', 'host_id', 'node_id', 'drive_id', 'vendor', 'model', 'serial', 'size', 'status', 'life'] )
 
 
     def collect( self ):
@@ -487,6 +490,23 @@ class wekaCollector(object):
                 labelvalues = [str(cluster), alert['type'], alert['title'], host_name, host_id, node_id, drive_id]
                 metric_objs['alerts'].add_metric(labelvalues, 1.0)
 
+        #metric_objs['drives'] = GaugeMetricFamily('weka_drives', 'Weka cluster drives', 
+        #        labels=['cluster', 'host_name', 'host_id', 'node_id', 'drive_id', 'vendor', 'model', 'serial', 'size', 'status', 'life'] )
+        for drive in wekadata["driveList"]:
+            metric_objs['drives'].add_metric(
+                    [
+                str(cluster), 
+                drive['hostname'], 
+                drive['host_id'], 
+                drive['node_id'], 
+                drive['disk_id'], 
+                drive['vendor'], 
+                drive['model'], 
+                drive['serial_number'], 
+                str(drive['size_bytes']), 
+                drive['status'], 
+                str(100-int(drive['percentage_used'])) 
+                ], 1)
         #try:
         #except:
         #    log.error( "error processing alerts for cluster {}".format(str(cluster)) )
