@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 7,
-  "iteration": 1609281085971,
+  "iteration": 1609698829483,
   "links": [],
   "panels": [
     {
@@ -222,9 +222,6 @@
     "list": [
       {
         "current": {
-          "selected": false,
-          "text": "Prometheus",
-          "value": "Prometheus"
         },
         "error": null,
         "hide": 0,
@@ -244,7 +241,7 @@
         "current": {
         },
         "datasource": "$weka_datasource",
-        "definition": "label_values(weka_info,cluster)",
+        "definition": "label_values(weka_drives,cluster)",
         "error": null,
         "hide": 0,
         "includeAll": false,
@@ -252,8 +249,20 @@
         "multi": false,
         "name": "cluster",
         "options": [
+          {
+            "selected": false
+          },
+          {
+            "selected": false
+          },
+          {
+            "selected": false
+          },
+          {
+            "selected": false
+          }
         ],
-        "query": "label_values(weka_info,cluster)",
+        "query": "label_values(weka_drives,cluster)",
         "refresh": 0,
         "regex": "",
         "skipUrlSync": false,
@@ -263,6 +272,16 @@
         "tagsQuery": "",
         "type": "query",
         "useTags": false
+      },
+      {
+        "datasource": "$weka_datasource",
+        "error": null,
+        "filters": [],
+        "hide": 0,
+        "label": null,
+        "name": "adhoc",
+        "skipUrlSync": false,
+        "type": "adhoc"
       }
     ]
   },
@@ -274,5 +293,5 @@
   "timezone": "",
   "title": "Weka Cluster Drives",
   "uid": "WekaDrives",
-  "version": 5
+  "version": 11
 }
