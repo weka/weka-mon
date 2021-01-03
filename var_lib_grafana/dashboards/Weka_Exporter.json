@@ -15,8 +15,8 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 6,
-  "iteration": 1608818256497,
+  "id": 1,
+  "iteration": 1609264642342,
   "links": [],
   "panels": [
     {
@@ -24,7 +24,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": null,
+      "datasource": "$weka_datasource",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -95,7 +95,6 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:76",
           "format": "s",
           "label": null,
           "logBase": 1,
@@ -104,7 +103,6 @@
           "show": true
         },
         {
-          "$$hashKey": "object:77",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -290,7 +288,6 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:100",
           "decimals": null,
           "format": "s",
           "label": "",
@@ -300,7 +297,6 @@
           "show": true
         },
         {
-          "$$hashKey": "object:101",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -390,7 +386,6 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:181",
           "format": "s",
           "label": null,
           "logBase": 1,
@@ -399,7 +394,6 @@
           "show": true
         },
         {
-          "$$hashKey": "object:182",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -418,7 +412,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": null,
+      "datasource": "$weka_datasource",
       "fieldConfig": {
         "defaults": {
           "custom": {}
@@ -489,7 +483,6 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:258",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -498,7 +491,6 @@
           "show": true
         },
         {
-          "$$hashKey": "object:259",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -513,7 +505,7 @@
       }
     }
   ],
-  "refresh": "5s",
+  "refresh": "30s",
   "schemaVersion": 26,
   "style": "dark",
   "tags": [],
@@ -542,7 +534,7 @@
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-12h",
     "to": "now"
   },
   "timepicker": {
@@ -561,5 +553,5 @@
   "timezone": "",
   "title": "Weka Metrics Exporter Stats",
   "uid": "WekaExporter",
-  "version": 4
+  "version": 6
 }
