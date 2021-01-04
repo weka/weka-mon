@@ -147,8 +147,8 @@ if __name__ == '__main__':
         else:
             cluster_auth = None
         p = Process(target=prom_client, 
-                args=(port, args.configfile, spec, cluster_auth, args.lokihost, args.lokiport))
-        subprocesses[spec] = p  # keep processes by clusterspec so easy to tell them apart
+                args=(port, args.configfile, clusterspeclist[0], cluster_auth, args.lokihost, args.lokiport))
+        subprocesses[clusterspeclist[0]] = p  # keep processes by clusterspec so easy to tell them apart
         port += 1
         
     # kick them off
