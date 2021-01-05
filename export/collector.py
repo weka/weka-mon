@@ -496,8 +496,38 @@ class wekaCollector(object):
         #metric_objs['drives'] = GaugeMetricFamily('weka_drives', 'Weka cluster drives', 
         #        labels=['cluster', 'host_name', 'host_id', 'node_id', 'drive_id', 'vendor', 'model', 'serial', 'size', 'status', 'life'] )
 
+        drive_error = False
         try:
             for drive in wekadata["driveList"]:
+                if drive['hostname'] == None:
+                    log.error(f"hostname is None")
+                    drive_error = True
+                if drive['host_id'] == None:
+                    log.error(f"host_id is None")
+                    drive_error = True
+                if drive['node_id'] == None:
+                    log.error(f"node_id is None")
+                    drive_error = True
+                if drive['disk_id'] == None:
+                    log.error(f"disk_id is None")
+                    drive_error = True
+                if drive['vendor'] == None:
+                    log.error(f"vendor is None")
+                    drive_error = True
+                if drive['model'] == None:
+                    log.error(f"model is None")
+                    drive_error = True
+                if drive['serial_number'] == None:
+                    log.error(f"serial_number is None")
+                    drive_error = True
+                if drive['status'] == None:
+                    log.error(f"status is None")
+                    drive_error = True
+
+                if drive_error:
+                    log.error(f"{drive['hostname']} {drive['host_id']} {drive['node_id']} {drive['disk_id']} {drive['vendor']} {drive['model']} {drive['serial_number']} {drive['status']}")
+                    continue
+
                 metric_objs['drives'].add_metric(
                         [
                     str(cluster), 
@@ -515,7 +545,6 @@ class wekaCollector(object):
 
         except:
             log.error( "error processing DRIVES for cluster {}".format(str(cluster)) )
-
 
 
         # get all the IO stats...
