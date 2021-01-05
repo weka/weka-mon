@@ -468,48 +468,53 @@ class wekaCollector(object):
 
                 #labels=['cluster', 'type', 'title', 'host_name', 'host_id', 'node_id', 'drive_id' ] )
         log.debug(f"alerts cluster={cluster.name}")
-        for alert in wekadata["alerts"]:
-            if not alert["muted"]:
-                log.debug(f"alert detected {alert['type']}")
-                host_name="None"
-                host_id="None"
-                node_id="None"
-                drive_id="None"
-                if "params" in alert:
-                    #print( json.dumps(alert["params"], indent=4, sort_keys=True) )
-                    params = alert['params']
-                    if 'hostname' in params:
-                        host_name = params['hostname']
-                    if 'host_id' in params:
-                        host_id = params['host_id']
-                    if 'node_id' in params:
-                        node_id = params['node_id']
-                    if 'drive_id' in params:
-                        drive_id = params['drive_id']
+        try:
+            for alert in wekadata["alerts"]:
+                if not alert["muted"]:
+                    log.debug(f"alert detected {alert['type']}")
+                    host_name="None"
+                    host_id="None"
+                    node_id="None"
+                    drive_id="None"
+                    if "params" in alert:
+                        #print( json.dumps(alert["params"], indent=4, sort_keys=True) )
+                        params = alert['params']
+                        if 'hostname' in params:
+                            host_name = params['hostname']
+                        if 'host_id' in params:
+                            host_id = params['host_id']
+                        if 'node_id' in params:
+                            node_id = params['node_id']
+                        if 'drive_id' in params:
+                            drive_id = params['drive_id']
+                    labelvalues = [str(cluster), alert['type'], alert['title'], host_name, host_id, node_id, drive_id]
+                    metric_objs['alerts'].add_metric(labelvalues, 1.0)
+        except:
+            log.error( "error processing alerts for cluster {}".format(str(cluster)) )
 
-                labelvalues = [str(cluster), alert['type'], alert['title'], host_name, host_id, node_id, drive_id]
-                metric_objs['alerts'].add_metric(labelvalues, 1.0)
 
         #metric_objs['drives'] = GaugeMetricFamily('weka_drives', 'Weka cluster drives', 
         #        labels=['cluster', 'host_name', 'host_id', 'node_id', 'drive_id', 'vendor', 'model', 'serial', 'size', 'status', 'life'] )
-        for drive in wekadata["driveList"]:
-            metric_objs['drives'].add_metric(
-                    [
-                str(cluster), 
-                drive['hostname'], 
-                drive['host_id'], 
-                drive['node_id'], 
-                drive['disk_id'], 
-                drive['vendor'], 
-                drive['model'], 
-                drive['serial_number'], 
-                str(drive['size_bytes']), 
-                drive['status'], 
-                str(100-int(drive['percentage_used'])) 
-                ], 1)
-        #try:
-        #except:
-        #    log.error( "error processing alerts for cluster {}".format(str(cluster)) )
+
+        try:
+            for drive in wekadata["driveList"]:
+                metric_objs['drives'].add_metric(
+                        [
+                    str(cluster), 
+                    drive['hostname'], 
+                    drive['host_id'], 
+                    drive['node_id'], 
+                    drive['disk_id'], 
+                    drive['vendor'], 
+                    drive['model'], 
+                    drive['serial_number'], 
+                    str(drive['size_bytes']), 
+                    drive['status'], 
+                    str(100-int(drive['percentage_used'])) 
+                    ], 1)
+
+        except:
+            log.error( "error processing DRIVES for cluster {}".format(str(cluster)) )
 
 
 
