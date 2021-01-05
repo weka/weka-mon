@@ -116,6 +116,10 @@ if __name__ == '__main__':
     #sublog = logging.getLogger( "signals" )
     #sublog.setLevel(loglevel)
 
+    # configure logging in wekacluster module
+    sublog = logging.getLogger( "wekacluster" )
+    sublog.setLevel(logging.INFO)
+
     # configure logging in collector module
     sublog = logging.getLogger( "collector" )
     sublog.setLevel(logging.INFO)

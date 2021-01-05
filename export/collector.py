@@ -330,13 +330,63 @@ class wekaCollector(object):
         thread_runner = simul_threads(cluster.sizeof()*4)   # up the server count - so 1 thread per server in the cluster
         #thread_runner = simul_threads(50)  # testing
 
+        # be simplistic at first... let's just gather on a subset of nodes each query
+        #all_nodes = backend_nodes + client_nodes    # concat both lists
+
+        node_maps = { "FRONTEND": [], "COMPUTE": [], "DRIVES": [], "MANAGEMENT": [] }       # initial state of maps
+
+        #log.debug(f'{weka_maps["node-role"]}')
+
+        for node in weka_maps["node-role"]: # node == "NodeId<xx>"
+            for role in weka_maps['node-role'][node]:
+                nid = int(node.split('<')[1].split('>')[0]) # make nodeid numeric
+                node_maps[role].append(nid)
+
+        #log.debug(f"{cluster.name} {node_maps}")
+
+        # find a better place to define this... for now here is good (vince)
+        category_nodetypes = { 
+                'cpu': ['FRONTEND','COMPUTE','DRIVES'],
+                'ops': ['FRONTEND'],
+                'ops_driver': ['FRONTEND'],
+                'ops_nfs': ['COMPUTE'],     # not sure about this one
+                'ssd': ['DRIVES']
+                }
+
+
         # schedule a bunch of data gather queries
         for category, stat_dict in self.get_commandlist().items():
+
+            category_nodes = []
+            #log.error(f"{cluster.name} category is: {category} {category_nodetypes[category]}")
+            for nodetype in category_nodetypes[category]:  # nodetype is FRONTEND, COMPUTE, DRIVES, MANAGEMENT
+                category_nodes += node_maps[nodetype]
+
+            log.debug(f"{cluster.name} cat nodes: {category} {category_nodes}") # debugging
+
+            query_nodes = list( set( category_nodes.copy() ) ) # make the list unique so we don't ask for the same data muliple times
+
             for stat, command in stat_dict.items():
-                try:
-                    thread_runner.new( self.call_api, (cluster, stat, category, command ) ) 
-                except:
-                    log.error( "gather(): error scheduling thread wekastat for cluster {}".format(str(cluster)) )
+                step = 100
+                for i in range(0, len(query_nodes), step):
+                    import copy
+                    newcmd = copy.deepcopy(command)                           # make sure to copy it
+                    newcmd["parms"]["node_ids"] = copy.deepcopy(query_nodes[i:i+step])     # make sure to copy it
+                    log.debug(f"{i}: {i+step}, {cluster.name} {query_nodes[i:i+step]}" )  # debugging
+                    log.debug(f"scheduling {cluster.name} {newcmd['parms']}" )  # debugging
+                    try:
+                        thread_runner.new( self.call_api, (cluster, stat, category, newcmd ) ) 
+                    except:
+                        log.error( "gather(): error scheduling thread wekastat for cluster {}".format(str(cluster)) )
+
+
+        # schedule a bunch of data gather queries
+        #for category, stat_dict in self.get_commandlist().items():
+        #    for stat, command in stat_dict.items():
+        #        try:
+        #            thread_runner.new( self.call_api, (cluster, stat, category, command ) ) 
+        #        except:
+        #            log.error( "gather(): error scheduling thread wekastat for cluster {}".format(str(cluster)) )
 
         thread_runner.run()     # schedule the rest of the threads, wait for them
         del thread_runner
