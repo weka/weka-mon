@@ -110,7 +110,7 @@ class wekaCollector(object):
     wekaIOCommands = {}
     weka_stat_list = {} # category: {{ stat:unit}, {stat:unit}}
 
-    def __init__( self, configfile, cluster_obj ):
+    def __init__( self, configfile, cluster_obj ): # wekaCollector
 
         # dynamic module globals
         # this comes from a yaml file
@@ -120,6 +120,7 @@ class wekaCollector(object):
         self.collect_time = None
         self.clusterdata = {}
         self.threaderror = False
+        self.api_stats = {}
 
         self.wekaCollector_objlist = {}
         self.wekaCollector_objlist[str(cluster_obj)] = cluster_obj
@@ -193,6 +194,7 @@ class wekaCollector(object):
 
     def collect( self ):
         with self._access_lock:     # be thread-safe - if we get called from simultaneous scrapes... could be ugly
+            self.api_stats['num_calls'] = 0
             should_gather = False
             start_time = time.time()
             secs_since_last_min = start_time % 60
@@ -244,10 +246,18 @@ class wekaCollector(object):
                 elapsed = self.last_elapsed
 
             yield GaugeMetricFamily('weka_collect_seconds', 'Total Time spent in Prometheus collect', value=elapsed)
-            log.info(f"status returned. total time = {elapsed}")
+            yield GaugeMetricFamily('weka_collect_apicalls', 'Total number of api calls', value=self.api_stats['num_calls'])
+            avetime = 0
+            try:    # prevent div by zero, just in case
+                avetime = elapsed/self.api_stats['num_calls']
+            except:
+                pass
+            yield GaugeMetricFamily('weka_collect_timepercall', 'Average Time per api call', value=avetime)
+            log.info(f"status returned. total time = {elapsed} {self.api_stats['num_calls']} api calls made, ave time per call={avetime}")
 
     # runs in a thread, so args comes in as a dict
     def call_api( self, cluster, metric, category, args ):
+        self.api_stats['num_calls'] += 1
         method = args['method']
         parms = args['parms']
         log.debug(f"method={method}, parms={parms}")
