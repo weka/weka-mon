@@ -94,7 +94,8 @@ if __name__ == '__main__':
 
     # set the root logger
     logger = logging.getLogger()
-    FORMAT = "%(process)s:%(filename)s:%(lineno)s:%(funcName)s():%(message)s"
+    #FORMAT = "%(process)s:%(filename)s:%(lineno)s:%(funcName)s():%(message)s"
+    FORMAT = "%(process)s:%(filename)s:%(lineno)s:%(funcName)s():%(levelname)s:%(message)s"
     #logging.basicConfig(format=FORMAT)
     logger.setLevel(loglevel)
 
@@ -109,7 +110,7 @@ if __name__ == '__main__':
     #console_handler.setLevel(loglevel)
 
     # add handlers to root logger
-    #logger.addHandler(syslog_handler)
+    logger.addHandler(syslog_handler)
     logger.addHandler(console_handler)
 
     # configure logging in signals module
@@ -118,7 +119,7 @@ if __name__ == '__main__':
 
     # configure logging in wekacluster module
     sublog = logging.getLogger( "wekacluster" )
-    sublog.setLevel(logging.INFO)
+    sublog.setLevel(logging.DEBUG)
 
     # configure logging in collector module
     sublog = logging.getLogger( "collector" )
@@ -138,6 +139,9 @@ if __name__ == '__main__':
 
     # configure logging in circular module
     logging.getLogger("circular").setLevel(logging.INFO)
+
+    # configure logging in urllib3 module
+    logging.getLogger("urllib3").setLevel(logging.INFO)
 
     # schedule up a process for each cluster, put them on conescutive ports starting at 8001 (or specified port)
     subprocesses = {}

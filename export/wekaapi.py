@@ -309,7 +309,7 @@ class WekaApi():
         request = self.format_request(message_id, method, parms)
         log.debug(f"trying {api_endpoint}")
         try:
-            response = self.http_conn.request('POST', api_endpoint, headers=self.headers, body=json.dumps(request).encode('utf-8'))
+            response = self.http_conn.request('POST', api_endpoint, headers=self.headers, body=json.dumps(request).encode('utf-8'), timeout=urllib3.Timeout(15))
         except urllib3.exceptions.MaxRetryError as exc:
             # https failed, try http - http would never produce an ssl error
             if isinstance(exc.reason, urllib3.exceptions.SSLError):

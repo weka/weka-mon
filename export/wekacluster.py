@@ -50,7 +50,7 @@ class WekaHost(object):
             self.host_in_progress -= 1
             raise
         self.host_in_progress -= 1
-        log.debug(f"elapsed time for host {self.name}: {time.time() - start_time} secs")
+        log.debug(f"elapsed time for host {self.name}/{method}: {time.time() - start_time} secs")
         return result
 
     def __str__(self):
