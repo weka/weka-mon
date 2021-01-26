@@ -41,16 +41,16 @@ class WekaHost(object):
         self._scheme = cluster._scheme
 
     def call_api( self, method=None, parms={} ):
-        start_time = time.time()
+        #start_time = time.time()
         self.host_in_progress += 1
-        log.debug(f"calling Weka API on host {self}/{method}, {self.host_in_progress} in progress for host")
+        #log.debug(f"calling Weka API on host {self}/{method}, {self.host_in_progress} in progress for host")
         try:
             result = self.api_obj.weka_api_command( method, parms )
         except:
             self.host_in_progress -= 1
             raise
         self.host_in_progress -= 1
-        log.debug(f"elapsed time for host {self.name}/{method}: {time.time() - start_time} secs")
+        #log.debug(f"elapsed time for host {self.name}/{method}: {round(time.time() - start_time, 4)} secs")
         return result
 
     def __str__(self):

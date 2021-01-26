@@ -40,20 +40,11 @@ except ImportError:
 from logging import debug, info, warning, error, critical, getLogger, DEBUG, StreamHandler, Formatter
 
 log = getLogger(__name__)
- 
+
 class HttpException(Exception):
     def __init__(self, error_code, error_msg):
         self.error_code = error_code
         self.error_msg = error_msg
-
-#class JsonRpcException(Exception):
-#    def __init__(self, json_error):
-#        self.orig_json = json_error
-#        self.code = json_error['code']
-#        self.message = json_error['message']
-#        self.data = json_error.get('data', None)
-
-#pool_manager = urllib3.PoolManager(num_pools=100) # new
 
 class WekaApiIOStopped(Exception):
     def __init__(self, message):
@@ -304,12 +295,16 @@ class WekaApi():
     def weka_api_command(self, method, parms):
 
         api_endpoint = f"{self._scheme}://{self._host}:{self._port}{self._path}"
-        log.debug(f"api_endpoint = {api_endpoint}")
+        #log.debug(f"api_endpoint = {api_endpoint}")
         message_id = self.unique_id()
         request = self.format_request(message_id, method, parms)
-        log.debug(f"trying {api_endpoint}")
+        #log.debug(f"trying {api_endpoint}")
         try:
-            response = self.http_conn.request('POST', api_endpoint, headers=self.headers, body=json.dumps(request).encode('utf-8'), timeout=urllib3.Timeout(15))
+            start_time = time.time()
+            response = self.http_conn.request('POST', api_endpoint, headers=self.headers, body=json.dumps(request).encode('utf-8'), 
+                    timeout=urllib3.Timeout(15), retries=urllib3.Retry(total=0, connect=None, read=None, redirect=None, status=None))
+            elapsed_time = time.time() - start_time
+            log.debug(f"ET {self._host}/{method}: {round(elapsed_time, 4)} secs")
         except urllib3.exceptions.MaxRetryError as exc:
             # https failed, try http - http would never produce an ssl error
             if isinstance(exc.reason, urllib3.exceptions.SSLError):
@@ -324,6 +319,9 @@ class WekaApi():
             else:
                 log.critical(f"MaxRetryError: {exc.reason}")
             raise
+        except urllib3.exceptions.ReadTimeoutError as exc:
+            log.error(f"api call timed out on {self._host}/{method}")
+            return
         except Exception as exc:
             log.debug(f"{exc}")
             track = traceback.format_exc()
@@ -348,7 +346,7 @@ class WekaApi():
             if 'error' in response_object:
                 log.error( "bad response from {}".format(self._host) )
                 raise WekaApiIOStopped(response_object['error']['message'])
-            log.debug( "good response from {}".format(self._host) )
+            #log.debug( "good response from {}".format(self._host) )
             return self._format_response( method, response_object )
         elif response.status == httpclient.MOVED_PERMANENTLY:
             oldhost = self._host

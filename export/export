@@ -119,7 +119,7 @@ if __name__ == '__main__':
 
     # configure logging in wekacluster module
     sublog = logging.getLogger( "wekacluster" )
-    sublog.setLevel(logging.DEBUG)
+    sublog.setLevel(logging.INFO)
 
     # configure logging in collector module
     sublog = logging.getLogger( "collector" )
@@ -127,7 +127,7 @@ if __name__ == '__main__':
 
     # configure logging in wekaapi module
     sublog = logging.getLogger( "wekaapi" )
-    sublog.setLevel(logging.INFO)
+    sublog.setLevel(logging.DEBUG)
 
     # configure logging in sthreads module
     sublog = logging.getLogger( "sthreads" )
@@ -141,7 +141,7 @@ if __name__ == '__main__':
     logging.getLogger("circular").setLevel(logging.INFO)
 
     # configure logging in urllib3 module
-    logging.getLogger("urllib3").setLevel(logging.INFO)
+    logging.getLogger("urllib3").setLevel(logging.ERROR)
 
     # schedule up a process for each cluster, put them on conescutive ports starting at 8001 (or specified port)
     subprocesses = {}

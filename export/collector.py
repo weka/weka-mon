@@ -247,13 +247,14 @@ class wekaCollector(object):
 
             yield GaugeMetricFamily('weka_collect_seconds', 'Total Time spent in Prometheus collect', value=elapsed)
             yield GaugeMetricFamily('weka_collect_apicalls', 'Total number of api calls', value=self.api_stats['num_calls'])
-            avetime = 0
-            try:    # prevent div by zero, just in case
-                avetime = elapsed/self.api_stats['num_calls']
-            except:
-                pass
-            yield GaugeMetricFamily('weka_collect_timepercall', 'Average Time per api call', value=avetime)
-            log.info(f"status returned. total time = {elapsed} {self.api_stats['num_calls']} api calls made, ave time per call={avetime}")
+            #avetime = 0
+            #try:    # prevent div by zero, just in case
+            #    avetime = elapsed/self.api_stats['num_calls']
+            #except:
+            #    pass
+            #yield GaugeMetricFamily('weka_collect_timepercall', 'Average Time per api call', value=avetime)
+            #log.info(f"status returned. total time = {elapsed} {self.api_stats['num_calls']} api calls made, ave time per call={avetime}")
+            log.info(f"status returned. total time = {elapsed} {self.api_stats['num_calls']} api calls made")
 
     # runs in a thread, so args comes in as a dict
     def call_api( self, cluster, metric, category, args ):
