@@ -53,7 +53,7 @@ services:
       - /dev/log:/dev/log
       - ${HOME}/.weka:/weka/.weka
       - /etc/hosts:/etc/hosts
-      - ${PWD}/export/export.yml:/weka/export.yml
+      - ${PWD}/export.yml:/weka/export.yml
     #command: -v -a ${CLUSTER_SPEC}
     command: -v --loki_host loki ${CLUSTER_SPEC}
     #restart: "unless-stopped"
