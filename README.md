@@ -10,7 +10,9 @@ To use this, do the following:
 
 o Clone this repository
 
-o Run the install.sh 
+o Run the install.sh
+
+o Edit the export.yml - put your weka server hostnames under hosts: (about line 15)
 
 o Edit the alertmanager configuration file in etc_alertmanager/ (if you're using alertmanager)
 
@@ -49,23 +51,4 @@ Grafana Dashboards are automatically provisioned, and Grafana, Loki, Prometheus,
 # Use
 
 Using a standard web browser, go to http://<this server>:3000 to access the Grafana Dashboards.
-
-# CLUSTER_SPEC
-
-The CLUSTER_SPEC environment variable is used to set where the Weka clusters the Exporter (```export```) will pull data from.
-
-The format of a cluster specification is similar to that used by the Stateless Clients: a list of weka backend servers, plus the addition of optional authentication parameters.
-
-Generally, the format is as such:
-```
-<wekaserver1>,<wekaserver2>,...,<wekaserverN>:authfile
-```
-
-Multiple clusters can be monitored by listing the cluster spec for each cluster.  For example:
-```
-export CLUSTER_SPEC="weka1,weka2,weka5:~/.weka/cluster1_auth tweka1,tweka4,tweka7:~/.weka/cluster2_auth"
-```
-
-The auth files can be generated with the ```weka user login``` command.  See docs.weka.io for details.   If you are using the default user/password (not suggested), you can leave off the ```:authfile``` and it will use the default credentials automatically.  ie: ```export CLUSTER_SPEC="weka1,weka2,weka5"```
-
 
