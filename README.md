@@ -12,7 +12,7 @@ o Clone this repository
 
 o Run the install.sh 
 
-o Edit the alertmanager configuration file
+o Edit the alertmanager configuration file in etc_alertmanager/ (if you're using alertmanager)
 
 o Start with `docker-compose up -d`
 
