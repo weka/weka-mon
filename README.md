@@ -6,7 +6,14 @@ A solution that implements Grafana dashboards with Prometheus, and includes Graf
 
 # Use Overview:  
 
-Clone this repository, edit the alertmanager configuration file, start with docker-compose.   Compose will start Grafana, Prometheus, Loki, Alertmanager, and Weka Exporter containers such that all can communicate with each other.
+To use this, do the following:
+
+o Clone this repository 
+o Run the install.sh 
+o Edit the alertmanager configuration file
+o Start with `docker-compose up -d`
+
+Compose will start Grafana, Prometheus, Loki, Alertmanager, and Weka Exporter containers such that all can communicate with each other.
 
 # Data Flow:
 
