@@ -12,11 +12,12 @@ o Clone this repository
 
 o Run the install.sh
 
-o Edit the export.yml - put your weka server hostnames under hosts: (about line 15)
+o Edit the export.yml - put your weka server hostnames under hosts: (about line 15). You might also need to set the auth-token.json filename or location.
 
 o Edit the alertmanager configuration file in etc_alertmanager/ (if you're using alertmanager)
 
 o Start with `docker-compose up -d`
+
 
 Compose will start Grafana, Prometheus, Loki, Alertmanager, and Weka Exporter containers such that all can communicate with each other.
 
@@ -37,14 +38,12 @@ Run the "install.sh" script to set the permissions on the subdirectories used to
 
 Edit the configuration as needed.  Start copying etc_alertmanager/alertmanager.yml.sanitized to etc_alertmanager/alertmanager.yml, and edit it to send the alerts to your desired destination (PagerDuty, Slack, Email, Text message - please refer to Prometheus Alertmanager documentation for details if you are unfamiliar with configuring Alertmanager).  Skip this step if you don't want Alerts sent via Alertmanager.
 
-Set and export the CLUSTER_SPEC environment variable so this software can communicate with the cluster(s).  See CLUSTER_SPEC section below.
-
 Then run Docker Compose to start the containers:
 ```
 docker-compose up -d
 ```
 
-Compose will pull the needed containers from docker hub automatically.  You can optionally build the ```export``` container yourself from the included sources (see the ```export``` subdirectory README.md for details.
+Compose will pull the needed containers from docker hub automatically.  For details on the export.yml file, please see https://github.com/weka/export
 
 Grafana Dashboards are automatically provisioned, and Grafana, Loki, Prometheus, and Alertmanager are pre-configured from the config files in the included subdirectories.
 
