@@ -1,10 +1,4 @@
 
-docker pull grafana/grafana 
-docker pull grafana/loki 
-docker pull prom/prometheus 
-docker pull prom/alertmanager 
-docker pull wekasolutions/export
-
 # set permissions so that the continer(s) can write to these directories
 mkdir -p prometheus_data
 chmod 755 prometheus_data/

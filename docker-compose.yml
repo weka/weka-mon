@@ -11,7 +11,7 @@ services:
       - ${PWD}/etc_loki:/etc/loki
       - ${PWD}/loki_data:/loki
     command: -config.file=/etc/loki/loki-config.yaml
-    #restart: unless-stopped
+    restart: always
     ports:
       - "3100:3100"
 
@@ -21,7 +21,8 @@ services:
       - /dev/log:/dev/log
       - ${PWD}/etc_prometheus:/etc/prometheus
       - ${PWD}/prometheus_data:/prometheus
-    #restart:
+    command: --storage.tsdb.retention.size=20GB --config.file=/etc/prometheus/prometheus.yml
+    restart: always
     ports:
       - "9090:9090"
 
@@ -32,7 +33,7 @@ services:
       - ${PWD}/etc_alertmanager:/etc/alertmanager
       - ${PWD}/prometheus_data:/prometheus
     command: --config.file="/etc/alertmanager/alertmanager.yml"
-    #restart: unless-stopped
+    #restart: always
     ports:
       - "9093:9093"
 
@@ -43,7 +44,7 @@ services:
       - ${PWD}/etc_grafana_provisioning:/etc/grafana/provisioning
       - ${PWD}/var_lib_grafana:/var/lib/grafana/
       - ${PWD}/usr_share_grafana_public_img:/usr/share/grafana/public/img/weka
-    #restart: unless-stopped
+    restart: always
     ports:
       - "3000:3000"
 
@@ -54,11 +55,7 @@ services:
       - ${HOME}/.weka:/weka/.weka
       - /etc/hosts:/etc/hosts
       - ${PWD}/export.yml:/weka/export.yml
-    #command: -v -a ${CLUSTER_SPEC}
-    command: -v --loki_host loki ${CLUSTER_SPEC}
-    #restart: "unless-stopped"
+    command: -v
+    restart: always
     ports:
       - "8001:8001"
-      - "8002:8002"
-      - "8003:8003"
-      - "8004:8004"
