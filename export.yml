@@ -12,14 +12,19 @@ exporter:
 cluster:
   # a list of hostnames or ip addresses.  Minimum of 1 requred.  You do not need to list all hosts in the 
   #     cluster, but more than one is suggested
+
+  auth_token_file: auth-token.json
   hosts:
     - vweka01
     - vweka02
     - vweka03
+
+  force_https: True   # only 3.10+ clusters support https
+  verify_cert: False  # default cert cannot be verified
+
   # auth_token_file can be an absolute path, relative path, or filename.  
   # If just a filename it will be searched for in ".", "~/.weka", and "./.weka"
   # This file can be generated with the 'weka user login' command and copied to where we are running
-  auth_token_file: auth-token.json
 
 # This file comes pre-set to pupulate the Grafana Panels that we've provided
 #
