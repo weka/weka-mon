@@ -257,3 +257,5 @@ stats:
 #    SSD_WRITES: iops
 #    SSD_WRITE_ERRORS: count
 #    SSD_WRITE_LATENCY: microsecs
+#  network:
+#    PUMPS_TXQ_FULL: times
