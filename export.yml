@@ -7,6 +7,8 @@ exporter:
   listen_port: 8001
   loki_host: loki
   loki_port: 3100
+  timeout: 10.0
+  node_groupsize: 100
 
 # cluster section - info about the weka cluster we want to export data from:
 cluster:
@@ -111,7 +113,7 @@ stats:
 #    LINK_LATENCY: microsecs
     LINK_OPS: ops
 #    LOOKUP_LATENCY: microsecs
-#    LOOKUP_OPS: ops
+    LOOKUP_OPS: ops
 #    MKDIR_LATENCY: microsecs
     MKDIR_OPS: ops
 #    MKNOD_LATENCY: microsecs
