@@ -8,7 +8,8 @@ exporter:
   loki_host: loki
   loki_port: 3100
   timeout: 10.0
-  node_groupsize: 100
+  max_procs: 8
+  max_threads_per_proc: 100
 
 # cluster section - info about the weka cluster we want to export data from:
 cluster:
@@ -21,7 +22,7 @@ cluster:
     - vweka02
     - vweka03
 
-  force_https: True   # only 3.10+ clusters support https
+  force_https: False   # only 3.10+ clusters support https
   verify_cert: False  # default cert cannot be verified
 
   # auth_token_file can be an absolute path, relative path, or filename.  
