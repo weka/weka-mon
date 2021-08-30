@@ -10,6 +10,7 @@ exporter:
   timeout: 10.0
   max_procs: 8
   max_threads_per_proc: 100
+  backends_only: True
 
 # cluster section - info about the weka cluster we want to export data from:
 cluster:
