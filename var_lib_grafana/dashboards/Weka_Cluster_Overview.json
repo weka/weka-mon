@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1617229923764,
+  "iteration": 1630846967826,
   "links": [
     {
       "$$hashKey": "object:415",
@@ -4436,7 +4436,8 @@
       "datasource": "$weka_datasource",
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "custom": {},
+          "unit": "iops"
         },
         "overrides": []
       },
@@ -4504,7 +4505,7 @@
       "yaxes": [
         {
           "$$hashKey": "object:167",
-          "format": "Bps",
+          "format": "iops",
           "label": null,
           "logBase": 1,
           "max": null,
@@ -4632,7 +4633,8 @@
       "datasource": "$weka_datasource",
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "custom": {},
+          "unit": "iops"
         },
         "overrides": []
       },
@@ -4700,7 +4702,7 @@
       "yaxes": [
         {
           "$$hashKey": "object:167",
-          "format": "Bps",
+          "format": "iops",
           "label": null,
           "logBase": 1,
           "max": null,
@@ -5228,11 +5230,7 @@
   "templating": {
     "list": [
       {
-        "current": {
-          "selected": false,
-          "text": "Prometheus",
-          "value": "Prometheus"
-        },
+        "current": {},
         "description": null,
         "error": null,
         "hide": 0,
@@ -5250,11 +5248,7 @@
       },
       {
         "allValue": null,
-        "current": {
-          "selected": false,
-          "text": "a100test",
-          "value": "a100test"
-        },
+        "current": {},
         "datasource": "$weka_datasource",
         "definition": "label_values(weka_info,cluster)",
         "description": null,
@@ -5281,11 +5275,7 @@
       },
       {
         "allValue": null,
-        "current": {
-          "selected": false,
-          "text": "b1",
-          "value": "b1"
-        },
+        "current": {},
         "datasource": "$weka_datasource",
         "definition": "label_values(weka_stats{cluster=\"$cluster\",host_role=\"server\"},host_name)",
         "description": null,
@@ -5332,5 +5322,5 @@
   "timezone": "",
   "title": "Weka Cluster Overview",
   "uid": "WekaOverview",
-  "version": 998
+  "version": 4
 }
