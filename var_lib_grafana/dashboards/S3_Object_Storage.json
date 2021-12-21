@@ -23,17 +23,22 @@
   "fiscalYearStartMonth": 0,
   "gnetId": 12563,
   "graphTooltip": 0,
-  "id": 11,
-  "iteration": 1637334131896,
+  "id": 13,
+  "iteration": 1640119856767,
   "links": [
     {
+      "asDropdown": true,
       "icon": "external link",
-      "includeVars": true,
-      "keepTime": true,
+      "includeVars": false,
+      "keepTime": false,
       "tags": [
-        "minio"
+        "weka"
       ],
-      "type": "dashboards"
+      "targetBlank": false,
+      "title": "weka dashboards",
+      "tooltip": "",
+      "type": "dashboards",
+      "url": ""
     }
   ],
   "liveNow": false,
@@ -101,7 +106,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.2.3",
+      "pluginVersion": "8.2.1",
       "targets": [
         {
           "exemplar": true,
@@ -110,7 +115,7 @@
           "instant": false,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "Start time of the MinIO servers",
+          "legendFormat": "Start time of the S3 servers",
           "metric": "process_start_time_seconds",
           "refId": "A",
           "step": 60
@@ -132,7 +137,7 @@
     {
       "cacheTimeout": null,
       "datasource": "Prometheus",
-      "description": "Total number of disks for current MinIO server instances",
+      "description": "Total number of disks for current S3 server instances",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -192,14 +197,14 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.2.3",
+      "pluginVersion": "8.2.1",
       "targets": [
         {
           "expr": "sum(minio_disks_total)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "Total number of disks for current MinIO server instances",
+          "legendFormat": "Total number of disks for current S3 server instances",
           "metric": "process_start_time_seconds",
           "refId": "A",
           "step": 60
@@ -211,7 +216,7 @@
     {
       "cacheTimeout": null,
       "datasource": "Prometheus",
-      "description": "Total number of offline disks for current MinIO server instances",
+      "description": "Total number of offline disks for current S3 server instances",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -274,7 +279,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.2.3",
+      "pluginVersion": "8.2.1",
       "targets": [
         {
           "expr": "sum(minio_disks_offline)",
@@ -282,7 +287,7 @@
           "instant": false,
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "Total number of offline disks for current MinIO server instances",
+          "legendFormat": "Total number of offline disks for current S3 server instances",
           "metric": "process_start_time_seconds",
           "refId": "A",
           "step": 60
@@ -354,7 +359,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.2.3",
+      "pluginVersion": "8.2.1",
       "targets": [
         {
           "exemplar": true,
@@ -362,7 +367,7 @@
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "Total size of the disk for current MinIO server instances",
+          "legendFormat": "Total size of the disk for current S3 server instances",
           "metric": "process_start_time_seconds",
           "refId": "A",
           "step": 60
@@ -386,7 +391,7 @@
     {
       "cacheTimeout": null,
       "datasource": "Prometheus",
-      "description": "Total disk space used for current MinIO server instances",
+      "description": "Total disk space used for current S3 server instances",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -446,7 +451,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.2.3",
+      "pluginVersion": "8.2.1",
       "targets": [
         {
           "exemplar": true,
@@ -454,7 +459,7 @@
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "Total disk space used for current MinIO server instances",
+          "legendFormat": "Total disk space used for current S3 server instances",
           "metric": "process_start_time_seconds",
           "refId": "A",
           "step": 60
@@ -472,7 +477,7 @@
     {
       "cacheTimeout": null,
       "datasource": "Prometheus",
-      "description": "Total available disk space for current MinIO server instances",
+      "description": "Total available disk space for current S3 server instances",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -533,7 +538,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.2.3",
+      "pluginVersion": "8.2.1",
       "targets": [
         {
           "exemplar": true,
@@ -541,7 +546,7 @@
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "Total available disk space for current MinIO server instances",
+          "legendFormat": "Total available disk space for current S3 server instances",
           "metric": "process_start_time_seconds",
           "refId": "A",
           "step": 60
@@ -570,7 +575,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "Prometheus",
-      "description": "Number of total/offline disks for current MinIO server instances",
+      "description": "Number of total/offline disks for current S3 server instances",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -599,7 +604,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -682,7 +687,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "Prometheus",
-      "description": "Total disk space used for current MinIO server instances",
+      "description": "Total disk space used for current S3 server instances",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -711,7 +716,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -834,7 +839,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -938,7 +943,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1052,7 +1057,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1158,7 +1163,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1271,7 +1276,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1382,7 +1387,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1485,7 +1490,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1587,7 +1592,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1664,7 +1669,7 @@
       },
       "dataFormat": "timeseries",
       "datasource": "Prometheus",
-      "description": "Latency information of the requests on MinIO server instances",
+      "description": "Latency information of the requests on S3 server instances",
       "gridPos": {
         "h": 7,
         "w": 12,
@@ -1769,7 +1774,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1868,7 +1873,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "Prometheus",
-      "description": "Latency information of the requests on MinIO server instances",
+      "description": "Latency information of the requests on S3 server instances",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -1897,7 +1902,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2057,7 +2062,7 @@
       {
         "allValue": null,
         "current": {
-          "selected": false,
+          "selected": true,
           "text": [
             "All"
           ],
@@ -2093,7 +2098,7 @@
         "auto_count": 30,
         "auto_min": "10s",
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "10m",
           "value": "10m"
         },
@@ -2199,5 +2204,5 @@
   "timezone": "",
   "title": "S3 Object Storage",
   "uid": "pJnnS4hZzqc",
-  "version": 10
+  "version": 1
 }

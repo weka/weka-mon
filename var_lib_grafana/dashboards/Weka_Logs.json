@@ -1,4 +1,54 @@
 {
+  "__inputs": [
+    {
+      "name": "DS_PROMETHEUS",
+      "label": "Prometheus",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    },
+    {
+      "name": "DS_LOKI",
+      "label": "Loki",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "loki",
+      "pluginName": "Loki"
+    }
+  ],
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "8.2.1"
+    },
+    {
+      "type": "panel",
+      "id": "logs",
+      "name": "Logs",
+      "version": ""
+    },
+    {
+      "type": "datasource",
+      "id": "loki",
+      "name": "Loki",
+      "version": "1.0.0"
+    },
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "text",
+      "name": "Text",
+      "version": ""
+    }
+  ],
   "annotations": {
     "list": [
       {
@@ -19,9 +69,11 @@
     ]
   },
   "editable": true,
+  "fiscalYearStartMonth": 0,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1633650260936,
+  "id": null,
+  "iteration": 1639750609362,
   "links": [
     {
       "$$hashKey": "object:48",
@@ -35,9 +87,10 @@
       "type": "dashboards"
     }
   ],
+  "liveNow": false,
   "panels": [
     {
-      "datasource": "${weka_datasource}",
+      "datasource": "${DS_PROMETHEUS}",
       "gridPos": {
         "h": 2,
         "w": 2,
@@ -49,14 +102,14 @@
         "content": "<img src=/public/img/weka/WekaColor.svg>",
         "mode": "html"
       },
-      "pluginVersion": "8.1.2",
+      "pluginVersion": "8.2.1",
       "timeFrom": null,
       "timeShift": null,
       "transparent": true,
       "type": "text"
     },
     {
-      "datasource": "Loki",
+      "datasource": "${DS_LOKI}",
       "gridPos": {
         "h": 28,
         "w": 21,
@@ -102,7 +155,7 @@
     }
   ],
   "refresh": "10s",
-  "schemaVersion": 30,
+  "schemaVersion": 31,
   "style": "dark",
   "tags": [
     "#weka"
@@ -110,7 +163,11 @@
   "templating": {
     "list": [
       {
-        "current": {},
+        "current": {
+          "selected": false,
+          "text": "Prometheus",
+          "value": "Prometheus"
+        },
         "description": null,
         "error": null,
         "hide": 0,
@@ -154,16 +211,8 @@
       },
       {
         "allValue": null,
-        "current": {
-          "selected": true,
-          "text": [
-            "All"
-          ],
-          "value": [
-            "$__all"
-          ]
-        },
-        "datasource": "Loki",
+        "current": {},
+        "datasource": "${DS_LOKI}",
         "definition": "label_values(category)",
         "description": null,
         "error": null,
@@ -185,16 +234,8 @@
       },
       {
         "allValue": null,
-        "current": {
-          "selected": true,
-          "text": [
-            "All"
-          ],
-          "value": [
-            "$__all"
-          ]
-        },
-        "datasource": "Loki",
+        "current": {},
+        "datasource": "${DS_LOKI}",
         "definition": "label_values(severity)",
         "description": null,
         "error": null,
@@ -216,16 +257,8 @@
       },
       {
         "allValue": null,
-        "current": {
-          "selected": true,
-          "text": [
-            "All"
-          ],
-          "value": [
-            "$__all"
-          ]
-        },
-        "datasource": "Loki",
+        "current": {},
+        "datasource": "${DS_LOKI}",
         "definition": "label_values(event_type)",
         "description": null,
         "error": null,
@@ -267,5 +300,5 @@
   "timezone": "",
   "title": "Weka Logs",
   "uid": "WekaLogs",
-  "version": 2
+  "version": 3
 }

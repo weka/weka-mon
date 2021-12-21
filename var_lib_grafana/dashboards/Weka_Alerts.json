@@ -14,9 +14,11 @@
     ]
   },
   "editable": true,
+  "fiscalYearStartMonth": 0,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1607779816177,
+  "id": 1,
+  "iteration": 1640117838475,
   "links": [
     {
       "$$hashKey": "object:842",
@@ -30,15 +32,10 @@
       "type": "dashboards"
     }
   ],
+  "liveNow": false,
   "panels": [
     {
       "datasource": "${DS_PROMETHEUS}",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "gridPos": {
         "h": 2,
         "w": 2,
@@ -50,10 +47,9 @@
         "content": "<img src=/public/img/weka/WekaColor.svg>",
         "mode": "html"
       },
-      "pluginVersion": "7.3.4",
+      "pluginVersion": "8.2.1",
       "timeFrom": null,
       "timeShift": null,
-      "title": "",
       "transparent": true,
       "type": "text"
     },
@@ -63,6 +59,7 @@
         "defaults": {
           "custom": {
             "align": null,
+            "displayMode": "auto",
             "filterable": false
           },
           "mappings": [],
@@ -178,7 +175,7 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "7.3.4",
+      "pluginVersion": "8.2.1",
       "repeat": null,
       "targets": [
         {
@@ -226,7 +223,7 @@
     }
   ],
   "refresh": "1m",
-  "schemaVersion": 26,
+  "schemaVersion": 31,
   "style": "dark",
   "tags": [
     "#weka"
@@ -235,7 +232,11 @@
     "list": [
       {
         "current": {
+          "selected": false,
+          "text": "Prometheus",
+          "value": "Prometheus"
         },
+        "description": null,
         "error": null,
         "hide": 0,
         "includeAll": false,
@@ -256,6 +257,7 @@
         },
         "datasource": "$weka_datasource",
         "definition": "label_values(weka_info,cluster)",
+        "description": null,
         "error": null,
         "hide": 0,
         "includeAll": false,
@@ -263,13 +265,15 @@
         "multi": false,
         "name": "cluster",
         "options": [],
-        "query": "label_values(weka_info,cluster)",
+        "query": {
+          "query": "label_values(weka_info,cluster)",
+          "refId": "Prometheus-cluster-Variable-Query"
+        },
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
         "sort": 0,
         "tagValuesQuery": "",
-        "tags": [],
         "tagsQuery": "",
         "type": "query",
         "useTags": false
@@ -296,5 +300,5 @@
   "timezone": "",
   "title": "Weka Alerts",
   "uid": "WekaAlerts",
-  "version": 1
+  "version": 2
 }

@@ -8,15 +8,23 @@
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
         "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
         "type": "dashboard"
       }
     ]
   },
   "description": "Weka Server/Client Details",
   "editable": true,
+  "fiscalYearStartMonth": 0,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1607779633422,
+  "id": 9,
+  "iteration": 1640117914552,
   "links": [
     {
       "$$hashKey": "object:252",
@@ -31,15 +39,10 @@
       "type": "dashboards"
     }
   ],
+  "liveNow": false,
   "panels": [
     {
       "datasource": "${DS_PROMETHEUS}",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "gridPos": {
         "h": 2,
         "w": 2,
@@ -51,16 +54,19 @@
         "content": "<img src=/public/img/weka/WekaColor.svg>",
         "mode": "html"
       },
-      "pluginVersion": "7.3.4",
+      "pluginVersion": "8.2.1",
       "timeFrom": null,
       "timeShift": null,
-      "title": "",
       "transparent": true,
       "type": "text"
     },
     {
       "collapsed": false,
       "datasource": "$weka_datasource",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -81,7 +87,6 @@
       "description": "Total Operations (io and metadata)",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "links": []
         },
         "overrides": []
@@ -112,7 +117,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.3.4",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -177,7 +182,6 @@
       "datasource": "$weka_datasource",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "links": []
         },
         "overrides": []
@@ -208,7 +212,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.3.4",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -275,7 +279,6 @@
       "description": "",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "links": []
         },
         "overrides": []
@@ -306,7 +309,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.3.4",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -383,7 +386,6 @@
       "datasource": "$weka_datasource",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "links": []
         },
         "overrides": []
@@ -414,7 +416,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.3.4",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -485,7 +487,6 @@
       "datasource": "$weka_datasource",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "links": []
         },
         "overrides": []
@@ -516,7 +517,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.3.4",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -587,7 +588,6 @@
       "datasource": "$weka_datasource",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "links": []
         },
         "overrides": []
@@ -618,7 +618,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.3.4",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -690,12 +690,6 @@
       },
       "dataFormat": "tsbuckets",
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "gridPos": {
         "h": 8,
         "w": 12,
@@ -762,12 +756,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -795,7 +783,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.3.4",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -863,6 +851,10 @@
     {
       "collapsed": true,
       "datasource": "$weka_datasource",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -1657,7 +1649,7 @@
     }
   ],
   "refresh": "1m",
-  "schemaVersion": 26,
+  "schemaVersion": 31,
   "style": "dark",
   "tags": [
     "#weka"
@@ -1666,7 +1658,11 @@
     "list": [
       {
         "current": {
+          "selected": false,
+          "text": "Prometheus",
+          "value": "Prometheus"
         },
+        "description": null,
         "error": null,
         "hide": 0,
         "includeAll": false,
@@ -1687,6 +1683,7 @@
         },
         "datasource": "$weka_datasource",
         "definition": "label_values(weka_info,cluster)",
+        "description": null,
         "error": null,
         "hide": 0,
         "includeAll": false,
@@ -1694,13 +1691,15 @@
         "multi": false,
         "name": "cluster",
         "options": [],
-        "query": "label_values(weka_info,cluster)",
+        "query": {
+          "query": "label_values(weka_info,cluster)",
+          "refId": "Prometheus-cluster-Variable-Query"
+        },
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
         "sort": 0,
         "tagValuesQuery": "",
-        "tags": [],
         "tagsQuery": "",
         "type": "query",
         "useTags": false
@@ -1711,6 +1710,7 @@
         },
         "datasource": "$weka_datasource",
         "definition": "label_values(weka_stats{cluster=\"$cluster\"},host_name)",
+        "description": null,
         "error": null,
         "hide": 0,
         "includeAll": false,
@@ -1718,13 +1718,15 @@
         "multi": false,
         "name": "host_name",
         "options": [],
-        "query": "label_values(weka_stats{cluster=\"$cluster\"},host_name)",
+        "query": {
+          "query": "label_values(weka_stats{cluster=\"$cluster\"},host_name)",
+          "refId": "Prometheus-host_name-Variable-Query"
+        },
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
         "sort": 0,
         "tagValuesQuery": "",
-        "tags": [],
         "tagsQuery": "",
         "type": "query",
         "useTags": false
@@ -1751,5 +1753,5 @@
   "timezone": "",
   "title": "Weka Server/Client Detail",
   "uid": "WekaServerDetail",
-  "version": 3
+  "version": 2
 }

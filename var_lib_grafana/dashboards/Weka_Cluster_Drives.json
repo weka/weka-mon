@@ -8,16 +8,24 @@
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
         "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
         "type": "dashboard"
       }
     ]
   },
   "editable": true,
+  "fiscalYearStartMonth": 0,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 7,
-  "iteration": 1609698829483,
+  "id": 2,
+  "iteration": 1640118141602,
   "links": [],
+  "liveNow": false,
   "panels": [
     {
       "datasource": null,
@@ -25,6 +33,7 @@
         "defaults": {
           "custom": {
             "align": null,
+            "displayMode": "auto",
             "filterable": false
           },
           "mappings": [],
@@ -152,10 +161,12 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "7.3.4",
+      "pluginVersion": "8.2.1",
       "targets": [
         {
+          "exemplar": true,
           "expr": "weka_drives{cluster=\"$cluster\"}",
+          "instant": true,
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -167,6 +178,10 @@
       "transformations": [
         {
           "id": "labelsToFields",
+          "options": {}
+        },
+        {
+          "id": "merge",
           "options": {}
         },
         {
@@ -213,7 +228,7 @@
       "type": "table"
     }
   ],
-  "schemaVersion": 26,
+  "schemaVersion": 31,
   "style": "dark",
   "tags": [
     "#weka"
@@ -222,7 +237,11 @@
     "list": [
       {
         "current": {
+          "selected": false,
+          "text": "Prometheus",
+          "value": "Prometheus"
         },
+        "description": null,
         "error": null,
         "hide": 0,
         "includeAll": false,
@@ -242,39 +261,30 @@
         },
         "datasource": "$weka_datasource",
         "definition": "label_values(weka_drives,cluster)",
+        "description": null,
         "error": null,
         "hide": 0,
         "includeAll": false,
         "label": null,
         "multi": false,
         "name": "cluster",
-        "options": [
-          {
-            "selected": false
-          },
-          {
-            "selected": false
-          },
-          {
-            "selected": false
-          },
-          {
-            "selected": false
-          }
-        ],
-        "query": "label_values(weka_drives,cluster)",
-        "refresh": 0,
+        "options": [],
+        "query": {
+          "query": "label_values(weka_drives,cluster)",
+          "refId": "Prometheus-cluster-Variable-Query"
+        },
+        "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
         "sort": 0,
         "tagValuesQuery": "",
-        "tags": [],
         "tagsQuery": "",
         "type": "query",
         "useTags": false
       },
       {
         "datasource": "$weka_datasource",
+        "description": null,
         "error": null,
         "filters": [],
         "hide": 0,
@@ -293,5 +303,5 @@
   "timezone": "",
   "title": "Weka Cluster Drives",
   "uid": "WekaDrives",
-  "version": 11
+  "version": 4
 }
