@@ -52,7 +52,7 @@ cluster:
 
 stats:
   cpu:     # Category
-     CPU_UTILIZATION: percent'    # metric
+    CPU_UTILIZATION: percent    # metric
 #  object_storage:     # Category
 #    FAILED_OBJECT_DELETES: count
 #    FAILED_OBJECT_DOWNLOADS: count
