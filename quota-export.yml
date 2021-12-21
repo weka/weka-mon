@@ -1,0 +1,15 @@
+# exporter section - info about how we're going to run
+exporter:
+  listen_port: 8101
+  timeout: 10.0
+  backends_only: True
+
+# cluster section - info about the weka cluster we want to export data from:
+cluster:
+  auth_token_file: auth-token.json
+  hosts:
+    - vweka01
+    - vweka02
+    - vweka03
+  force_https: False   # only 3.10+ clusters support https
+  verify_cert: False  # default cert cannot be verified

@@ -8,6 +8,12 @@
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
         "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
         "type": "dashboard"
       }
     ]
@@ -15,7 +21,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1607779892263,
+  "iteration": 1633650260936,
   "links": [
     {
       "$$hashKey": "object:48",
@@ -32,12 +38,6 @@
   "panels": [
     {
       "datasource": "${weka_datasource}",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "gridPos": {
         "h": 2,
         "w": 2,
@@ -49,21 +49,14 @@
         "content": "<img src=/public/img/weka/WekaColor.svg>",
         "mode": "html"
       },
-      "pluginVersion": "7.3.4",
+      "pluginVersion": "8.1.2",
       "timeFrom": null,
       "timeShift": null,
-      "title": "",
       "transparent": true,
       "type": "text"
     },
     {
       "datasource": "Loki",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "gridPos": {
         "h": 28,
         "w": 21,
@@ -72,6 +65,10 @@
       },
       "id": 2,
       "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
         "showLabels": false,
         "showTime": true,
         "sortOrder": "Descending",
@@ -80,7 +77,7 @@
       "pluginVersion": "7.1.1",
       "targets": [
         {
-          "expr": "{type=\"weka\",cluster=\"$cluster\"}",
+          "expr": "{source=\"weka\",cluster=\"$cluster\",category=~\"$category\",severity=~\"$severity\",event_type=~\"$event_type\"}",
           "legendFormat": "",
           "refId": "A"
         }
@@ -105,7 +102,7 @@
     }
   ],
   "refresh": "10s",
-  "schemaVersion": 26,
+  "schemaVersion": 30,
   "style": "dark",
   "tags": [
     "#weka"
@@ -113,8 +110,8 @@
   "templating": {
     "list": [
       {
-        "current": {
-        },
+        "current": {},
+        "description": null,
         "error": null,
         "hide": 0,
         "includeAll": false,
@@ -131,10 +128,10 @@
       },
       {
         "allValue": null,
-        "current": {
-        },
+        "current": {},
         "datasource": "$weka_datasource",
         "definition": "label_values(weka_info,cluster)",
+        "description": null,
         "error": null,
         "hide": 0,
         "includeAll": false,
@@ -142,13 +139,108 @@
         "multi": false,
         "name": "cluster",
         "options": [],
-        "query": "label_values(weka_info,cluster)",
+        "query": {
+          "query": "label_values(weka_info,cluster)",
+          "refId": "StandardVariableQuery"
+        },
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
         "sort": 0,
         "tagValuesQuery": "",
-        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "Loki",
+        "definition": "label_values(category)",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": null,
+        "multi": true,
+        "name": "category",
+        "options": [],
+        "query": "label_values(category)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "Loki",
+        "definition": "label_values(severity)",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": null,
+        "multi": true,
+        "name": "severity",
+        "options": [],
+        "query": "label_values(severity)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "Loki",
+        "definition": "label_values(event_type)",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": null,
+        "multi": true,
+        "name": "event_type",
+        "options": [],
+        "query": "label_values(event_type)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
         "tagsQuery": "",
         "type": "query",
         "useTags": false
@@ -175,5 +267,5 @@
   "timezone": "",
   "title": "Weka Logs",
   "uid": "WekaLogs",
-  "version": 1
+  "version": 2
 }

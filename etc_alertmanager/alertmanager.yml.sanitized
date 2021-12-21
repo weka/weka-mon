@@ -1,28 +1,53 @@
 ---
 global:
   resolve_timeout: 5m
-  slack_api_url: 'https://hooks.slack.com/services/SECRET'
-#inhibit_rules:
-#  -
-#    equal:
-#      - alertname
-#      - dev
-#      - instance
-#    #source_match:
+  slack_api_url: 'https://hooks.slack.com/services/<SECRET>'
+  
+  smtp_smarthost: 'smtp.gmail.com:587'
+  smtp_from: '<SECRET>@gmail.com'
+  smtp_auth_username: '<SECRET>@gmail.com'
+  smtp_auth_identity: '<SECRET>@gmail.com'
+  smtp_auth_password: '<SECRET>'
+
+inhibit_rules:
+  -
+    equal:
+      - alertname
+      - cluster
+      - type
+  -
+    source_matchers: 
+      - type = CloudHealth
+
+
 #    #  severity: critical
 #    #target_match:
 #    #  severity: warning
+#
 route:
-  group_by: [cluster, type]
+  group_by: ['...']
   receiver: 'slack-notify'
   #receiver: 'pagerduty-notify'
   group_interval: 10s
   group_wait: 10s
   #repeat_interval: 1h
+
+  routes:
+  - match:
+      wekatype: alert
+    receiver: 'slack-notify'
+#    receiver: 'opsgenie-notify'
+    group_by: [cluster, type]
+  - match:
+      wekatype: quota
+    receiver: 'gmail-notify'
+#    receiver: 'slack-notify2'
+
+
 receivers:
   - name: 'slack-notify'
     slack_configs:
-    - channel: '#MY_CHANNEL'
+    - channel: '#vince-alerts-test2'
       username: "Weka Alert"
       send_resolved: true
       title: '[{{ .Status | toUpper }} {{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }} Alerts{{ end }}] {{ .CommonAnnotations.summary }}'
@@ -35,10 +60,49 @@ receivers:
         {{ if .CommonLabels.host_id }}{{else}}HostId(s) affected: {{ range .Alerts }}{{ .Labels.host_id }} {{ end }}{{ end }}
         {{ if .CommonLabels.node_id }}{{else}}NodeId(s) affected: {{ range .Alerts }}{{ .Labels.node_id }} {{ end }}{{ end }}
         {{ if .CommonLabels.drive_id }}{{else}}DiskId(s) affected: {{ range .Alerts }}{{ .Labels.drive_id }} {{ end }}{{ end }}
+
   - name: 'pagerduty-notify'
     pagerduty_configs:
-    - service_key: 'SECRET'
+    - service_key: '<SECRET>'
       send_resolved: true
       description: '[{{ .Status | toUpper }} {{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }} Alerts{{ end }}] {{ .CommonAnnotations.summary }}'
-#templates:
-#  - weka.tmpl
+
+  - name: 'slack-notify2'
+    slack_configs:
+    - channel: '#vince-quota-test'
+      username: "Weka Quota"
+      send_resolved: true
+      title: '[{{ .Status | toUpper }} {{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }} Alerts{{ end }}] {{ .CommonAnnotations.summary }}'
+      text: |-
+        <!channel>
+        {{ .CommonAnnotations.summary }}
+        {{ .CommonAnnotations.description }}
+        Owner: {{ .CommonAnnotations.owner }}
+        Cluster: {{ .CommonAnnotations.cluster }}
+        Filesystem: {{ .CommonAnnotations.filesystem }}
+        Directory:  {{ .CommonAnnotations.directory }}
+        Quota: {{ .CommonAnnotations.soft_quota }}GB
+        Usage: {{ .CommonAnnotations.bytes_used }}GB
+
+  - name: 'gmail-notify'
+    email_configs:
+    - to: '{{ .CommonAnnotations.owner }}'
+      headers:
+        subject: "Weka Filesystem Quota Exceeded"
+
+      html: |-
+        <p>
+        {{ .CommonAnnotations.summary }}<br>
+        {{ .CommonAnnotations.description }}<br>
+        Owner: {{ .CommonAnnotations.owner }}<br>
+        Cluster: {{ .CommonAnnotations.cluster }}<br>
+        Filesystem: {{ .CommonAnnotations.filesystem }}<br>
+        Directory:  {{ .CommonAnnotations.directory }}<br>
+        Quota: {{ .CommonAnnotations.soft_quota }}GB<br>
+        Usage: {{ .CommonAnnotations.bytes_used }}GB<br>
+        </p>
+
+  - name: 'opsgenie-notify'
+    opsgenie_configs:
+    - api_key: <SECRET>
+      source: 'weka cluster {{ .CommonLabels.cluster }}'

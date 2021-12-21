@@ -5,6 +5,24 @@ groups:
     - alert: WekaAlert
       expr: weka_alerts >= 1
       for: 1m
+      labels:
+        wekatype: alert
       #annotations:
       #  summary: "Weka Alert Summary {{ $labels.cluster }}"
       #  description: "Weka Alert Description {{ $labels.cluster }}"
+  - name: WekaQuota
+    rules:
+    - alert: WekaQuota
+      expr: weka_quota >= 1
+      labels:
+        wekatype: quota
+      annotations:
+        thevalue: weka_quota{cluster=$labels.cluster}
+        summary: 'Weka Soft Quota Exceeded on cluster: {{ $labels.cluster }}'
+        description: 'Over quota on {{ $labels.cluster }}, filesystem={{ $labels.filesystem }}, directory={{ $labels.directory }}. Quota is {{ $labels.soft_quotaGB }}'
+        cluster: '{{ $labels.cluster }}'
+        filesystem: '{{ $labels.filesystem }}'
+        directory: '{{ $labels.directory }}'
+        soft_quota: '{{ $labels.soft_quotaGB }}'
+        bytes_used: '{{ $value }}'
+        owner: '{{ $labels.owner }}'
