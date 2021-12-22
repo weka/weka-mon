@@ -2,7 +2,7 @@
 Weka Cluster Monitoring
 
 
-A solution that implements Grafana dashboards with Prometheus, and includes Grafana/Loki for logs and Prometheus/Alertmanager for alerting.
+A solution that implements Grafana dashboards with Prometheus, and includes Grafana/Loki for logs and Prometheus/Alertmanager for alerting, with data exporter(s) for Weka.
 
 # Use Overview:  
 
