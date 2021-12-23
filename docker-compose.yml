@@ -1,11 +1,20 @@
 version: "3"
 
-#networks:
-#  weka:
-
 services:
+
+  grafana:
+    image: grafana/grafana:latest
+    volumes:
+      - /dev/log:/dev/log
+      - ${PWD}/etc_grafana_provisioning:/etc/grafana/provisioning
+      - ${PWD}/var_lib_grafana:/var/lib/grafana/
+      - ${PWD}/usr_share_grafana_public_img:/usr/share/grafana/public/img/weka
+    restart: always
+    ports:
+      - "3000:3000"
+
   loki:
-    image: grafana/loki:2.0.0
+    image: grafana/loki:2.3.0
     volumes:
       - /dev/log:/dev/log
       - ${PWD}/etc_loki:/etc/loki
@@ -19,6 +28,7 @@ services:
     image: prom/prometheus:latest
     volumes:
       - /dev/log:/dev/log
+      - /etc/hosts:/etc/hosts
       - ${PWD}/etc_prometheus:/etc/prometheus
       - ${PWD}/prometheus_data:/prometheus
     command: --storage.tsdb.retention.size=20GB --config.file=/etc/prometheus/prometheus.yml
@@ -31,22 +41,10 @@ services:
     volumes:
       - /dev/log:/dev/log
       - ${PWD}/etc_alertmanager:/etc/alertmanager
-      - ${PWD}/prometheus_data:/prometheus
-    command: --config.file="/etc/alertmanager/alertmanager.yml"
+    command: --config.file="/etc/alertmanager/alertmanager.yml" --log.level=debug # -web.external-url=http://hostname-here:9093/
     #restart: always
     ports:
       - "9093:9093"
-
-  grafana:
-    image: grafana/grafana:latest
-    volumes:
-      - /dev/log:/dev/log
-      - ${PWD}/etc_grafana_provisioning:/etc/grafana/provisioning
-      - ${PWD}/var_lib_grafana:/var/lib/grafana/
-      - ${PWD}/usr_share_grafana_public_img:/usr/share/grafana/public/img/weka
-    restart: always
-    ports:
-      - "3000:3000"
 
   export:
     image: wekasolutions/export:latest
@@ -59,3 +57,14 @@ services:
     restart: always
     ports:
       - "8001:8001"
+
+  quota-export:
+    image: wekasolutions/quota-export:latest
+    volumes:
+      - /dev/log:/dev/log
+      - ${HOME}/.weka:/weka/.weka
+      - /etc/hosts:/etc/hosts
+      - ${PWD}/quota-export.yml:/weka/quota-export.yml
+    restart: always
+    ports:
+      - "8101:8101"

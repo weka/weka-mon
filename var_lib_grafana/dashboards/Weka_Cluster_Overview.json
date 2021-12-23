@@ -8,14 +8,22 @@
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
         "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
         "type": "dashboard"
       }
     ]
   },
   "editable": true,
+  "fiscalYearStartMonth": 0,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1630846967826,
+  "id": 3,
+  "iteration": 1640030499607,
   "links": [
     {
       "$$hashKey": "object:415",
@@ -40,6 +48,7 @@
       "url": "http://${gui_host}:14000"
     }
   ],
+  "liveNow": false,
   "panels": [
     {
       "collapsed": false,
@@ -57,12 +66,6 @@
     },
     {
       "datasource": "${DS_PROMETHEUS}",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "gridPos": {
         "h": 2,
         "w": 3,
@@ -74,10 +77,9 @@
         "content": "<img src=/public/img/weka/WekaColor.svg>",
         "mode": "html"
       },
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "timeFrom": null,
       "timeShift": null,
-      "title": "",
       "transparent": true,
       "type": "text"
     },
@@ -86,14 +88,15 @@
       "datasource": "$weka_datasource",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "mappings": [
             {
-              "id": 0,
-              "op": "=",
-              "text": "N/A",
-              "type": 1,
-              "value": "null"
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
             }
           ],
           "thresholds": {
@@ -135,7 +138,7 @@
         "text": {},
         "textMode": "name"
       },
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "targets": [
         {
           "expr": "weka_info{cluster=\"$cluster\"}",
@@ -154,14 +157,15 @@
       "datasource": "$weka_datasource",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "mappings": [
             {
-              "id": 0,
-              "op": "=",
-              "text": "N/A",
-              "type": 1,
-              "value": "null"
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
             }
           ],
           "thresholds": {
@@ -203,7 +207,7 @@
         "text": {},
         "textMode": "name"
       },
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "targets": [
         {
           "expr": "weka_info{cluster=\"$cluster\"}",
@@ -222,14 +226,15 @@
       "datasource": "$weka_datasource",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "mappings": [
             {
-              "id": 0,
-              "op": "=",
-              "text": "N/A",
-              "type": 1,
-              "value": "null"
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
             }
           ],
           "thresholds": {
@@ -271,7 +276,7 @@
         "text": {},
         "textMode": "name"
       },
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "targets": [
         {
           "expr": "weka_info{cluster=\"$cluster\"}",
@@ -290,14 +295,15 @@
       "datasource": "$weka_datasource",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "mappings": [
             {
-              "id": 0,
-              "op": "=",
-              "text": "N/A",
-              "type": 1,
-              "value": "null"
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
             }
           ],
           "thresholds": {
@@ -339,7 +345,7 @@
         "text": {},
         "textMode": "name"
       },
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "targets": [
         {
           "expr": "weka_info{cluster=\"$cluster\"}",
@@ -358,14 +364,15 @@
       "datasource": "$weka_datasource",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "mappings": [
             {
-              "id": 0,
-              "op": "=",
-              "text": "N/A",
-              "type": 1,
-              "value": "null"
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
             }
           ],
           "thresholds": {
@@ -407,7 +414,7 @@
         "text": {},
         "textMode": "name"
       },
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "targets": [
         {
           "expr": "weka_info{cluster=\"$cluster\"}",
@@ -426,15 +433,16 @@
       "datasource": "$weka_datasource",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "decimals": 0,
           "mappings": [
             {
-              "id": 0,
-              "op": "=",
-              "text": "N/A",
-              "type": 1,
-              "value": "null"
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
             }
           ],
           "min": 0,
@@ -485,7 +493,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "targets": [
         {
           "expr": "weka_uptime{cluster=\"$cluster\"}",
@@ -504,14 +512,15 @@
       "datasource": "$weka_datasource",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "mappings": [
             {
-              "id": 0,
-              "op": "=",
-              "text": "N/A",
-              "type": 1,
-              "value": "null"
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
             }
           ],
           "thresholds": {
@@ -553,7 +562,7 @@
         "text": {},
         "textMode": "name"
       },
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "targets": [
         {
           "expr": "weka_info{cluster=\"$cluster\"}",
@@ -571,7 +580,6 @@
       "datasource": null,
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -607,7 +615,7 @@
         "text": {},
         "textMode": "value"
       },
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "targets": [
         {
           "expr": "weka_num_servers_total{cluster=\"$cluster\"}",
@@ -625,7 +633,6 @@
       "datasource": null,
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -665,7 +672,7 @@
         "text": {},
         "textMode": "value"
       },
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "targets": [
         {
           "expr": "weka_num_servers_total{cluster=\"$cluster\"} - weka_num_servers_active{cluster=\"$cluster\"}",
@@ -685,14 +692,15 @@
       "description": "Total capacity of the cluster",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "mappings": [
             {
-              "id": 0,
-              "op": "=",
-              "text": "N/A",
-              "type": 1,
-              "value": "null"
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
             }
           ],
           "thresholds": {
@@ -734,7 +742,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "targets": [
         {
           "expr": "weka_drive_storage_total_bytes{cluster=\"$cluster\"}",
@@ -754,14 +762,15 @@
       "description": "Capacity that has not been put into a filesystem",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "mappings": [
             {
-              "id": 0,
-              "op": "=",
-              "text": "N/A",
-              "type": 1,
-              "value": "null"
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
             }
           ],
           "thresholds": {
@@ -802,7 +811,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "targets": [
         {
           "expr": "weka_drive_storage_unprovisioned_bytes{cluster=\"$cluster\"}",
@@ -821,7 +830,6 @@
       "description": "",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -868,7 +876,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "targets": [
         {
           "expr": "sum(weka_alerts{cluster=\"$cluster\"})",
@@ -891,12 +899,6 @@
       "dashes": false,
       "datasource": "$weka_datasource",
       "description": "Total Used drive capacity",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -924,7 +926,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -992,14 +994,15 @@
       "datasource": "$weka_datasource",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "mappings": [
             {
-              "id": 0,
-              "op": "=",
-              "text": "N/A",
-              "type": 1,
-              "value": "null"
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
             }
           ],
           "thresholds": {
@@ -1038,7 +1041,7 @@
         "showThresholdMarkers": true,
         "text": {}
       },
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "targets": [
         {
           "expr": "weka_overview_activity_write_bytespersec{cluster=\"$cluster\"}+weka_overview_activity_read_bytespersec{cluster=\"$cluster\"}",
@@ -1058,14 +1061,15 @@
       "datasource": "$weka_datasource",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "mappings": [
             {
-              "id": 0,
-              "op": "=",
-              "text": "N/A",
-              "type": 1,
-              "value": "null"
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
             }
           ],
           "thresholds": {
@@ -1091,7 +1095,7 @@
       "interval": "1m",
       "links": [],
       "options": {
-        "orientation": "horizontal",
+        "orientation": "auto",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -1103,7 +1107,7 @@
         "showThresholdMarkers": true,
         "text": {}
       },
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "targets": [
         {
           "expr": "weka_overview_activity_write_bytespersec{cluster=\"$cluster\"}+weka_overview_activity_read_bytespersec{cluster=\"$cluster\"}",
@@ -1135,19 +1139,19 @@
       "datasource": "$weka_datasource",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "displayName": "",
           "mappings": [
             {
-              "from": "",
-              "id": 1,
-              "operator": "",
-              "text": "",
-              "to": "",
-              "type": 1,
-              "value": "0"
+              "options": {
+                "0": {
+                  "text": ""
+                }
+              },
+              "type": "value"
             }
           ],
+          "max": 100,
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1193,7 +1197,7 @@
         "showUnfilled": false,
         "text": {}
       },
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "repeat": null,
       "repeatDirection": "v",
       "targets": [
@@ -1229,9 +1233,10 @@
       "description": "",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "decimals": 0,
           "mappings": [],
+          "max": 100,
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1276,7 +1281,7 @@
         "showUnfilled": true,
         "text": {}
       },
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "targets": [
         {
           "expr": "sort_desc(weka_fs{cluster=\"$cluster\", stat=\"total_percent_used\"})",
@@ -1299,9 +1304,10 @@
       "description": "",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "decimals": 0,
           "mappings": [],
+          "max": 100,
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1346,7 +1352,7 @@
         "showUnfilled": true,
         "text": {}
       },
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "targets": [
         {
           "expr": "sort_desc(weka_fs{cluster=\"$cluster\", stat=\"ssd_percent_used\"})",
@@ -1370,12 +1376,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -1407,7 +1407,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1482,12 +1482,6 @@
       "datasource": "$weka_datasource",
       "fieldConfig": {
         "defaults": {
-          "color": {},
-          "custom": {},
-          "thresholds": {
-            "mode": "absolute",
-            "steps": []
-          },
           "unit": "bytes"
         },
         "overrides": []
@@ -1523,7 +1517,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1603,7 +1597,6 @@
       "description": "",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "unit": "percent"
         },
         "overrides": []
@@ -1638,7 +1631,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1713,12 +1706,6 @@
       "dashes": false,
       "datasource": "$weka_datasource",
       "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -1749,7 +1736,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1823,12 +1810,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 0,
       "fillGradient": 0,
       "gridPos": {
@@ -1859,7 +1840,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1958,7 +1939,6 @@
       "datasource": "$weka_datasource",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "unit": "percent"
         },
         "overrides": []
@@ -1993,7 +1973,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -2102,12 +2082,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -2135,7 +2109,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -2200,12 +2174,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -2233,7 +2201,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -2297,12 +2265,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -2330,7 +2292,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -2408,12 +2370,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -2441,7 +2397,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -2506,12 +2462,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -2539,7 +2489,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -2602,12 +2552,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -2635,7 +2579,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -2704,12 +2648,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -2737,7 +2675,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -2806,12 +2744,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -2839,7 +2771,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -2906,7 +2838,6 @@
       "datasource": "$weka_datasource",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "unit": "binBps"
         },
         "overrides": []
@@ -2938,7 +2869,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -3007,12 +2938,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -3040,7 +2965,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -3195,12 +3120,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -3228,7 +3147,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -3309,12 +3228,6 @@
       },
       "dataFormat": "tsbuckets",
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "gridPos": {
         "h": 8,
         "w": 12,
@@ -3377,7 +3290,6 @@
       "datasource": "$weka_datasource",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -3412,7 +3324,7 @@
         "showUnfilled": true,
         "text": {}
       },
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "targets": [
         {
           "expr": "sum by (le) (weka_blocksize_bucket{cluster=\"$cluster\",category=\"ops_driver\",stat=\"READ_SIZES\"})",
@@ -3454,12 +3366,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -3487,7 +3393,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -3550,12 +3456,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -3583,7 +3483,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -3646,12 +3546,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -3679,7 +3573,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -3689,7 +3583,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READS\"})",
+          "expr": "sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READS\"} or weka_stats{cluster=\"$cluster\",category=\"ops_driver\",stat=\"READS_RDMA\"})",
           "interval": "",
           "legendFormat": "{{host_name}}",
           "refId": "A"
@@ -3742,12 +3636,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -3775,7 +3663,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -3785,7 +3673,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READ_BYTES\"})",
+          "expr": "sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READ_BYTES\"} or weka_stats{cluster=\"$cluster\",category=\"ops_driver\",stat=\"READ_BYTES_RDMA\"})",
           "interval": "",
           "legendFormat": "{{host_name}}",
           "refId": "A"
@@ -3838,12 +3726,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -3871,7 +3753,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -3881,7 +3763,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITES\"})",
+          "expr": "sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITES\"} or weka_stats{cluster=\"$cluster\",category=\"ops_driver\",stat=\"WRITES_RDMA\"})",
           "interval": "",
           "legendFormat": "{{host_name}}",
           "refId": "A"
@@ -3934,12 +3816,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -3967,7 +3843,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -3977,7 +3853,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITE_BYTES\"})",
+          "expr": "sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITE_BYTES\"} or weka_stats{cluster=\"$cluster\",category=\"ops_driver\",stat=\"WRITE_BYTES_RDMA\"})",
           "interval": "",
           "legendFormat": "{{host_name}}",
           "refId": "A"
@@ -4030,12 +3906,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -4062,7 +3932,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -4072,10 +3942,52 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum by (host_name) ( weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"OPS\"} ) - sum by (host_name)( weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READS\"} )- sum by (host_name)( weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITES\"} )",
+          "exemplar": true,
+          "expr": "sum by (host_name) ( weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"OPS\"} ) - sum by (host_name)( weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READS\"} or weka_stats{cluster=\"$cluster\",category=\"ops_driver\",stat=\"READS_RDMA\"} )- sum by (host_name)( weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITES\"} or weka_stats{cluster=\"$cluster\",category=\"ops_driver\",stat=\"WRITES_RDMA\"})",
+          "hide": true,
           "interval": "",
           "legendFormat": "{{host_name}}",
           "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"OPS\"} ) - sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READS\"}) - sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITES\"})",
+          "hide": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "B"
+        },
+        {
+          "exemplar": true,
+          "expr": "sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"OPS\"} )",
+          "hide": true,
+          "interval": "",
+          "legendFormat": "{{host_name}} ops",
+          "refId": "C"
+        },
+        {
+          "exemplar": true,
+          "expr": "sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READS\"})",
+          "hide": true,
+          "interval": "",
+          "legendFormat": "{{host_name}} reads",
+          "refId": "D"
+        },
+        {
+          "exemplar": true,
+          "expr": "sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITES\"})",
+          "hide": true,
+          "interval": "",
+          "legendFormat": "{{host_name}} writes",
+          "refId": "E"
+        },
+        {
+          "exemplar": true,
+          "expr": "sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"OPS\"}) - sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READS\"} or weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITES\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{host_name}}",
+          "refId": "F"
         }
       ],
       "thresholds": [],
@@ -4127,12 +4039,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -4159,7 +4065,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -4169,13 +4075,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "avg by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READ_LATENCY\"})",
+          "expr": "avg by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READ_LATENCY\"} or weka_stats{cluster=\"$cluster\",category=\"ops_driver\",stat=\"READ_LATENCY_RDMA\"})",
           "interval": "",
           "legendFormat": "{{host_name}} read",
           "refId": "A"
         },
         {
-          "expr": "avg by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITE_LATENCY\"})",
+          "expr": "avg by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITE_LATENCY\"} or weka_stats{cluster=\"$cluster\",category=\"ops_driver\",stat=\"WRITE_LATENCY_RDMA\"})",
           "interval": "",
           "legendFormat": "{{host_name}} write",
           "refId": "B"
@@ -4242,12 +4148,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -4275,7 +4175,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -4285,10 +4185,20 @@
       "steppedLine": false,
       "targets": [
         {
+          "exemplar": true,
           "expr": "topk( 5, sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READS\",host_role=\"client\"}) + sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITES\",host_role=\"client\"}))  ",
+          "hide": true,
           "interval": "",
           "legendFormat": "{{host_name}}",
           "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "topk( 5, sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READS\",host_role=\"client\"} or weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITES\",host_role=\"client\"}))",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{host_name}}",
+          "refId": "B"
         }
       ],
       "thresholds": [],
@@ -4311,6 +4221,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:323",
           "format": "iops",
           "label": null,
           "logBase": 1,
@@ -4319,6 +4230,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:324",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -4338,12 +4250,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -4371,7 +4277,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -4436,7 +4342,6 @@
       "datasource": "$weka_datasource",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "unit": "iops"
         },
         "overrides": []
@@ -4468,7 +4373,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -4478,7 +4383,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "topk( 5, sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READS\",host_role=\"client\"}))",
+          "expr": "topk( 5, sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READS\",host_role=\"client\"} or weka_stats{cluster=\"$cluster\",category=\"ops_driver\",stat=\"READS_RDMA\",host_role=\"client\"}))",
           "interval": "",
           "legendFormat": "{{host_name}}",
           "refId": "A"
@@ -4533,12 +4438,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -4566,7 +4465,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -4576,7 +4475,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "topk( 5, sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READ_BYTES\",host_role=\"client\"}))",
+          "expr": "topk( 5, sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READ_BYTES\",host_role=\"client\"} or weka_stats{cluster=\"$cluster\",category=\"ops_driver\",stat=\"READ_BYTES_RDMA\",host_role=\"client\"}))",
           "interval": "",
           "legendFormat": "{{host_name}}",
           "refId": "A"
@@ -4633,7 +4532,6 @@
       "datasource": "$weka_datasource",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "unit": "iops"
         },
         "overrides": []
@@ -4665,7 +4563,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -4675,7 +4573,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "topk( 5, sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITES\",host_role=\"client\"}))",
+          "expr": "topk( 5, sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITES\",host_role=\"client\"} or weka_stats{cluster=\"$cluster\",category=\"ops_driver\",stat=\"WRITES_RDMA\",host_role=\"client\"}))",
           "interval": "",
           "legendFormat": "{{host_name}}",
           "refId": "A"
@@ -4730,12 +4628,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -4763,7 +4655,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -4773,7 +4665,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "topk( 5, sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITE_BYTES\",host_role=\"client\"}))",
+          "expr": "topk( 5, sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITE_BYTES\",host_role=\"client\"} or weka_stats{cluster=\"$cluster\",category=\"ops_driver\",stat=\"WRITE_BYTES_RDMA\",host_role=\"client\"}))",
           "interval": "",
           "legendFormat": "{{host_name}}",
           "refId": "A"
@@ -4826,12 +4718,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -4859,7 +4745,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -4869,10 +4755,20 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "topk( 5, sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READ_LATENCY\",host_role=\"client\"}))",
+          "exemplar": true,
+          "expr": "topk( 5, avg by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READ_LATENCY\",host_role=\"client\"} or weka_stats{cluster=\"$cluster\",category=\"ops_driver\",stat=\"READ_LATENCY_RDMA\",host_role=\"client\"}))",
+          "hide": true,
           "interval": "",
           "legendFormat": "{{host_name}}",
           "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "topk( 5, avg by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READ_LATENCY\",host_role=\"client\"}))",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "B"
         }
       ],
       "thresholds": [],
@@ -4895,6 +4791,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:410",
           "format": "µs",
           "label": null,
           "logBase": 1,
@@ -4903,6 +4800,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:411",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -4922,12 +4820,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -4955,7 +4847,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -4965,7 +4857,8 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "topk( 5, sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITE_LATENCY\",host_role=\"client\"}))",
+          "exemplar": true,
+          "expr": "topk( 5, avg by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITE_LATENCY\",host_role=\"client\"} or weka_stats{cluster=\"$cluster\",category=\"ops_driver\",stat=\"WRITE_LATENCY_RDMA\",host_role=\"client\"}))",
           "interval": "",
           "legendFormat": "{{host_name}}",
           "refId": "A"
@@ -4991,6 +4884,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:922",
           "format": "µs",
           "label": null,
           "logBase": 1,
@@ -4999,6 +4893,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:923",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -5018,12 +4913,6 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -5051,7 +4940,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.3",
+      "pluginVersion": "8.2.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -5061,7 +4950,8 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "topk( 5, sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"OPS\",host_role=\"client\"}) - sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READS\",host_role=\"client\"}) - sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITES\",host_role=\"client\"}))",
+          "exemplar": true,
+          "expr": "topk( 5, sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"OPS\",host_role=\"client\"}) - sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"READS\",host_role=\"client\"} or weka_stats{cluster=\"$cluster\",category=\"ops_driver\",stat=\"READS_RDMA\",host_role=\"client\"}) - sum by (host_name) (weka_stats{cluster=\"$cluster\",category=\"ops\",stat=\"WRITES\",host_role=\"client\"} or weka_stats{cluster=\"$cluster\",category=\"ops_driver\",stat=\"WRITES_RDMA\",host_role=\"client\"}))",
           "interval": "",
           "legendFormat": "{{host_name}}",
           "refId": "A"
@@ -5087,6 +4977,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:750",
           "format": "ops",
           "label": null,
           "logBase": 1,
@@ -5095,6 +4986,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:751",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -5109,7 +5001,7 @@
       }
     },
     {
-      "collapsed": true,
+      "collapsed": false,
       "datasource": "$weka_datasource",
       "gridPos": {
         "h": 1,
@@ -5118,111 +5010,104 @@
         "y": 147
       },
       "id": 78,
-      "panels": [
-        {
-          "aliasColors": {},
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "$weka_datasource",
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
-          },
-          "fill": 1,
-          "fillGradient": 1,
-          "gridPos": {
-            "h": 10,
-            "w": 24,
-            "x": 0,
-            "y": 144
-          },
-          "hiddenSeries": false,
-          "id": 80,
-          "legend": {
-            "avg": false,
-            "current": false,
-            "max": false,
-            "min": false,
-            "show": false,
-            "total": false,
-            "values": false
-          },
-          "lines": true,
-          "linewidth": 1,
-          "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
-          "percentage": false,
-          "pluginVersion": "7.4.3",
-          "pointradius": 2,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "spaceLength": 10,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "expr": "weka_stats{cluster=\"$cluster\",category=\"cpu\",stat=\"CPU_UTILIZATION\"}",
-              "interval": "",
-              "legendFormat": "{{node_id}} {{host_name}} {{node_role}}",
-              "refId": "A"
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeRegions": [],
-          "timeShift": null,
-          "title": "CPU Utilization by NodeId/Core",
-          "tooltip": {
-            "shared": false,
-            "sort": 2,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "decimals": null,
-              "format": "percent",
-              "label": null,
-              "logBase": 1,
-              "max": "100",
-              "min": "0",
-              "show": true
-            },
-            {
-              "decimals": null,
-              "format": "percent",
-              "label": null,
-              "logBase": 1,
-              "max": "100",
-              "min": "0",
-              "show": false
-            }
-          ],
-          "yaxis": {
-            "align": false,
-            "alignLevel": null
-          }
-        }
-      ],
+      "panels": [],
       "title": "per core stats",
       "type": "row"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "$weka_datasource",
+      "fill": 1,
+      "fillGradient": 1,
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 148
+      },
+      "hiddenSeries": false,
+      "id": 80,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": false,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.2.1",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "weka_stats{cluster=\"$cluster\",category=\"cpu\",stat=\"CPU_UTILIZATION\"}",
+          "interval": "",
+          "legendFormat": "{{node_id}} {{host_name}} {{node_role}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "CPU Utilization by NodeId/Core",
+      "tooltip": {
+        "shared": false,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "decimals": null,
+          "format": "percent",
+          "label": null,
+          "logBase": 1,
+          "max": "100",
+          "min": "0",
+          "show": true
+        },
+        {
+          "decimals": null,
+          "format": "percent",
+          "label": null,
+          "logBase": 1,
+          "max": "100",
+          "min": "0",
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     }
   ],
   "refresh": "1m",
-  "schemaVersion": 27,
+  "schemaVersion": 31,
   "style": "dark",
   "tags": [
     "#weka"
@@ -5230,7 +5115,11 @@
   "templating": {
     "list": [
       {
-        "current": {},
+        "current": {
+          "selected": false,
+          "text": "Prometheus",
+          "value": "Prometheus"
+        },
         "description": null,
         "error": null,
         "hide": 0,
@@ -5248,7 +5137,8 @@
       },
       {
         "allValue": null,
-        "current": {},
+        "current": {
+        },
         "datasource": "$weka_datasource",
         "definition": "label_values(weka_info,cluster)",
         "description": null,
@@ -5268,14 +5158,14 @@
         "skipUrlSync": false,
         "sort": 0,
         "tagValuesQuery": "",
-        "tags": [],
         "tagsQuery": "",
         "type": "query",
         "useTags": false
       },
       {
         "allValue": null,
-        "current": {},
+        "current": {
+        },
         "datasource": "$weka_datasource",
         "definition": "label_values(weka_stats{cluster=\"$cluster\",host_role=\"server\"},host_name)",
         "description": null,
@@ -5295,7 +5185,6 @@
         "skipUrlSync": false,
         "sort": 0,
         "tagValuesQuery": "",
-        "tags": [],
         "tagsQuery": "",
         "type": "query",
         "useTags": false
@@ -5303,7 +5192,7 @@
     ]
   },
   "time": {
-    "from": "now-2d",
+    "from": "now-12h",
     "to": "now"
   },
   "timepicker": {
@@ -5322,5 +5211,5 @@
   "timezone": "",
   "title": "Weka Cluster Overview",
   "uid": "WekaOverview",
-  "version": 4
+  "version": 10
 }

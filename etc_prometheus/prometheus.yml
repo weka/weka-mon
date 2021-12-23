@@ -21,16 +21,6 @@ scrape_configs:
         targets: 
           - "prometheus:9090"
   - 
-    job_name: weka
-    scrape_interval: 60s
-    static_configs: 
-      - 
-        targets: 
-          - "export:8001"
-          - "export:8002"
-          - "export:8003"
-          - "export:8004"
-  - 
     job_name: grafana
     scrape_interval: 15s
     scrape_timeout: 5s
@@ -38,3 +28,40 @@ scrape_configs:
       - 
         targets: 
           - "grafana:3000"
+  - 
+    job_name: s3
+    scrape_interval: 15s
+    scrape_timeout: 5s
+    metrics_path: /minio/prometheus/metrics
+    static_configs: 
+      - 
+        targets: 
+          - "vweka01:9000"
+          - "vweka02:9000"
+          - "vweka03:9000"
+          - "vweka04:9000"
+          - "vweka05:9000"
+          - "vweka06:9000"
+          - "vweka07:9000"
+  - 
+    job_name: weka
+    scrape_interval: 60s
+    static_configs: 
+      - 
+        targets: 
+          - "export:8001"
+          - "export:8002"
+  - 
+    job_name: weka-quota
+    scrape_interval: 24h
+    static_configs: 
+      - 
+        targets: 
+          - "quota-export:8101"
+  - 
+    job_name: loki
+    scrape_interval: 10s
+    static_configs: 
+      - 
+        targets: 
+          - "loki:3100"
