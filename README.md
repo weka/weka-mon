@@ -1,8 +1,10 @@
 # weka-mon
 Weka Cluster Monitoring
 
-
 A solution that implements Grafana dashboards with Prometheus, and includes Grafana/Loki for logs and Prometheus/Alertmanager for alerting, with data exporter(s) for Weka.
+
+# New in v1.4.0
+Quota monitoring: A new container, quota-export (from https://github.com/weka/quota-exporter) has been added, and an Alertmanger integration sends emails to the user when they are over their Soft Quota.  Until all docs are updated, please reach out to Weka Customer Support for configuration assistance.
 
 # Use Overview:  
 

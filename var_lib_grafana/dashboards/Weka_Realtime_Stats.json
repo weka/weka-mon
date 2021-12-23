@@ -1790,7 +1790,7 @@
     ]
   },
   "timezone": "",
-  "title": "Weka Realtime Stats",
+  "title": "(experimental) Weka Realtime Stats",
   "uid": "WekaRT",
-  "version": 6
+  "version": 7
 }
