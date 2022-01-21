@@ -42,6 +42,9 @@ route:
       wekatype: quota
     receiver: 'gmail-notify'
 #    receiver: 'slack-notify2'
+    group_wait: 1s
+    group_interval: 1s
+    repeat_interval: 1d
 
 
 receivers:
