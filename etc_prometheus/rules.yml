@@ -3,7 +3,7 @@ groups:
   - name: WekaAlert
     rules:
     - alert: WekaAlert
-      expr: weka_alerts >= 1
+      expr: weka_alerts > 0
       for: 1m
       labels:
         wekatype: alert
@@ -13,13 +13,13 @@ groups:
   - name: WekaQuota
     rules:
     - alert: WekaQuota
-      expr: weka_quota >= 1
+      expr: weka_quota > 0
       labels:
         wekatype: quota
       annotations:
         thevalue: weka_quota{cluster=$labels.cluster}
         summary: 'Weka Soft Quota Exceeded on cluster: {{ $labels.cluster }}'
-        description: 'Over quota on {{ $labels.cluster }}, filesystem={{ $labels.filesystem }}, directory={{ $labels.directory }}. Quota is {{ $labels.soft_quotaGB }}'
+        description: 'Over quota on {{ $labels.cluster }}, filesystem={{ $labels.filesystem }}, directory={{ $labels.directory }}. Quota is {{ $labels.soft_quotaGB }}GB'
         cluster: '{{ $labels.cluster }}'
         filesystem: '{{ $labels.filesystem }}'
         directory: '{{ $labels.directory }}'

@@ -7,7 +7,7 @@ alerting:
           targets: 
             - "alertmanager:9093"
 global: 
-  evaluation_interval: 15s
+  evaluation_interval: 1m
   scrape_interval: 60s
   scrape_timeout: 50s
 rule_files: 
@@ -53,7 +53,7 @@ scrape_configs:
           - "export:8002"
   - 
     job_name: weka-quota
-    scrape_interval: 24h
+    scrape_interval: 1m
     static_configs: 
       - 
         targets: 
