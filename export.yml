@@ -527,7 +527,7 @@ stats:
 #    FILEATOMICOPEN_OPS: Ops/Sec
 #    UNLINK_OPS: Ops/Sec
 #    WRITE_BYTES: Bytes/Sec
-#  ops_nfs:
+  ops_nfs:
 #    STATFS_OPS: Ops/Sec
     WRITE_BYTES: Bytes/Sec
 #    RENAME_LATENCY: Microseconds
