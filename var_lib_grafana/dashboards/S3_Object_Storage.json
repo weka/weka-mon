@@ -23,8 +23,8 @@
   "fiscalYearStartMonth": 0,
   "gnetId": 12563,
   "graphTooltip": 0,
-  "id": 13,
-  "iteration": 1640119856767,
+  "id": 5,
+  "iteration": 1648044412243,
   "links": [
     {
       "asDropdown": true,
@@ -44,867 +44,6 @@
   "liveNow": false,
   "panels": [
     {
-      "cacheTimeout": null,
-      "datasource": "Prometheus",
-      "description": "Start time of the S3 server",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "rgb(31, 120, 193)",
-            "mode": "fixed"
-          },
-          "mappings": [
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "dtdurations"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 4,
-        "x": 0,
-        "y": 0
-      },
-      "id": 1,
-      "interval": null,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "none",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "text": {},
-        "textMode": "auto"
-      },
-      "pluginVersion": "8.2.1",
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "time() - min(process_start_time_seconds)",
-          "format": "time_series",
-          "instant": false,
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "Start time of the S3 servers",
-          "metric": "process_start_time_seconds",
-          "refId": "A",
-          "step": 60
-        }
-      ],
-      "title": "Uptime",
-      "transformations": [
-        {
-          "id": "reduce",
-          "options": {
-            "reducers": [
-              "max"
-            ]
-          }
-        }
-      ],
-      "type": "stat"
-    },
-    {
-      "cacheTimeout": null,
-      "datasource": "Prometheus",
-      "description": "Total number of disks for current S3 server instances",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "rgb(31, 120, 193)",
-            "mode": "fixed"
-          },
-          "mappings": [
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 4,
-        "x": 4,
-        "y": 0
-      },
-      "id": 9,
-      "interval": null,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "none",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "text": {},
-        "textMode": "auto"
-      },
-      "pluginVersion": "8.2.1",
-      "targets": [
-        {
-          "expr": "sum(minio_disks_total)",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "Total number of disks for current S3 server instances",
-          "metric": "process_start_time_seconds",
-          "refId": "A",
-          "step": 60
-        }
-      ],
-      "title": "Total disks",
-      "type": "stat"
-    },
-    {
-      "cacheTimeout": null,
-      "datasource": "Prometheus",
-      "description": "Total number of offline disks for current S3 server instances",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "rgba(50, 172, 45, 0.97)",
-                "value": null
-              },
-              {
-                "color": "rgba(237, 129, 40, 0.89)",
-                "value": 1
-              },
-              {
-                "color": "rgba(245, 54, 54, 0.9)",
-                "value": 2
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 4,
-        "x": 8,
-        "y": 0
-      },
-      "id": 10,
-      "interval": null,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "text": {},
-        "textMode": "auto"
-      },
-      "pluginVersion": "8.2.1",
-      "targets": [
-        {
-          "expr": "sum(minio_disks_offline)",
-          "format": "time_series",
-          "instant": false,
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "Total number of offline disks for current S3 server instances",
-          "metric": "process_start_time_seconds",
-          "refId": "A",
-          "step": 60
-        }
-      ],
-      "title": "Offline disks",
-      "type": "stat"
-    },
-    {
-      "cacheTimeout": null,
-      "datasource": "Prometheus",
-      "description": "Total size of the disk for current S3 server instances",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "rgb(31, 120, 193)",
-            "mode": "fixed"
-          },
-          "mappings": [
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "decbytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 4,
-        "x": 12,
-        "y": 0
-      },
-      "id": 15,
-      "interval": null,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "none",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "max"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "text": {},
-        "textMode": "auto"
-      },
-      "pluginVersion": "8.2.1",
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "disk_storage_total{instance=\"$instance\"}",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "Total size of the disk for current S3 server instances",
-          "metric": "process_start_time_seconds",
-          "refId": "A",
-          "step": 60
-        }
-      ],
-      "title": "Disk total size (Max)",
-      "transformations": [
-        {
-          "id": "reduce",
-          "options": {
-            "includeTimeField": false,
-            "mode": "reduceFields",
-            "reducers": [
-              "max"
-            ]
-          }
-        }
-      ],
-      "type": "stat"
-    },
-    {
-      "cacheTimeout": null,
-      "datasource": "Prometheus",
-      "description": "Total disk space used for current S3 server instances",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "rgb(31, 120, 193)",
-            "mode": "fixed"
-          },
-          "mappings": [
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "decbytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 4,
-        "x": 16,
-        "y": 0
-      },
-      "id": 16,
-      "interval": null,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "none",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "max"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "text": {},
-        "textMode": "auto"
-      },
-      "pluginVersion": "8.2.1",
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "sum(disk_storage_used{instance=\"$instance\"})",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "Total disk space used for current S3 server instances",
-          "metric": "process_start_time_seconds",
-          "refId": "A",
-          "step": 60
-        }
-      ],
-      "title": "Disk total used (Max)",
-      "transformations": [
-        {
-          "id": "reduce",
-          "options": {}
-        }
-      ],
-      "type": "stat"
-    },
-    {
-      "cacheTimeout": null,
-      "datasource": "Prometheus",
-      "description": "Total available disk space for current S3 server instances",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "rgba(245, 54, 54, 0.9)",
-                "value": null
-              },
-              {
-                "color": "rgba(237, 129, 40, 0.89)",
-                "value": 50
-              },
-              {
-                "color": "rgba(50, 172, 45, 0.97)",
-                "value": 0
-              }
-            ]
-          },
-          "unit": "decbytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 4,
-        "x": 20,
-        "y": 0
-      },
-      "id": 17,
-      "interval": null,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [],
-          "fields": "/^Last \\*$/",
-          "values": false
-        },
-        "text": {},
-        "textMode": "auto"
-      },
-      "pluginVersion": "8.2.1",
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "sum(disk_storage_available{instance=\"$instance\"})",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "Total available disk space for current S3 server instances",
-          "metric": "process_start_time_seconds",
-          "refId": "A",
-          "step": 60
-        }
-      ],
-      "title": "Disk total available (Max)",
-      "transformations": [
-        {
-          "id": "reduce",
-          "options": {
-            "reducers": [
-              "lastNotNull"
-            ]
-          }
-        }
-      ],
-      "type": "stat"
-    },
-    {
-      "aliasColors": {
-        "Offline 10.13.1.25:9000": "dark-red",
-        "Total 10.13.1.25:9000": "blue"
-      },
-      "bars": false,
-      "cacheTimeout": null,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "Prometheus",
-      "description": "Number of total/offline disks for current S3 server instances",
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 6,
-        "w": 8,
-        "x": 0,
-        "y": 3
-      },
-      "hiddenSeries": false,
-      "id": 11,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "rightSide": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "8.2.1",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "minio_disks_offline{instance=~\"$instance\"}",
-          "format": "time_series",
-          "instant": false,
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "Offline {{instance}}",
-          "metric": "process_start_time_seconds",
-          "refId": "A",
-          "step": 60
-        },
-        {
-          "expr": "minio_disks_total{instance=~\"$instance\"}",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "Total {{instance}}",
-          "metric": "process_start_time_seconds",
-          "refId": "B",
-          "step": 60
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Disks",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "decimals": 0,
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": "0",
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {
-        "available 10.13.1.25:9000": "green",
-        "used 10.13.1.25:9000": "blue"
-      },
-      "bars": false,
-      "cacheTimeout": null,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "Prometheus",
-      "description": "Total disk space used for current S3 server instances",
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 6,
-        "w": 8,
-        "x": 8,
-        "y": 3
-      },
-      "hiddenSeries": false,
-      "id": 8,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "rightSide": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "8.2.1",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "avg(disk_storage_used{instance=~\"$instance\"})",
-          "format": "time_series",
-          "hide": false,
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "used {{instance}}",
-          "metric": "process_start_time_seconds",
-          "refId": "A",
-          "step": 60
-        },
-        {
-          "exemplar": true,
-          "expr": "avg(disk_storage_total{instance=~\"$instance\"})",
-          "format": "time_series",
-          "hide": false,
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "total {{instance}}",
-          "metric": "process_start_time_seconds",
-          "refId": "B",
-          "step": 60
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Disk Usage",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "$$hashKey": "object:322",
-          "decimals": null,
-          "format": "decbytes",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": "0",
-          "show": true
-        },
-        {
-          "$$hashKey": "object:323",
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {
-        "available 10.13.1.25:9000": "green",
-        "used 10.13.1.25:9000": "blue"
-      },
-      "bars": false,
-      "cacheTimeout": null,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "Prometheus",
-      "description": "Percentage disk space used for current S3 server instances",
-      "fieldConfig": {
-        "defaults": {
-          "links": []
-        },
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 6,
-        "w": 8,
-        "x": 16,
-        "y": 3
-      },
-      "hiddenSeries": false,
-      "id": 20,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "rightSide": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "8.2.1",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "sum(disk_storage_used{instance=~\"$instance\"}) by (instance) / sum(disk_storage_total{instance=~\"$instance\"}) by (instance) * 100",
-          "format": "time_series",
-          "hide": false,
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "{{instance}}",
-          "metric": "process_start_time_seconds",
-          "refId": "A",
-          "step": 60
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Disk Percentage Utilization",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "$$hashKey": "object:968",
-          "decimals": null,
-          "format": "percent",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": "0",
-          "show": true
-        },
-        {
-          "$$hashKey": "object:969",
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
@@ -920,7 +59,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 9
+        "y": 0
       },
       "hiddenSeries": false,
       "id": 13,
@@ -1034,7 +173,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 9
+        "y": 0
       },
       "hiddenSeries": false,
       "id": 14,
@@ -1141,7 +280,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 17
+        "y": 8
       },
       "hiddenSeries": false,
       "id": 4,
@@ -1254,7 +393,7 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 17
+        "y": 8
       },
       "hiddenSeries": false,
       "id": 24,
@@ -1365,7 +504,7 @@
         "h": 7,
         "w": 8,
         "x": 0,
-        "y": 24
+        "y": 15
       },
       "hiddenSeries": false,
       "id": 7,
@@ -1468,7 +607,7 @@
         "h": 7,
         "w": 8,
         "x": 8,
-        "y": 24
+        "y": 15
       },
       "hiddenSeries": false,
       "id": 22,
@@ -1570,7 +709,7 @@
         "h": 7,
         "w": 8,
         "x": 16,
-        "y": 24
+        "y": 15
       },
       "hiddenSeries": false,
       "id": 21,
@@ -1674,7 +813,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 31
+        "y": 22
       },
       "heatmap": {},
       "hideZeroBuckets": false,
@@ -1752,7 +891,7 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 31
+        "y": 22
       },
       "hiddenSeries": false,
       "id": 18,
@@ -1880,7 +1019,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 38
+        "y": 29
       },
       "hiddenSeries": false,
       "id": 23,
@@ -2022,7 +1161,7 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 38
+        "y": 29
       },
       "id": 28,
       "options": {
@@ -2173,8 +1312,8 @@
     ]
   },
   "time": {
-    "from": "2021-11-17T19:31:26.349Z",
-    "to": "2021-11-17T19:42:50.396Z"
+    "from": "now-30m",
+    "to": "now"
   },
   "timepicker": {
     "refresh_intervals": [
@@ -2204,5 +1343,5 @@
   "timezone": "",
   "title": "S3 Object Storage",
   "uid": "S3_Object_Storage",
-  "version": 2
+  "version": 1
 }
