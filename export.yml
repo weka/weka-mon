@@ -254,7 +254,7 @@ stats:
 #    UDP_SENDMSG_FAILED_EAGAIN: Packets/Sec
 #    FAULT_SENT_DELAYED_PACKETS: Packets/Sec
 #    RDMA_COMP_FAILURES: Failures/Sec
-    RDMA_TX_BYTES: Bytes/Sec
+#    RDMA_TX_BYTES: Bytes/Sec
 #    FAULT_RECV_DROPPED_PACKETS: Packets/Sec
 #    SEND_QUEUE_TIMEOUTS: Packets/Sec
 #    SLOW_PATH_CSUM: Packets/Sec
@@ -276,7 +276,7 @@ stats:
 #    PUMP_DURATION: none
 #    REORDERED_PACKETS: Packets/Sec
 #    SEND_WINDOW_TIMEOUTS: Packets/Sec
-    RDMA_RX_BYTES: Bytes/Sec
+#    RDMA_RX_BYTES: Bytes/Sec
 #    RESENT_DATA_PACKETS: Packets/Sec
 #    SENT_PACKETS: Packets/Sec
 #    GOODPUT_RX_RATIO: %
@@ -454,8 +454,8 @@ stats:
     WRITE_LATENCY: Microseconds
     WRITES: Ops/Sec
   ops_driver:
-    WRITE_BYTES_RDMA: bytespersec
-    READ_BYTES_RDMA: bytespersec
+#    WRITE_BYTES_RDMA: bytespersec
+#    READ_BYTES_RDMA: bytespersec
 #    READDIR_LATENCY: Microseconds
 #    FILEOPEN_LATENCY: Microseconds
 #    LINK_LATENCY: Microseconds
@@ -492,7 +492,7 @@ stats:
 #    SETXATTR_OPS: Ops/Sec
     READ_SIZES: Blocks
 #    FILECLOSE_OPS: Ops/Sec
-    WRITE_RDMA_SIZES: Blocks
+#    WRITE_RDMA_SIZES: Blocks
 #    SYMLINK_LATENCY: Microseconds
 #    SYMLINK_OPS: Ops/Sec
 #    GETATTR_LATENCY: Microseconds
