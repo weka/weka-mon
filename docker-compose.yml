@@ -3,7 +3,7 @@ version: "3"
 services:
 
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana:8.4.6
     volumes:
       - /dev/log:/dev/log
       - ${PWD}/etc_grafana_provisioning:/etc/grafana/provisioning
@@ -12,6 +12,10 @@ services:
     restart: always
     ports:
       - "3000:3000"
+    logging:
+      options:
+        max-file: "5"
+        max-size: "15m"
 
   loki:
     image: grafana/loki:2.3.0
@@ -23,6 +27,10 @@ services:
     restart: always
     ports:
       - "3100:3100"
+    logging:
+      options:
+        max-file: "5"
+        max-size: "15m"
 
   prometheus:
     image: prom/prometheus:latest
@@ -35,6 +43,10 @@ services:
     restart: always
     ports:
       - "9090:9090"
+    logging:
+      options:
+        max-file: "5"
+        max-size: "15m"
 
   alertmanager:
     image: prom/alertmanager:latest
@@ -45,26 +57,38 @@ services:
     #restart: always
     ports:
       - "9093:9093"
+    logging:
+      options:
+        max-file: "5"
+        max-size: "15m"
 
   export:
     image: wekasolutions/export:latest
     volumes:
       - /dev/log:/dev/log
-      - ${HOME}/.weka:/weka/.weka
+      - ${PWD}/.weka:/weka/.weka
       - /etc/hosts:/etc/hosts
       - ${PWD}/export.yml:/weka/export.yml
     command: -v
     restart: always
     ports:
       - "8001:8001"
+    logging:
+      options:
+        max-file: "5"
+        max-size: "15m"
 
   quota-export:
     image: wekasolutions/quota-export:latest
     volumes:
       - /dev/log:/dev/log
-      - ${HOME}/.weka:/weka/.weka
+      - ${PWD}/.weka:/weka/.weka
       - /etc/hosts:/etc/hosts
       - ${PWD}/quota-export.yml:/weka/quota-export.yml
     restart: always
     ports:
       - "8101:8101"
+    logging:
+      options:
+        max-file: "5"
+        max-size: "15m"
