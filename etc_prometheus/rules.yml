@@ -25,4 +25,6 @@ groups:
         directory: '{{ $labels.directory }}'
         soft_quota: '{{ $labels.soft_quotaGB }}'
         bytes_used: '{{ $value }}'
+        available: '{{ $labels.availableGB }}'
+        #available: '{{ $labels.hard_quotaGB - $value }}'
         owner: '{{ $labels.owner }}'
