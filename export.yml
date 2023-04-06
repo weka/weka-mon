@@ -456,6 +456,8 @@ stats:
     WRITE_LATENCY: Microseconds
     WRITES: Ops/Sec
   ops_driver:
+#    WRITE_BYTES_RDMA: bytespersec
+#    READ_BYTES_RDMA: bytespersec
 #    RENAME_LATENCY: Microseconds
 #    READDIR_LATENCY: Microseconds
 #    FILEOPEN_LATENCY: Microseconds
