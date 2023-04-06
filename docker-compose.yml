@@ -41,8 +41,8 @@ services:
       - ${PWD}/prometheus_data:/prometheus
     command: --storage.tsdb.retention.size=20GB --config.file=/etc/prometheus/prometheus.yml
     restart: always
-    ports:
-      - "9090:9090"
+    #ports:
+    #  - "9090:9090"
     logging:
       options:
         max-file: "5"
@@ -53,7 +53,11 @@ services:
     volumes:
       - /dev/log:/dev/log
       - ${PWD}/etc_alertmanager:/etc/alertmanager
-    command: --config.file="/etc/alertmanager/alertmanager.yml" --log.level=debug # -web.external-url=http://hostname-here:9093/
+    command: 
+      - "--config.file=/etc/alertmanager/alertmanager.yml" 
+      - "--log.level=debug"
+      - "--web.external-url=http://buckaroo:9093/"
+#      - "--web.external-url=http://hostname-here:9093/"    # SET THIS SO ALERT EMAILS HAVE A LINK TO IT
     #restart: always
     ports:
       - "9093:9093"
@@ -69,7 +73,7 @@ services:
       - ${PWD}/.weka:/weka/.weka
       - /etc/hosts:/etc/hosts
       - ${PWD}/export.yml:/weka/export.yml
-    command: -v
+    command: -vvv
     restart: always
     ports:
       - "8001:8001"
@@ -77,6 +81,19 @@ services:
       options:
         max-file: "5"
         max-size: "15m"
+
+# example of adding another exporter for a second cluster:
+  #cst-export:
+  #  image: wekasolutions/export:latest
+  #  volumes:
+  #    - /dev/log:/dev/log
+  #    - ${HOME}/.weka:/weka/.weka
+  #    - /etc/hosts:/etc/hosts
+  #    - ${PWD}/cst-export.yml:/weka/export.yml
+  #  command: -v 
+  #  restart: always
+  #  ports:
+  #    - "8002:8002"
 
   quota-export:
     image: wekasolutions/quota-export:latest

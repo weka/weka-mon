@@ -50,7 +50,7 @@ scrape_configs:
       - 
         targets: 
           - "export:8001"
-          - "export:8002"
+          - "cst-export:8002"
   - 
     job_name: weka-quota
     scrape_interval: 1m
