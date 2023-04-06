@@ -20,19 +20,31 @@
   },
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "gnetId": null,
   "graphTooltip": 0,
   "id": 2,
-  "iteration": 1640118141602,
-  "links": [],
+  "iteration": 1668772580665,
+  "links": [
+    {
+      "$$hashKey": "object:415",
+      "asDropdown": true,
+      "icon": "dashboard",
+      "includeVars": true,
+      "tags": [
+        "#weka"
+      ],
+      "targetBlank": true,
+      "title": "Weka Dashboards",
+      "tooltip": "",
+      "type": "dashboards",
+      "url": ""
+    }
+  ],
   "liveNow": false,
   "panels": [
     {
-      "datasource": null,
       "fieldConfig": {
         "defaults": {
           "custom": {
-            "align": null,
             "displayMode": "auto",
             "filterable": false
           },
@@ -158,10 +170,17 @@
       },
       "id": 2,
       "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "8.2.1",
+      "pluginVersion": "8.4.6",
       "targets": [
         {
           "exemplar": true,
@@ -172,8 +191,6 @@
           "refId": "A"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Weka Drives",
       "transformations": [
         {
@@ -228,7 +245,7 @@
       "type": "table"
     }
   ],
-  "schemaVersion": 31,
+  "schemaVersion": 35,
   "style": "dark",
   "tags": [
     "#weka"
@@ -237,15 +254,9 @@
     "list": [
       {
         "current": {
-          "selected": false,
-          "text": "Prometheus",
-          "value": "Prometheus"
         },
-        "description": null,
-        "error": null,
         "hide": 0,
         "includeAll": false,
-        "label": null,
         "multi": false,
         "name": "weka_datasource",
         "options": [],
@@ -256,16 +267,15 @@
         "type": "datasource"
       },
       {
-        "allValue": null,
         "current": {
         },
-        "datasource": "$weka_datasource",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "$weka_datasource"
+        },
         "definition": "label_values(weka_drives,cluster)",
-        "description": null,
-        "error": null,
         "hide": 0,
         "includeAll": false,
-        "label": null,
         "multi": false,
         "name": "cluster",
         "options": [],
@@ -283,12 +293,12 @@
         "useTags": false
       },
       {
-        "datasource": "$weka_datasource",
-        "description": null,
-        "error": null,
+        "datasource": {
+          "type": "prometheus",
+          "uid": "$weka_datasource"
+        },
         "filters": [],
         "hide": 0,
-        "label": null,
         "name": "adhoc",
         "skipUrlSync": false,
         "type": "adhoc"
@@ -303,5 +313,6 @@
   "timezone": "",
   "title": "Weka Cluster Drives",
   "uid": "WekaDrives",
-  "version": 4
+  "version": 12,
+  "weekStart": ""
 }

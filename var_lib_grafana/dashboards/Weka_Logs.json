@@ -20,10 +20,9 @@
   },
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "gnetId": null,
   "graphTooltip": 0,
-  "id": 4,
-  "iteration": 1640117701560,
+  "id": 7,
+  "iteration": 1668772619871,
   "links": [
     {
       "$$hashKey": "object:48",
@@ -40,7 +39,9 @@
   "liveNow": false,
   "panels": [
     {
-      "datasource": "${weka_datasource}",
+      "datasource": {
+        "uid": "${weka_datasource}"
+      },
       "gridPos": {
         "h": 2,
         "w": 2,
@@ -52,14 +53,15 @@
         "content": "<img src=/public/img/weka/WekaColor.svg>",
         "mode": "html"
       },
-      "pluginVersion": "8.2.1",
-      "timeFrom": null,
-      "timeShift": null,
+      "pluginVersion": "8.4.6",
       "transparent": true,
       "type": "text"
     },
     {
-      "datasource": "Loki",
+      "datasource": {
+        "type": "loki",
+        "uid": "-iewarJnz"
+      },
       "gridPos": {
         "h": 28,
         "w": 21,
@@ -85,8 +87,6 @@
           "refId": "A"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Weka logs",
       "transformations": [
         {
@@ -105,7 +105,7 @@
     }
   ],
   "refresh": "10s",
-  "schemaVersion": 31,
+  "schemaVersion": 35,
   "style": "dark",
   "tags": [
     "#weka"
@@ -114,15 +114,9 @@
     "list": [
       {
         "current": {
-          "selected": false,
-          "text": "Prometheus",
-          "value": "Prometheus"
         },
-        "description": null,
-        "error": null,
         "hide": 0,
         "includeAll": false,
-        "label": null,
         "multi": false,
         "name": "weka_datasource",
         "options": [],
@@ -134,16 +128,15 @@
         "type": "datasource"
       },
       {
-        "allValue": null,
         "current": {
         },
-        "datasource": "$weka_datasource",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "$weka_datasource"
+        },
         "definition": "label_values(weka_info,cluster)",
-        "description": null,
-        "error": null,
         "hide": 0,
         "includeAll": false,
-        "label": null,
         "multi": false,
         "name": "cluster",
         "options": [],
@@ -161,7 +154,6 @@
         "useTags": false
       },
       {
-        "allValue": null,
         "current": {
           "selected": true,
           "text": [
@@ -171,13 +163,13 @@
             "$__all"
           ]
         },
-        "datasource": "Loki",
+        "datasource": {
+          "type": "loki",
+          "uid": "-iewarJnz"
+        },
         "definition": "label_values(category)",
-        "description": null,
-        "error": null,
         "hide": 0,
         "includeAll": true,
-        "label": null,
         "multi": true,
         "name": "category",
         "options": [],
@@ -192,7 +184,6 @@
         "useTags": false
       },
       {
-        "allValue": null,
         "current": {
           "selected": true,
           "text": [
@@ -202,13 +193,13 @@
             "$__all"
           ]
         },
-        "datasource": "Loki",
+        "datasource": {
+          "type": "loki",
+          "uid": "-iewarJnz"
+        },
         "definition": "label_values(severity)",
-        "description": null,
-        "error": null,
         "hide": 0,
         "includeAll": true,
-        "label": null,
         "multi": true,
         "name": "severity",
         "options": [],
@@ -223,7 +214,6 @@
         "useTags": false
       },
       {
-        "allValue": null,
         "current": {
           "selected": true,
           "text": [
@@ -233,13 +223,13 @@
             "$__all"
           ]
         },
-        "datasource": "Loki",
+        "datasource": {
+          "type": "loki",
+          "uid": "-iewarJnz"
+        },
         "definition": "label_values(event_type)",
-        "description": null,
-        "error": null,
         "hide": 0,
         "includeAll": true,
-        "label": null,
         "multi": true,
         "name": "event_type",
         "options": [],
@@ -275,5 +265,6 @@
   "timezone": "",
   "title": "Weka Logs",
   "uid": "WekaLogs",
-  "version": 2
+  "version": 14,
+  "weekStart": ""
 }

@@ -15,10 +15,9 @@
   },
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "gnetId": null,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1640117838475,
+  "iteration": 1668772560296,
   "links": [
     {
       "$$hashKey": "object:842",
@@ -35,7 +34,9 @@
   "liveNow": false,
   "panels": [
     {
-      "datasource": "${DS_PROMETHEUS}",
+      "datasource": {
+        "uid": "${weka_datasource}"
+      },
       "gridPos": {
         "h": 2,
         "w": 2,
@@ -47,18 +48,17 @@
         "content": "<img src=/public/img/weka/WekaColor.svg>",
         "mode": "html"
       },
-      "pluginVersion": "8.2.1",
-      "timeFrom": null,
-      "timeShift": null,
+      "pluginVersion": "8.4.6",
       "transparent": true,
       "type": "text"
     },
     {
-      "datasource": "$weka_datasource",
+      "datasource": {
+        "uid": "$weka_datasource"
+      },
       "fieldConfig": {
         "defaults": {
           "custom": {
-            "align": null,
             "displayMode": "auto",
             "filterable": false
           },
@@ -172,11 +172,17 @@
       },
       "id": 4,
       "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "8.2.1",
-      "repeat": null,
+      "pluginVersion": "8.4.6",
       "targets": [
         {
           "expr": "weka_alerts{cluster=\"$cluster\"}",
@@ -188,8 +194,6 @@
           "refId": "A"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Alerts",
       "transformations": [
         {
@@ -223,7 +227,7 @@
     }
   ],
   "refresh": "1m",
-  "schemaVersion": 31,
+  "schemaVersion": 35,
   "style": "dark",
   "tags": [
     "#weka"
@@ -232,15 +236,9 @@
     "list": [
       {
         "current": {
-          "selected": false,
-          "text": "Prometheus",
-          "value": "Prometheus"
         },
-        "description": null,
-        "error": null,
         "hide": 0,
         "includeAll": false,
-        "label": null,
         "multi": false,
         "name": "weka_datasource",
         "options": [],
@@ -252,16 +250,15 @@
         "type": "datasource"
       },
       {
-        "allValue": null,
         "current": {
         },
-        "datasource": "$weka_datasource",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "$weka_datasource"
+        },
         "definition": "label_values(weka_info,cluster)",
-        "description": null,
-        "error": null,
         "hide": 0,
         "includeAll": false,
-        "label": null,
         "multi": false,
         "name": "cluster",
         "options": [],
@@ -300,5 +297,6 @@
   "timezone": "",
   "title": "Weka Alerts",
   "uid": "WekaAlerts",
-  "version": 2
+  "version": 9,
+  "weekStart": ""
 }
