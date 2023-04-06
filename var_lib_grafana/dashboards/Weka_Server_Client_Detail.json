@@ -21,10 +21,9 @@
   "description": "Weka Server/Client Details",
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "gnetId": null,
   "graphTooltip": 0,
-  "id": 9,
-  "iteration": 1640117914552,
+  "id": 10,
+  "iteration": 1668772652804,
   "links": [
     {
       "$$hashKey": "object:252",
@@ -42,7 +41,9 @@
   "liveNow": false,
   "panels": [
     {
-      "datasource": "${DS_PROMETHEUS}",
+      "datasource": {
+        "uid": "${DS_PROMETHEUS}"
+      },
       "gridPos": {
         "h": 2,
         "w": 2,
@@ -54,18 +55,14 @@
         "content": "<img src=/public/img/weka/WekaColor.svg>",
         "mode": "html"
       },
-      "pluginVersion": "8.2.1",
-      "timeFrom": null,
-      "timeShift": null,
+      "pluginVersion": "8.4.6",
       "transparent": true,
       "type": "text"
     },
     {
       "collapsed": false,
-      "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
+      "datasource": {
+        "uid": "$weka_datasource"
       },
       "gridPos": {
         "h": 1,
@@ -83,7 +80,9 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "$weka_datasource",
+      "datasource": {
+        "uid": "$weka_datasource"
+      },
       "description": "Total Operations (io and metadata)",
       "fieldConfig": {
         "defaults": {
@@ -117,7 +116,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.1",
+      "pluginVersion": "8.4.6",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -134,9 +133,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Total Client OPS",
       "tooltip": {
         "shared": true,
@@ -145,33 +142,25 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
       "yaxes": [
         {
           "format": "ops",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -179,7 +168,9 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "$weka_datasource",
+      "datasource": {
+        "uid": "$weka_datasource"
+      },
       "fieldConfig": {
         "defaults": {
           "links": []
@@ -212,7 +203,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.1",
+      "pluginVersion": "8.4.6",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -229,9 +220,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Total Client Throughput",
       "tooltip": {
         "shared": true,
@@ -240,34 +229,25 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
       "yaxes": [
         {
-          "decimals": null,
           "format": "Bps",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -275,7 +255,9 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "$weka_datasource",
+      "datasource": {
+        "uid": "$weka_datasource"
+      },
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -309,7 +291,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.1",
+      "pluginVersion": "8.4.6",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -338,9 +320,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "OPS Details",
       "tooltip": {
         "shared": true,
@@ -349,33 +329,25 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
       "yaxes": [
         {
           "format": "ops",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -383,7 +355,9 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "$weka_datasource",
+      "datasource": {
+        "uid": "$weka_datasource"
+      },
       "fieldConfig": {
         "defaults": {
           "links": []
@@ -416,7 +390,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.1",
+      "pluginVersion": "8.4.6",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -439,9 +413,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Throughput Details",
       "tooltip": {
         "shared": true,
@@ -450,33 +422,25 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
       "yaxes": [
         {
           "format": "Bps",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -484,7 +448,9 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "$weka_datasource",
+      "datasource": {
+        "uid": "$weka_datasource"
+      },
       "fieldConfig": {
         "defaults": {
           "links": []
@@ -517,7 +483,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.1",
+      "pluginVersion": "8.4.6",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -540,9 +506,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Average Latency",
       "tooltip": {
         "shared": true,
@@ -551,33 +515,25 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
       "yaxes": [
         {
           "format": "µs",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -585,7 +541,9 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "$weka_datasource",
+      "datasource": {
+        "uid": "$weka_datasource"
+      },
       "fieldConfig": {
         "defaults": {
           "links": []
@@ -618,7 +576,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.1",
+      "pluginVersion": "8.4.6",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -635,9 +593,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "CPU Utilization",
       "tooltip": {
         "shared": true,
@@ -646,17 +602,13 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
       "yaxes": [
         {
-          "decimals": null,
           "format": "percent",
-          "label": null,
           "logBase": 1,
           "max": "100",
           "min": "0",
@@ -664,23 +616,16 @@
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
-      "cards": {
-        "cardPadding": null,
-        "cardRound": null
-      },
+      "cards": {},
       "color": {
         "cardColor": "#b4ff00",
         "colorScale": "sqrt",
@@ -689,7 +634,9 @@
         "mode": "spectrum"
       },
       "dataFormat": "tsbuckets",
-      "datasource": "$weka_datasource",
+      "datasource": {
+        "uid": "$weka_datasource"
+      },
       "gridPos": {
         "h": 8,
         "w": 12,
@@ -724,8 +671,6 @@
           "refId": "C"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "io blocksize distribution heatmap",
       "tooltip": {
         "show": true,
@@ -735,27 +680,21 @@
       "xAxis": {
         "show": true
       },
-      "xBucketNumber": null,
-      "xBucketSize": null,
       "yAxis": {
-        "decimals": null,
         "format": "short",
         "logBase": 1,
-        "max": null,
-        "min": null,
-        "show": true,
-        "splitFactor": null
+        "show": true
       },
-      "yBucketBound": "auto",
-      "yBucketNumber": null,
-      "yBucketSize": null
+      "yBucketBound": "auto"
     },
     {
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "$weka_datasource",
+      "datasource": {
+        "uid": "$weka_datasource"
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -783,7 +722,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.1",
+      "pluginVersion": "8.4.6",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -806,9 +745,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "io blocksize distribution",
       "tooltip": {
         "shared": true,
@@ -817,9 +754,7 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -827,33 +762,25 @@
         {
           "$$hashKey": "object:147",
           "format": "iops",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
         {
           "$$hashKey": "object:148",
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": false
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
       "collapsed": true,
-      "datasource": "$weka_datasource",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
+      "datasource": {
+        "uid": "$weka_datasource"
       },
       "gridPos": {
         "h": 1,
@@ -868,7 +795,9 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "$weka_datasource",
+          "datasource": {
+            "uid": "$weka_datasource"
+          },
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -920,9 +849,7 @@
             }
           ],
           "thresholds": [],
-          "timeFrom": null,
           "timeRegions": [],
-          "timeShift": null,
           "title": "Read Ops Details",
           "tooltip": {
             "shared": true,
@@ -931,33 +858,25 @@
           },
           "type": "graph",
           "xaxis": {
-            "buckets": null,
             "mode": "time",
-            "name": null,
             "show": true,
             "values": []
           },
           "yaxes": [
             {
               "format": "ops",
-              "label": null,
               "logBase": 1,
-              "max": null,
               "min": "0",
               "show": true
             },
             {
               "format": "short",
-              "label": null,
               "logBase": 1,
-              "max": null,
-              "min": null,
               "show": true
             }
           ],
           "yaxis": {
-            "align": false,
-            "alignLevel": null
+            "align": false
           }
         },
         {
@@ -965,7 +884,9 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "$weka_datasource",
+          "datasource": {
+            "uid": "$weka_datasource"
+          },
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -1017,9 +938,7 @@
             }
           ],
           "thresholds": [],
-          "timeFrom": null,
           "timeRegions": [],
-          "timeShift": null,
           "title": "Write OPS Details",
           "tooltip": {
             "shared": true,
@@ -1028,33 +947,25 @@
           },
           "type": "graph",
           "xaxis": {
-            "buckets": null,
             "mode": "time",
-            "name": null,
             "show": true,
             "values": []
           },
           "yaxes": [
             {
               "format": "ops",
-              "label": null,
               "logBase": 1,
-              "max": null,
               "min": "0",
               "show": true
             },
             {
               "format": "short",
-              "label": null,
               "logBase": 1,
-              "max": null,
-              "min": null,
               "show": true
             }
           ],
           "yaxis": {
-            "align": false,
-            "alignLevel": null
+            "align": false
           }
         },
         {
@@ -1062,7 +973,9 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "$weka_datasource",
+          "datasource": {
+            "uid": "$weka_datasource"
+          },
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -1114,9 +1027,7 @@
             }
           ],
           "thresholds": [],
-          "timeFrom": null,
           "timeRegions": [],
-          "timeShift": null,
           "title": "Read Throughput Details",
           "tooltip": {
             "shared": true,
@@ -1125,33 +1036,25 @@
           },
           "type": "graph",
           "xaxis": {
-            "buckets": null,
             "mode": "time",
-            "name": null,
             "show": true,
             "values": []
           },
           "yaxes": [
             {
               "format": "Bps",
-              "label": null,
               "logBase": 1,
-              "max": null,
               "min": "0",
               "show": true
             },
             {
               "format": "short",
-              "label": null,
               "logBase": 1,
-              "max": null,
-              "min": null,
               "show": true
             }
           ],
           "yaxis": {
-            "align": false,
-            "alignLevel": null
+            "align": false
           }
         },
         {
@@ -1159,7 +1062,9 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "$weka_datasource",
+          "datasource": {
+            "uid": "$weka_datasource"
+          },
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -1211,9 +1116,7 @@
             }
           ],
           "thresholds": [],
-          "timeFrom": null,
           "timeRegions": [],
-          "timeShift": null,
           "title": "Write Throughput Details",
           "tooltip": {
             "shared": true,
@@ -1222,33 +1125,25 @@
           },
           "type": "graph",
           "xaxis": {
-            "buckets": null,
             "mode": "time",
-            "name": null,
             "show": true,
             "values": []
           },
           "yaxes": [
             {
               "format": "Bps",
-              "label": null,
               "logBase": 1,
-              "max": null,
               "min": "0",
               "show": true
             },
             {
               "format": "short",
-              "label": null,
               "logBase": 1,
-              "max": null,
-              "min": null,
               "show": true
             }
           ],
           "yaxis": {
-            "align": false,
-            "alignLevel": null
+            "align": false
           }
         },
         {
@@ -1256,7 +1151,9 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "$weka_datasource",
+          "datasource": {
+            "uid": "$weka_datasource"
+          },
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -1308,9 +1205,7 @@
             }
           ],
           "thresholds": [],
-          "timeFrom": null,
           "timeRegions": [],
-          "timeShift": null,
           "title": "Read Latency Details",
           "tooltip": {
             "shared": true,
@@ -1319,33 +1214,25 @@
           },
           "type": "graph",
           "xaxis": {
-            "buckets": null,
             "mode": "time",
-            "name": null,
             "show": true,
             "values": []
           },
           "yaxes": [
             {
               "format": "µs",
-              "label": null,
               "logBase": 1,
-              "max": null,
               "min": "0",
               "show": true
             },
             {
               "format": "short",
-              "label": null,
               "logBase": 1,
-              "max": null,
-              "min": null,
               "show": true
             }
           ],
           "yaxis": {
-            "align": false,
-            "alignLevel": null
+            "align": false
           }
         },
         {
@@ -1353,7 +1240,9 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "$weka_datasource",
+          "datasource": {
+            "uid": "$weka_datasource"
+          },
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -1406,9 +1295,7 @@
             }
           ],
           "thresholds": [],
-          "timeFrom": null,
           "timeRegions": [],
-          "timeShift": null,
           "title": "Write Latency Details",
           "tooltip": {
             "shared": true,
@@ -1417,33 +1304,25 @@
           },
           "type": "graph",
           "xaxis": {
-            "buckets": null,
             "mode": "time",
-            "name": null,
             "show": true,
             "values": []
           },
           "yaxes": [
             {
               "format": "µs",
-              "label": null,
               "logBase": 1,
-              "max": null,
               "min": "0",
               "show": true
             },
             {
               "format": "short",
-              "label": null,
               "logBase": 1,
-              "max": null,
-              "min": null,
               "show": true
             }
           ],
           "yaxis": {
-            "align": false,
-            "alignLevel": null
+            "align": false
           }
         },
         {
@@ -1451,7 +1330,9 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "$weka_datasource",
+          "datasource": {
+            "uid": "$weka_datasource"
+          },
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -1504,9 +1385,7 @@
             }
           ],
           "thresholds": [],
-          "timeFrom": null,
           "timeRegions": [],
-          "timeShift": null,
           "title": "Metadata OPS Details",
           "tooltip": {
             "shared": true,
@@ -1515,33 +1394,25 @@
           },
           "type": "graph",
           "xaxis": {
-            "buckets": null,
             "mode": "time",
-            "name": null,
             "show": true,
             "values": []
           },
           "yaxes": [
             {
               "format": "ops",
-              "label": null,
               "logBase": 1,
-              "max": null,
               "min": "0",
               "show": true
             },
             {
               "format": "short",
-              "label": null,
               "logBase": 1,
-              "max": null,
-              "min": null,
               "show": false
             }
           ],
           "yaxis": {
-            "align": false,
-            "alignLevel": null
+            "align": false
           }
         },
         {
@@ -1549,7 +1420,9 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "$weka_datasource",
+          "datasource": {
+            "uid": "$weka_datasource"
+          },
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -1602,9 +1475,7 @@
             }
           ],
           "thresholds": [],
-          "timeFrom": null,
           "timeRegions": [],
-          "timeShift": null,
           "title": "Cpu Utilization Details",
           "tooltip": {
             "shared": true,
@@ -1613,17 +1484,13 @@
           },
           "type": "graph",
           "xaxis": {
-            "buckets": null,
             "mode": "time",
-            "name": null,
             "show": true,
             "values": []
           },
           "yaxes": [
             {
-              "decimals": null,
               "format": "percent",
-              "label": null,
               "logBase": 1,
               "max": "100",
               "min": "0",
@@ -1631,16 +1498,12 @@
             },
             {
               "format": "short",
-              "label": null,
               "logBase": 1,
-              "max": null,
-              "min": null,
               "show": false
             }
           ],
           "yaxis": {
-            "align": false,
-            "alignLevel": null
+            "align": false
           }
         }
       ],
@@ -1649,7 +1512,7 @@
     }
   ],
   "refresh": "1m",
-  "schemaVersion": 31,
+  "schemaVersion": 35,
   "style": "dark",
   "tags": [
     "#weka"
@@ -1658,15 +1521,12 @@
     "list": [
       {
         "current": {
-          "selected": false,
-          "text": "Prometheus",
-          "value": "Prometheus"
+          #"selected": false,
+          #"text": "Prometheus",
+          #"value": "Prometheus"
         },
-        "description": null,
-        "error": null,
         "hide": 0,
         "includeAll": false,
-        "label": null,
         "multi": false,
         "name": "weka_datasource",
         "options": [],
@@ -1678,16 +1538,18 @@
         "type": "datasource"
       },
       {
-        "allValue": null,
         "current": {
+          #"selected": false,
+          #"text": "3.13.6-test",
+          #"value": "3.13.6-test"
         },
-        "datasource": "$weka_datasource",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "$weka_datasource"
+        },
         "definition": "label_values(weka_info,cluster)",
-        "description": null,
-        "error": null,
         "hide": 0,
         "includeAll": false,
-        "label": null,
         "multi": false,
         "name": "cluster",
         "options": [],
@@ -1705,16 +1567,18 @@
         "useTags": false
       },
       {
-        "allValue": null,
         "current": {
+          #"selected": false,
+          #"text": "vweka01",
+          #"value": "vweka01"
         },
-        "datasource": "$weka_datasource",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "$weka_datasource"
+        },
         "definition": "label_values(weka_stats{cluster=\"$cluster\"},host_name)",
-        "description": null,
-        "error": null,
         "hide": 0,
         "includeAll": false,
-        "label": null,
         "multi": false,
         "name": "host_name",
         "options": [],
@@ -1753,5 +1617,6 @@
   "timezone": "",
   "title": "Weka Server/Client Detail",
   "uid": "WekaServerDetail",
-  "version": 2
+  "version": 14,
+  "weekStart": ""
 }

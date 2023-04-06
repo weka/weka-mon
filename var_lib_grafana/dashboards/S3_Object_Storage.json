@@ -18,13 +18,13 @@
       }
     ]
   },
-  "description": "S3 dashboard",
+  "description": "S3 dashboard2",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "gnetId": 12563,
   "graphTooltip": 0,
-  "id": 5,
-  "iteration": 1648044412243,
+  "id": 11,
+  "iteration": 1668781773475,
   "links": [
     {
       "asDropdown": true,
@@ -48,7 +48,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "Qmewa9Jnk"
+      },
       "description": "S3 server instances memory usages",
       "editable": true,
       "error": false,
@@ -82,7 +85,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.1",
+      "pluginVersion": "8.4.6",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -114,9 +117,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Memory Stats",
       "tooltip": {
         "msResolution": false,
@@ -126,9 +127,7 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -136,25 +135,18 @@
         {
           "$$hashKey": "object:1058",
           "format": "bytes",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         },
         {
           "$$hashKey": "object:1059",
           "format": "Bps",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -162,7 +154,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "Qmewa9Jnk"
+      },
       "description": "Total user and system CPU time spent in percentage by S3 server instances",
       "editable": true,
       "error": false,
@@ -196,7 +191,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.1",
+      "pluginVersion": "8.4.6",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -221,9 +216,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "CPU Stats",
       "tooltip": {
         "msResolution": false,
@@ -233,9 +226,7 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -243,25 +234,18 @@
         {
           "$$hashKey": "object:468",
           "format": "percentunit",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         },
         {
           "$$hashKey": "object:469",
           "format": "s",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -271,8 +255,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
-      "decimals": null,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "Qmewa9Jnk"
+      },
       "description": "Data sent/received by current S3 server instances",
       "fill": 1,
       "fillGradient": 0,
@@ -302,7 +288,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.1",
+      "pluginVersion": "8.4.6",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -335,9 +321,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Data Transmitted",
       "tooltip": {
         "shared": true,
@@ -346,9 +330,7 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -356,25 +338,18 @@
         {
           "$$hashKey": "object:1307",
           "format": "decbytes",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         },
         {
           "$$hashKey": "object:1308",
           "format": "decbytes",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -384,8 +359,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
-      "decimals": null,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "Qmewa9Jnk"
+      },
       "description": "Internode data sent/received by current S3 server instances",
       "fill": 1,
       "fillGradient": 0,
@@ -415,7 +392,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.1",
+      "pluginVersion": "8.4.6",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -444,9 +421,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Internode Data Transmitted",
       "tooltip": {
         "shared": true,
@@ -455,9 +430,7 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -465,25 +438,18 @@
         {
           "$$hashKey": "object:796",
           "format": "decbytes",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         },
         {
           "$$hashKey": "object:797",
           "format": "decbytes",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -496,7 +462,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "Qmewa9Jnk"
+      },
       "description": "Total number of S3 requests in current server instances",
       "fill": 1,
       "fillGradient": 0,
@@ -526,7 +495,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.1",
+      "pluginVersion": "8.4.6",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -548,9 +517,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "S3 Total Requests/Min",
       "tooltip": {
         "shared": true,
@@ -559,9 +526,7 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -569,25 +534,18 @@
         {
           "$$hashKey": "object:636",
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         },
         {
           "$$hashKey": "object:637",
           "format": "s",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": false
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -599,7 +557,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "Qmewa9Jnk"
+      },
       "description": "Total number of active S3 requests in current S3 server instances",
       "fill": 1,
       "fillGradient": 0,
@@ -629,7 +590,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.1",
+      "pluginVersion": "8.4.6",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -650,9 +611,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "S3 Active Requests",
       "tooltip": {
         "shared": true,
@@ -661,9 +620,7 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -671,25 +628,18 @@
         {
           "$$hashKey": "object:1222",
           "format": "opm",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         },
         {
           "$$hashKey": "object:1223",
           "format": "bytes",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -701,7 +651,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "Qmewa9Jnk"
+      },
       "description": "Total number of errors in s3 requests in current S3 server instances",
       "fill": 1,
       "fillGradient": 0,
@@ -731,7 +684,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.1",
+      "pluginVersion": "8.4.6",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -752,9 +705,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Total S3 Request Errors",
       "tooltip": {
         "shared": true,
@@ -763,9 +714,7 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -773,32 +722,22 @@
         {
           "$$hashKey": "object:248",
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         },
         {
           "$$hashKey": "object:249",
           "format": "s",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": false
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
-      "cards": {
-        "cardPadding": null,
-        "cardRound": null
-      },
+      "cards": {},
       "color": {
         "cardColor": "#b4ff00",
         "colorScale": "sqrt",
@@ -807,7 +746,10 @@
         "mode": "spectrum"
       },
       "dataFormat": "timeseries",
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "Qmewa9Jnk"
+      },
       "description": "Latency information of the requests on S3 server instances",
       "gridPos": {
         "h": 7,
@@ -849,8 +791,6 @@
           "refId": "B"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "S3 Requests Latency",
       "tooltip": {
         "show": true,
@@ -860,20 +800,13 @@
       "xAxis": {
         "show": true
       },
-      "xBucketNumber": null,
-      "xBucketSize": null,
       "yAxis": {
-        "decimals": null,
         "format": "ms",
         "logBase": 1,
-        "max": null,
         "min": "0",
-        "show": true,
-        "splitFactor": null
+        "show": true
       },
-      "yBucketBound": "auto",
-      "yBucketNumber": null,
-      "yBucketSize": null
+      "yBucketBound": "auto"
     },
     {
       "aliasColors": {
@@ -882,8 +815,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
-      "decimals": null,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "Qmewa9Jnk"
+      },
       "description": "HTTP request status of S3 server response",
       "fill": 1,
       "fillGradient": 0,
@@ -913,7 +848,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.1",
+      "pluginVersion": "8.4.6",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -960,9 +895,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "HTTP Request Status",
       "tooltip": {
         "shared": true,
@@ -971,9 +904,7 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -981,25 +912,18 @@
         {
           "$$hashKey": "object:1392",
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         },
         {
           "$$hashKey": "object:1393",
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -1011,7 +935,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "Qmewa9Jnk"
+      },
       "description": "Latency information of the requests on S3 server instances",
       "fill": 1,
       "fillGradient": 0,
@@ -1041,7 +968,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.1",
+      "pluginVersion": "8.4.6",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1063,9 +990,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "S3 Requests Latency",
       "tooltip": {
         "shared": true,
@@ -1074,9 +999,7 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -1084,29 +1007,21 @@
         {
           "$$hashKey": "object:174",
           "format": "s",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         },
         {
           "$$hashKey": "object:175",
           "format": "s",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": false
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
-      "datasource": null,
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1171,7 +1086,8 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
@@ -1189,7 +1105,7 @@
     }
   ],
   "refresh": false,
-  "schemaVersion": 31,
+  "schemaVersion": 35,
   "style": "dark",
   "tags": [
     "object-storage",
@@ -1199,23 +1115,18 @@
   "templating": {
     "list": [
       {
-        "allValue": null,
         "current": {
-          "selected": true,
-          "text": [
-            "All"
-          ],
-          "value": [
-            "$__all"
-          ]
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
         },
-        "datasource": "Prometheus",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "Qmewa9Jnk"
+        },
         "definition": "label_values(minio_version_info,instance)",
-        "description": null,
-        "error": null,
         "hide": 0,
         "includeAll": true,
-        "label": null,
         "multi": true,
         "name": "instance",
         "options": [],
@@ -1241,10 +1152,7 @@
           "text": "10m",
           "value": "10m"
         },
-        "description": null,
-        "error": null,
         "hide": 0,
-        "label": null,
         "name": "interval",
         "options": [
           {
@@ -1341,7 +1249,8 @@
     ]
   },
   "timezone": "",
-  "title": "S3 Object Storage",
-  "uid": "S3_Object_Storage",
-  "version": 1
+  "title": "S3 Object Storage2",
+  "uid": "S3_Object_Storage2",
+  "version": 1,
+  "weekStart": ""
 }
