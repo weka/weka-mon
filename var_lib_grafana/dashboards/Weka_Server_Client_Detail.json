@@ -1521,9 +1521,6 @@
     "list": [
       {
         "current": {
-          #"selected": false,
-          #"text": "Prometheus",
-          #"value": "Prometheus"
         },
         "hide": 0,
         "includeAll": false,
@@ -1539,9 +1536,6 @@
       },
       {
         "current": {
-          #"selected": false,
-          #"text": "3.13.6-test",
-          #"value": "3.13.6-test"
         },
         "datasource": {
           "type": "prometheus",
@@ -1568,9 +1562,6 @@
       },
       {
         "current": {
-          #"selected": false,
-          #"text": "vweka01",
-          #"value": "vweka01"
         },
         "datasource": {
           "type": "prometheus",
