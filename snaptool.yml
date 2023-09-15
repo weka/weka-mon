@@ -1,0 +1,53 @@
+cluster:
+    auth_token_file: auth-token.json
+    force_https: true
+    hosts:
+    - weka66
+    - weka67
+    - weka65
+    verify_cert: false
+filesystems:
+    fs01: default
+    fs02: workhoursHourlyUp, weekendsNoon
+    fs03: workhoursEvery20, weekendsNoon, fridayUpload
+schedules:
+    default:
+        daily:
+            every: Mon,Tue,Wed,Thu,Fri,Sat
+            retain: 14
+        hourly:
+            at: 9:00am
+            every: Mon,Tue,Wed,Thu,Fri
+            interval: 60
+            retain: 8
+            until: 5pm
+        monthly:
+            every: month
+            retain: 6
+        weekly:
+            every: Sunday
+            retain: 8
+    fridayUpload:
+        at: 7pm
+        every: Friday
+        retain: 3
+        upload: true
+    weekendsNoon:
+        at: 1200
+        every: Sat,Sun
+        retain: 4
+    workhoursEvery20:
+        at: 0900
+        every: Mon,Tue,Wed,Thu,Fri
+        interval: 20
+        retain: 7
+        until: 5pm
+    workhoursHourlyUp:
+        at: 0900
+        every: Mon,Tue,Wed,Thu,Fri
+        interval: 60
+        retain: 7
+        until: 5pm
+        upload: true
+snaptool:
+    port: 8090
