@@ -21,8 +21,6 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 7,
-  "iteration": 1668772619871,
   "links": [
     {
       "$$hashKey": "object:48",
@@ -60,7 +58,7 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "-iewarJnz"
+        "uid": "${loki_datasource}"
       },
       "gridPos": {
         "h": 28,
@@ -165,7 +163,7 @@
         },
         "datasource": {
           "type": "loki",
-          "uid": "-iewarJnz"
+          "uid": "${loki_datasource}"
         },
         "definition": "label_values(category)",
         "hide": 0,
@@ -195,7 +193,7 @@
         },
         "datasource": {
           "type": "loki",
-          "uid": "-iewarJnz"
+          "uid": "${loki_datasource}"
         },
         "definition": "label_values(severity)",
         "hide": 0,
@@ -225,7 +223,7 @@
         },
         "datasource": {
           "type": "loki",
-          "uid": "-iewarJnz"
+          "uid": "${loki_datasource}"
         },
         "definition": "label_values(event_type)",
         "hide": 0,
@@ -242,6 +240,24 @@
         "tagsQuery": "",
         "type": "query",
         "useTags": false
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "Loki",
+          "value": "Loki"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "loki_datasource",
+        "options": [],
+        "query": "loki",
+        "queryValue": "",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
       }
     ]
   },
@@ -265,6 +281,6 @@
   "timezone": "",
   "title": "Weka Logs",
   "uid": "WekaLogs",
-  "version": 14,
+  "version": 15,
   "weekStart": ""
 }
