@@ -16,3 +16,5 @@ chown -R 472:0 var_lib_grafana/ etc_grafana/
 
 mkdir -p logs
 chown 472:472 logs/
+mkdir -p .weka
+chown 472:472 .weka/
