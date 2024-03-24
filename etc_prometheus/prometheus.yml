@@ -29,21 +29,6 @@ scrape_configs:
         targets: 
           - "grafana:3000"
   - 
-    job_name: s3
-    scrape_interval: 15s
-    scrape_timeout: 5s
-    metrics_path: /minio/prometheus/metrics
-    static_configs: 
-      - 
-        targets: 
-          - "vweka01:9000"
-          - "vweka02:9000"
-          - "vweka03:9000"
-          - "vweka04:9000"
-          - "vweka05:9000"
-          - "vweka06:9000"
-          - "vweka07:9000"
-  - 
     job_name: weka
     scrape_interval: 60s
     static_configs: 

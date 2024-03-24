@@ -1,4 +1,4 @@
-weka stats list-types -H vweka01 -o category,identifier,unit --no-header --show-internal | awk 'BEGIN{cat="";unit="unit"}{
+weka stats list-types -H weka63 -o category,identifier,unit --no-header --show-internal | awk 'BEGIN{cat="";unit="unit"}{
 unit=$3;
 if( unit == "" )
     unit="none";

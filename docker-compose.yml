@@ -3,7 +3,7 @@ version: "3"
 services:
 
   grafana:
-    image: grafana/grafana:8.4.6
+    image: grafana/grafana:10.2.4
     volumes:
       - /dev/log:/dev/log
       - ${PWD}/etc_grafana/:/etc/grafana/
@@ -18,7 +18,7 @@ services:
         max-size: "15m"
 
   loki:
-    image: grafana/loki:2.3.0
+    image: grafana/loki:2.8.10
     volumes:
       - /dev/log:/dev/log
       - ${PWD}/etc_loki:/etc/loki
@@ -33,7 +33,7 @@ services:
         max-size: "15m"
 
   prometheus:
-    image: prom/prometheus:latest
+    image: prom/prometheus:v2.50.1
     volumes:
       - /dev/log:/dev/log
       - /etc/hosts:/etc/hosts
@@ -49,7 +49,7 @@ services:
         max-size: "15m"
 
   alertmanager:
-    image: prom/alertmanager:latest
+    image: prom/alertmanager:v0.27.0
     volumes:
       - /dev/log:/dev/log
       - ${PWD}/etc_alertmanager:/etc/alertmanager
@@ -67,7 +67,7 @@ services:
         max-size: "15m"
 
   export:
-    image: wekasolutions/export:latest
+    image: wekasolutions/export:1.7.0
     volumes:
       - /dev/log:/dev/log
       - ${PWD}/.weka:/weka/.weka
@@ -84,7 +84,7 @@ services:
 
 # example of adding another exporter for a second cluster:
   #cst-export:
-  #  image: wekasolutions/export:latest
+  #  image: wekasolutions/export:1.7.0
   #  volumes:
   #    - /dev/log:/dev/log
   #    - ${HOME}/.weka:/weka/.weka
@@ -96,7 +96,7 @@ services:
   #    - "8002:8002"
 
   quota-export:
-    image: wekasolutions/quota-export:latest
+    image: wekasolutions/quota-export:1.0.0
     volumes:
       - /dev/log:/dev/log
       - ${PWD}/.weka:/weka/.weka
@@ -109,3 +109,34 @@ services:
       options:
         max-file: "5"
         max-size: "15m"
+
+  hw_mon:
+    image: wekasolutions/hw_monitor:1.0.0
+    volumes:
+    - /dev/log:/dev/log
+    - /opt/weka-mon/.weka:/weka/.weka
+    - /etc/hosts:/etc/hosts
+    - /opt/weka-mon/hw_monitor.yml:/weka/hw_monitor.yml
+    - /opt/weka-mon/weka-cert.crt:/weka/weka-cert.crt
+    - /opt/weka-mon/private.key:/weka/private.key
+    command: -vvv
+    restart: always
+    ports:
+    - 8443:443
+    logging:
+      options:
+        max-file: '5'
+        max-size: 15m
+  snaptool:
+    image: wekasolutions/snaptool:1.5.3
+    volumes:
+    - /dev/log:/dev/log
+    - /etc/hosts:/etc/hosts
+    - /opt/weka-mon/:/weka/
+    restart: always
+    ports:
+    - 8090:8090
+    logging:
+      options:
+        max-file: '5'
+        max-size: 15m

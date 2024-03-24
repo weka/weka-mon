@@ -31,6 +31,7 @@ cluster:
 
   force_https: False   # only 3.10+ clusters support https
   verify_cert: False  # default cert cannot be verified
+  mgmt_port: 14000
 
   # auth_token_file can be an absolute path, relative path, or filename.  
   # If just a filename it will be searched for in ".", "~/.weka", and "./.weka"
