@@ -1,0 +1,55 @@
+# this only works with Dell R6615 servers - support for other servers is pending
+Information:
+    description: Redfish Event Listener Tool Simple Config
+    updated: February 24, 2023
+ServerInformation:
+    BmcIPs:
+    - 192.168.2.1
+    - 192.168.2.2
+    - 192.168.2.3
+    - 192.168.2.4
+    - 192.168.2.5
+    - 192.168.2.6
+    - 192.168.2.7
+    - 192.168.2.8
+    UserNames:
+    - root
+    - root
+    - root
+    - root
+    - root
+    - root
+    - root
+    - root
+    Passwords:
+    - WekaService
+    - Administrator
+    - Administrator
+    - Administrator
+    - Administrator
+    - Administrator
+    - Administrator
+    - Administrator
+SubscriptionDetails:
+    Context: Public
+    Destination: https://192.168.2.254:8443
+    EventTypes: null
+    Format: null
+    Expand: null
+    ResourceTypes: null
+    Registries: null
+SystemInformation:
+    ListenerIP: 0.0.0.0
+    ListenerPort: 8443
+    UseSSL: true
+CertificateDetails:
+    certfile: weka-cert.crt
+    keyfile: private.key
+cluster:
+    auth_token_file: auth-token.json
+    hosts:
+    - wekapod006
+    - wekapod004
+    - wekapod001
+    force_https: false
+    verify_cert: false

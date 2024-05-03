@@ -13,3 +13,8 @@ chgrp 10001 loki_data/
 # this is so the Grafana database persists between container restarts
 chmod 755 var_lib_grafana/ etc_grafana/
 chown -R 472:0 var_lib_grafana/ etc_grafana/
+
+mkdir -p logs
+chown 472:472 logs/
+mkdir -p .weka
+chown 472:472 .weka/
