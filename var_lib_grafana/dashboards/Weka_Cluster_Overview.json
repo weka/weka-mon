@@ -2054,7 +2054,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "avg by (host_name) (weka_stats{cluster=\"$cluster\",stat=\"CPU_UTILIZATION\",node_role=\"FRONTEND\"})",
+          "expr": "avg by (host_name) (weka_stats{cluster=\"$cluster\",stat=\"CPU_UTILIZATION\",node_role=\"FRONTEND\",host_role=\"server\"})",
           "hide": false,
           "interval": "",
           "legendFormat": "{{host_name}}",
