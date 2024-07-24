@@ -67,7 +67,7 @@ services:
         max-size: "15m"
 
   export:
-    image: wekasolutions/export:1.7.1
+    image: wekasolutions/export:1.7.3
     volumes:
       - /dev/log:/dev/log
       - ${PWD}/.weka:/weka/.weka
