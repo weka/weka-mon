@@ -5,22 +5,22 @@
 # exporter section - info about how we're going to run
 exporter:
   listen_port: 8001
-  loki_host: null
+  loki_host: loki
   loki_port: 3100
-  timeout: 10.0
-  max_procs: 4
-  max_threads_per_proc: 100
-  backends_only: True
-  datapoints_per_collect: 5
   events_only: False
   events_to_loki: True
   events_to_syslog: True
+  timeout: 10.0
+  max_procs: 4
+  max_threads_per_proc: 50
+  backends_only: True
+  datapoints_per_collect: 5
 
 # cluster section - info about the weka cluster we want to export data from:
 cluster:
   auth_token_file: auth-token.json
   hosts:
-    - 172.29.4.65
+    - 172.29.0.74
   force_https: False   # only 3.10+ clusters support https
   verify_cert: False  # default cert cannot be verified
   mgmt_port: 14000
