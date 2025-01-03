@@ -578,6 +578,9 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "uid": "$weka_datasource"
+      },
       "fieldConfig": {
         "defaults": {
           "mappings": [],
@@ -628,6 +631,9 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "uid": "$weka_datasource"
+      },
       "fieldConfig": {
         "defaults": {
           "mappings": [],
