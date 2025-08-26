@@ -5,32 +5,45 @@
 # exporter section - info about how we're going to run
 exporter:
   listen_port: 8001
-  loki_host: loki
-  loki_port: 3100
   events_only: False
-  events_to_loki: True
+  events_to_loki: False
   events_to_syslog: True
   timeout: 10.0
-  max_procs: 4
-  max_threads_per_proc: 50
+  max_procs: 8
+  max_threads_per_proc: 100
   backends_only: True
   datapoints_per_collect: 5
+  certfile: null
+  keyfile: null
+
+loki:
+  host: null
+  port: 3100
+  protocol: https
+  path: /loki/api/v1/push
+  user: null
+  password: null
+  org_id: null
+  client_cert: null
+  verify_cert: False
 
 # cluster section - info about the weka cluster we want to export data from:
 cluster:
   auth_token_file: auth-token.json
   hosts:
-    - 172.29.0.74
-  force_https: False   # only 3.10+ clusters support https
+    - vince-0.wekalab.io
+    - vince-1.wekalab.io
+    - vince-2.wekalab.io
+  force_https: True   # only 3.10+ clusters support https
   verify_cert: False  # default cert cannot be verified
   mgmt_port: 14000
 
-  # auth_token_file can be an absolute path, relative path, or filename.  
+  # auth_token_file must be a filename.
   #   If just a filename it will be searched for in ".", "~/.weka", and "./.weka"
   #   This file can be generated with the 'weka user login' command and copied to where we are running
-  # hosts is a list of hostnames or ip addresses.  Minimum of 1 requred.  You do not need to list all hosts in the cluster
+  # hosts is a list of hostnames or ip addresses.  Minimum of 1 required.  You do not need to list all hosts in the cluster
 
-# This file comes pre-set to pupulate the Grafana Panels that we've provided
+# This file comes pre-set to populate the Grafana Panels that we've provided
 #
 # File format:
 #

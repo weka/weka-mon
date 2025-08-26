@@ -1,9 +1,48 @@
 {
+  "__inputs": [
+    {
+      "name": "DS_PROMETHEUS",
+      "label": "Prometheus",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "10.2.5"
+    },
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "text",
+      "name": "Text",
+      "version": ""
+    }
+  ],
   "annotations": {
     "list": [
       {
         "builtIn": 1,
-        "datasource": "$weka_datasource",
+        "datasource": {
+          "uid": "$weka_datasource"
+        },
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
@@ -16,8 +55,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
-  "iteration": 1668772560296,
+  "id": null,
   "links": [
     {
       "$$hashKey": "object:842",
@@ -35,7 +73,8 @@
   "panels": [
     {
       "datasource": {
-        "uid": "${weka_datasource}"
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
       },
       "gridPos": {
         "h": 2,
@@ -45,22 +84,41 @@
       },
       "id": 6,
       "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
         "content": "<img src=/public/img/weka/WekaColor.svg>",
         "mode": "html"
       },
-      "pluginVersion": "8.4.6",
+      "pluginVersion": "10.2.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "refId": "A"
+        }
+      ],
       "transparent": true,
       "type": "text"
     },
     {
       "datasource": {
+        "type": "prometheus",
         "uid": "$weka_datasource"
       },
       "fieldConfig": {
         "defaults": {
           "custom": {
-            "displayMode": "auto",
-            "filterable": false
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "inspect": false
           },
           "mappings": [],
           "thresholds": {
@@ -161,6 +219,17 @@
                 "value": 230
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "severity"
+            },
+            "properties": [
+              {
+                "id": "custom.width"
+              }
+            ]
           }
         ]
       },
@@ -172,7 +241,9 @@
       },
       "id": 4,
       "options": {
+        "cellHeight": "sm",
         "footer": {
+          "countRows": false,
           "fields": "",
           "reducer": [
             "sum"
@@ -180,11 +251,20 @@
           "show": false
         },
         "showHeader": true,
-        "sortBy": []
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "Time"
+          }
+        ]
       },
-      "pluginVersion": "8.4.6",
+      "pluginVersion": "10.2.5",
       "targets": [
         {
+          "datasource": {
+            "uid": "$weka_datasource"
+          },
+          "editorMode": "code",
           "expr": "weka_alerts{cluster=\"$cluster\"}",
           "format": "table",
           "hide": false,
@@ -205,19 +285,21 @@
               "instance": true,
               "job": true
             },
+            "includeByName": {},
             "indexByName": {
               "Time": 0,
-              "Value": 11,
+              "Value": 12,
               "__name__": 1,
-              "cluster": 3,
-              "drive_id": 7,
-              "host_id": 6,
-              "host_name": 5,
-              "instance": 8,
-              "job": 10,
-              "node_id": 9,
-              "title": 4,
-              "type": 2
+              "cluster": 4,
+              "drive_id": 8,
+              "host_id": 7,
+              "host_name": 6,
+              "instance": 9,
+              "job": 11,
+              "node_id": 10,
+              "severity": 2,
+              "title": 5,
+              "type": 3
             },
             "renameByName": {}
           }
@@ -227,8 +309,7 @@
     }
   ],
   "refresh": "1m",
-  "schemaVersion": 35,
-  "style": "dark",
+  "schemaVersion": 39,
   "tags": [
     "#weka"
   ],
@@ -236,6 +317,9 @@
     "list": [
       {
         "current": {
+          "selected": false,
+          "text": "Prometheus",
+          "value": "PBFA97CFB590B2093"
         },
         "hide": 0,
         "includeAll": false,
@@ -250,8 +334,7 @@
         "type": "datasource"
       },
       {
-        "current": {
-        },
+        "current": {},
         "datasource": {
           "type": "prometheus",
           "uid": "$weka_datasource"
@@ -297,6 +380,6 @@
   "timezone": "",
   "title": "Weka Alerts",
   "uid": "WekaAlerts",
-  "version": 9,
+  "version": 2,
   "weekStart": ""
 }
