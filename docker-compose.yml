@@ -3,7 +3,7 @@ version: "3"
 services:
 
   grafana:
-    image: grafana/grafana:10.2.4
+    image: grafana/grafana:10.2.5
     volumes:
       - /dev/log:/dev/log
       - ${PWD}/etc_grafana/:/etc/grafana/
@@ -67,7 +67,7 @@ services:
         max-size: "15m"
 
   export:
-    image: wekasolutions/export:20250326
+    image: wekasolutions/export:20250825
     volumes:
       - /dev/log:/dev/log
       - ${PWD}/.weka:/weka/.weka
@@ -109,34 +109,3 @@ services:
       options:
         max-file: "5"
         max-size: "15m"
-
-  hw_mon:
-    image: wekasolutions/hw_monitor:1.0.0
-    volumes:
-    - /dev/log:/dev/log
-    - /opt/weka-mon/.weka:/weka/.weka
-    - /etc/hosts:/etc/hosts
-    - /opt/weka-mon/hw_monitor.yml:/weka/hw_monitor.yml
-    - /opt/weka-mon/weka-cert.crt:/weka/weka-cert.crt
-    - /opt/weka-mon/private.key:/weka/private.key
-    command: -vvv
-    restart: always
-    ports:
-    - 8443:443
-    logging:
-      options:
-        max-file: '5'
-        max-size: 15m
-  snaptool:
-    image: wekasolutions/snaptool:1.6.1
-    volumes:
-    - /dev/log:/dev/log
-    - /etc/hosts:/etc/hosts
-    - /opt/weka-mon/:/weka/
-    restart: always
-    ports:
-    - 8090:8090
-    logging:
-      options:
-        max-file: '5'
-        max-size: 15m
