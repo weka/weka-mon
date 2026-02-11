@@ -8,8 +8,7 @@ exporter:
 cluster:
   auth_token_file: auth-token.json
   hosts:
-    - vweka01
-    - vweka02
-    - vweka03
+    - 172.29.0.65
   force_https: False   # only 3.10+ clusters support https
   verify_cert: False  # default cert cannot be verified
+  mgmt_port: 14000

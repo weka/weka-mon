@@ -4,9 +4,9 @@
 
 # exporter section - info about how we're going to run
 exporter:
-  listen_port: 8001
+  listen_port: 8150
   events_only: False
-  events_to_loki: False
+  events_to_loki: True
   events_to_syslog: True
   timeout: 10.0
   max_procs: 8
@@ -17,7 +17,7 @@ exporter:
   keyfile: null
 
 loki:
-  host: null
+  host: localhost
   port: 3100
   protocol: https
   path: /loki/api/v1/push
@@ -31,10 +31,8 @@ loki:
 cluster:
   auth_token_file: auth-token.json
   hosts:
-    - vince-0.wekalab.io
-    - vince-1.wekalab.io
-    - vince-2.wekalab.io
-  force_https: True   # only 3.10+ clusters support https
+    - 172.29.0.65
+  force_https: False   # only 3.10+ clusters support https
   verify_cert: False  # default cert cannot be verified
   mgmt_port: 14000
 
