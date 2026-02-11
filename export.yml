@@ -4,7 +4,7 @@
 
 # exporter section - info about how we're going to run
 exporter:
-  listen_port: 8150
+  listen_port: 8001
   events_only: False
   events_to_loki: True
   events_to_syslog: True
