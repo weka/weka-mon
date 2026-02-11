@@ -1,4 +1,4 @@
-version: "3"
+#version: "3"
 
 services:
 
@@ -96,7 +96,7 @@ services:
   #    - "8002:8002"
 
   quota-export:
-    image: wekasolutions/quota-export:1.0.0
+    image: wekasolutions/quota-export:20260211
     volumes:
       - /dev/log:/dev/log
       - ${PWD}/.weka:/weka/.weka
