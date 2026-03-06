@@ -96,7 +96,7 @@ services:
   #    - "8002:8002"
 
   quota-export:
-    image: wekasolutions/quota-export:20260305
+    image: wekasolutions/quota-export:20260306
     volumes:
       - /dev/log:/dev/log
       - ${PWD}/.weka:/weka/.weka
