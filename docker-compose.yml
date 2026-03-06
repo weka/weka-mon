@@ -96,13 +96,14 @@ services:
   #    - "8002:8002"
 
   quota-export:
-    image: wekasolutions/quota-export:20260211
+    image: wekasolutions/quota-export:20260305
     volumes:
       - /dev/log:/dev/log
       - ${PWD}/.weka:/weka/.weka
       - /etc/hosts:/etc/hosts
       - ${PWD}/quota-export.yml:/weka/quota-export.yml
     restart: always
+    command: -v
     ports:
       - "8101:8101"
     logging:

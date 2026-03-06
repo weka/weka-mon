@@ -3,12 +3,17 @@ exporter:
   listen_port: 8101
   timeout: 10.0
   backends_only: True
+  exceeded_only: False
+  max_procs: 2
+  max_threads_per_proc: 40
 
 # cluster section - info about the weka cluster we want to export data from:
 cluster:
   auth_token_file: auth-token.json
   hosts:
     - 172.29.0.65
-  force_https: False   # only 3.10+ clusters support https
+  force_https: True   # only 3.10+ clusters support https
   verify_cert: False  # default cert cannot be verified
   mgmt_port: 14000
+  filesystems:
+    - default
